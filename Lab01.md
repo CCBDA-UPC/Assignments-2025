@@ -11,7 +11,7 @@ Take a look at the following hands-on guides to check if you already have the ba
 * Hands-on 4: [Python Development Environment Quick Start](../../../Cloud-Computing-QuickStart/blob/master/Python-Development-Environment-Quick-Start.md)
 
 #  Pre-lab homework 1
-Go to the AWS Academy and log into the course [AWS Academy Cloud Foundations](https://awsacademy.instructure.com/courses/40548)
+Go to the AWS Academy and log into the course [AWS Academy Cloud Foundations](https://awsacademy.instructure.com/courses/109366)
 
 Follow the modules and submit the knowledge checks at the end:
 - Module 1 - Cloud Concepts Overview
