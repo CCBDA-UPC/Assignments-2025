@@ -7,7 +7,7 @@ In this Lab session, we are going to discuss the overall structure of a [BlueSky
 * [Tasks for Lab session #2](#Tasks)
    * [Task 2.1: Geting Started with NLTK](#NLTK)
    * [Task 2.2: Getting Started with the BlueSky API in Python](#blueskyapi)
-   * [Task 2.3: Skeet pre-processing](#preproc)
+   * [Task 2.3: Posts pre-processing](#preproc)
 
 <a name="Prelab"/>
 
@@ -366,7 +366,7 @@ Create a file named `BlueSky_2.py` and use the previous API presented to obtain 
 
 <a name="preproc"/>
 
-## Task 2.3:  Posts pre-processing
+## Task 2.3: Posts pre-processing
 The code used in this Lab session is using part of the work done by [Marco Bonzanini](https://marcobonzanini.com/2015/03/02/mining-twitter-data-with-python-part-1/). As Marco indicates, it is far from perfect, but it’s a good starting point to become aware of the complexity of the problem, and it is reasonably easy to extend.
 
 We are going to focus on looking for the text of a post and breaking it down into words. While tokenization is a well-understood problem with several out-of-the-box solutions from popular libraries, BlueSky data pose some challenges because of the nature of the language used.
@@ -443,7 +443,7 @@ We are now ready for next Lab session where we will be mining streaming BlueSky 
 
 # How to submit this assignment:
 
-Use the **private** repo named *https://github.com/CCBDA-UPC/2025-2-xx*. It needs to have the file `README.md` with your responses to the above questions and the python requested files.
+Use the **private** repo named *https://github.com/CCBDA-UPC/2025-2-xx*. It needs to have the file `README.md` with your responses to the above questions. You may want to add some additional files with screenshots (linked to the README.md).
 
 Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with all the files generated during this session. 
 
