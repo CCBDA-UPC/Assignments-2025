@@ -300,7 +300,7 @@ if __name__ == "__main__":
 
 ```
 
-<center><img src="images/BlueSky_1.png" width="50%"></center>
+<img src="images/BlueSky_1.png" width="50%" style="display: block; margin: 0 auto">
 
 Another relevant thing to know, before we begin, is that we have two classes of APIs: **REST APIs** and **Streaming API**. All **REST APIs** only allow you to go back in time (posts already published). Often these APIs limit the number of posts you can retrieve, not just regarding rate limits as we mentioned, but also regarding a period.
 
