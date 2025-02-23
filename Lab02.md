@@ -306,16 +306,14 @@ Another relevant thing to know, before we begin, is that we have two classes of 
 
 On the other hand, the **Streaming API** looks into the future: we can retrieve all posts matching our filtering criteria as they become available. The Streaming API is useful when we want to filter a particular keyword and download a massive amount of posts about it. On the other hand, REST API is useful when we want to search for posts authored by a specific user, or we want to access our timeline.
 
-Get the file named `BlueSky_1.py` from this repository and execute it. 
+Get the file named [`BlueSky_1.py`](BlueSky_1.py) from this repository and execute it. 
 
 
 **Q221: Is the data printed correctly?** Add your answers to `README.md`.
 
 
 ### Task 2.2.2: Accessing Posts
-In order to search Posts 
-
-By default, in your response, you will only get the Tweet ID and Tweet text for each Tweet. If you need additional Tweet fields such as [context_annotations](https://developer.twitter.com/en/docs/twitter-api/annotations/overview), created_at (the time the post was created) etc., you can specifiy those fields using the post_fields parameter, as shown in the example below. Learn more about available fields [here](https://developer.twitter.com/en/docs/twitter-api/fields). By default, a request returns 10 Posts. If you want more than 10 Posts per request, you can specify that using the max_results parameter. The maximum Posts per request is 100.
+By default, a request returns 10 Posts. If you want more than 10 Posts per request, you can specify that using the max_results parameter. The maximum Posts per request is 100.
 
 ```python
 def list_posts(client, handle):
@@ -433,34 +431,15 @@ In this example, regular expressions are compiled with the flags re.VERBOSE, to 
 
 Keep track of the execution examining ten different posts extracted using tweepy, as shown above. In this initial exercise using BlueSky, if you don't want to have extra problems with *special characters* filter posts *in the English language*.
 
-**Q23: Add the code to `BlueSky_2.py` and your comments to `README.md`.**
+**Q23: Add the code to `BlueSky_3.py` and your comments to `README.md`.**
 
 We are now ready for next Lab session where we will be mining streaming BlueSky data.
 
 
 
-**Q25: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them?** Add your answers to `README.md`.
+**Q24: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them?** Add your answers to `README.md`.
 
-# Apendix
 
-You can download them like this and save it to a file (you can also specify the length parameter in order to obtain more):
-
-```bash
-curl -X GET "https://datasets-server.huggingface.co/rows?dataset=post_eval&config=emoji&split=train&offset=0&length=100" > posts.json
-```
-
-and this code reads the JSON file and outputs the correct rows containing the posts:
-
-```Python
-import json
-
-post_file = open("posts.json")
-posts = json.load(post_file)
-
-rows = posts["rows"]
-for row in rows:
-    print(row['row']['text'])
-```
 
 # How to submit this assignment:
 
