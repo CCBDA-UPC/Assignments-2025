@@ -1,5 +1,5 @@
 # Lab session #2: Doors in the Cloud
-In this Lab session, we are going to discuss the overall structure of a BlueSky "post"  and how to pre-process the text before going into a more interesting analysis in the next Lab session. In particular, we are going to see how tokenization, while being a well-understood problem, can get tricky dealing with [BlueSky](https://bsky.app/) data. Before this, we need to install A Python Development Environment which will be very helpful for this and future sessions.
+In this Lab session, we are going to discuss the overall structure of a [BlueSky](https://bsky.app/) "post" (popular alternative to Twitter/X) and how to pre-process the text before going into a more interesting analysis in the next Lab session. In particular, we are going to see how tokenization, while being a well-understood problem, can get tricky dealing with BlueSky data. Before this, we need to install A Python Development Environment which will be very helpful for this and future sessions.
 
 * [Pre-lab howemork](#Prelab)
    * [Continue studying AWS](#aws)
@@ -144,7 +144,7 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-<small>Please note that we are using the logging module to provide feedback on what is going on with the script as well as writting comments to ease the maintainability of the code. It is also convenient to write error checking sending messages to the log. That would allow us to track code malfunctioning.</small>
+<sub>Please note that we are using the logging module to provide feedback on what is going on with the script as well as writting comments to ease the maintainability of the code. It is also convenient to write error checking sending messages to the log. That would allow us to track code malfunctioning.</sub>
 
 ### Task 2.1.1: Word Count 1
 Obtain from this repository the file named `WordCountTensorFlow_1.py`, that computes and prints the 10 most common words in the book. Add one more line to print the total number of words of the book.
