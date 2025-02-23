@@ -147,7 +147,7 @@ if __name__ == "__main__":
 <sub>Please note that we are using the logging module to provide feedback on what is going on with the script as well as writting comments to ease the maintainability of the code. It is also convenient to write error checking sending messages to the log. That would allow us to track code malfunctioning.</sub>
 
 ### Task 2.1.1: Word Count 1
-Obtain from this repository the file named `WordCountTensorFlow_1.py`, that computes and prints the 10 most common words in the book. Add one more line to print the total number of words of the book.
+Obtain from this repository the file named [`WordCountTensorFlow_1.py`](WordCountTensorFlow_1.py), that computes and prints the 10 most common words in the book. Add one more line to print the total number of words of the book.
 
 **Q211: Copy and paste the output to `README.md`, a file that you will add to your repository.**
 
