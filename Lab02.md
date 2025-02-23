@@ -443,16 +443,7 @@ We are now ready for next Lab session where we will be mining streaming BlueSky 
 
 # How to submit this assignment:
 
-Use the **private** repo named *https://github.com/CCBDA-UPC/2025-2-xx*. It needs to have, at least, two files `README.md` with your responses to the above questions and `authors.json` with both members email addresses:
-
-```json5
-{
-  "authors": [
-    "FIRSTNAME1.LASTNAME1@estudiantat.upc.edu",
-    "FIRSTNAME2.LASTNAME2@estudiantat.upc.edu"
-  ]
-}
-```
+Use the **private** repo named *https://github.com/CCBDA-UPC/2025-2-xx*. It needs to have the file `README.md` with your responses to the above questions and the python requested files.
 
 Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with all the files generated during this session. 
 
