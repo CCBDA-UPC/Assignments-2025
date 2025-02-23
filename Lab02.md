@@ -8,7 +8,6 @@ In this Lab session, we are going to discuss the overall structure of a [BlueSky
    * [Task 2.1: Geting Started with NLTK](#NLTK)
    * [Task 2.2: Getting Started with the BlueSky API in Python](#blueskyapi)
    * [Task 2.3: Skeet pre-processing](#preproc)
-   * [Task 2.4: Conter Social](#countersocial)
 
 <a name="Prelab"/>
 
@@ -301,7 +300,7 @@ if __name__ == "__main__":
 
 ```
 
-<center><img src="images/BlueSky_1.png"></center>
+<center><img src="images/BlueSky_1.png" width="50%"></center>
 
 Another relevant thing to know, before we begin, is that we have two classes of APIs: **REST APIs** and **Streaming API**. All **REST APIs** only allow you to go back in time (posts already published). Often these APIs limit the number of posts you can retrieve, not just regarding rate limits as we mentioned, but also regarding a period.
 
