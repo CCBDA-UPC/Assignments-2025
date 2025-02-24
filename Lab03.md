@@ -158,12 +158,16 @@ Keep the [Boto3 Comprehend API](https://boto3.amazonaws.com/v1/documentation/api
 
 **Q352 Explain the differences that you have found using the NTLK and the AWS Comprehend service while analyzing the book.**
 
-**Q353 Think of how can you take advantage on AWS Comprehend to analyze the book. Add a file named ``Comprehend_2.py`` to implement that idea.**
+**Q353 Think of how can you take advantage on AWS Comprehend to analyze the book.** Add a file named ``Comprehend_2.py`` to implement that idea.
 
 
 # How to submit this assignment:
 
-**Q36 How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them?** Add your answers to README.md.
+**Q361 How long have you been working on this session?**
+
+**Q362 What have been the main difficulties you have faced and how have you solved them?** 
+
+Add your answers to README.md.
 
 Use the **private** repo named *https://github.com/CCBDA-UPC/2025-3-xx*. It needs to have the `README.md` file with your responses to the above questions.
 
