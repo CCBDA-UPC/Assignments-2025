@@ -211,7 +211,7 @@ _$ cat .env
 ATP_EMAIL=angel.toribio@upc.edu
 ATP_PASSWORD=XXXX---XXXX
 ```
-> **Warning**: these are application settings should always be kept private. Do not push the credentials to the git repository. You can use the environment variables, amongst other methods, to provide the configuration data to the applications.
+> **Warning**: these are application settings should always be kept private. Do not push the credentials to the git repository. You can use the environment variables, amongst other methods, to provide the configuration data to the applications. Please, include a file named [`.gitignore`](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files) that prevents `.env` from being included and published in the repo.
 
 Now we can write our first Python script to automatically publish a post in our BlueSky personal flow.
 
