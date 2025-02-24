@@ -17,9 +17,9 @@ Watch the videos
 - Demo - General Troubleshooting Tips
 - Demo - How to Launch Services through AWS Console
 
-If you cannot see the 
-
-you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab). You can go back into stopping 3rd party cookies after working with the environment.
+If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab).
+![Lab03-LearnerLab.jpeg](images/Lab03-LearnerLab.jpeg)
+ You can go back into stopping 3rd party cookies after working with the environment.
 
 ![Lab03-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
 
