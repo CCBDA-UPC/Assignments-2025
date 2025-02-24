@@ -58,6 +58,8 @@ Play with the demo using the provided text and parts of the "First contact with 
 
 <p align="center"><img src="./images/Lab03-AWSComprehendPlay.jpeg" alt="Learner lab" title="Learner lab"/></p>
 
+**Q34 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+
 ## Task 3.5: Create a python script that sends a text to AWS Comprehend and retrieves the analysis
 
 Using the "AWS Academy Learner Lab" AWS console it is only posible to execute python code in the browser terminal of the environment.
@@ -148,16 +150,15 @@ one of the fields: QUANTITY, 0.69606614112854
 Silicon Valley: LOCATION, 0.9980552196502686
 ...
 ```
-
-**Q34 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+**Q351 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.**
 
 ### Play with the AWS Comprehend API
 
 Keep the [Boto3 Comprehend API](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/comprehend.html#client) nearby and replace the file `MachineLearning.txt` by `FirstContactWithTensorFlow.txt` bearing in mind the restrictions on document size that the API has.
 
-**Q351 Explain the differences that you have found using the NTLK and the AWS Comprehend service while analyzing the book.**
+**Q352 Explain the differences that you have found using the NTLK and the AWS Comprehend service while analyzing the book.**
 
-**Q352 Think of how can you take advantage on AWS Comprehend to analyze the book. Add a file named ``Comprehend_2.py`` to implement that idea.**
+**Q353 Think of how can you take advantage on AWS Comprehend to analyze the book. Add a file named ``Comprehend_2.py`` to implement that idea.**
 
 
 # How to submit this assignment:
