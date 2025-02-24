@@ -17,6 +17,12 @@ Watch the videos
 - Demo - General Troubleshooting Tips
 - Demo - How to Launch Services through AWS Console
 
+If you cannot see the 
+
+you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab). You can go back into stopping 3rd party cookies after working with the environment.
+
+[Lab03-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
+
 #  Tasks for Lab session #3
 
 Go to the AWS Academy and log into the course [AWS Academy Cloud Foundations](https://awsacademy.instructure.com/courses/109366) and follow the laboratories detailed below.
