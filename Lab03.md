@@ -21,7 +21,7 @@ If you cannot see the
 
 you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab). You can go back into stopping 3rd party cookies after working with the environment.
 
-[Lab03-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
+![Lab03-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
 
 #  Tasks for Lab session #3
 
