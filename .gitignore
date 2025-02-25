@@ -1,4 +1,90 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cython debug symbols
+*.pyd
+*.so
+*.dll
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Installed dependencies
+*.egg-info/
+.dist-info/
+
+# Distribution / packaging
+build/
+develop-eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg
+.installed.cfg
+*.egg-info/
+pip-wheel-metadata/
+share/python-wheels/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.log
+.cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm and JetBrains-specific files
+.idea/
+*.iml
+workspace.xml
+tasks.xml
+usage.statistics.xml
+shelf/
+*.iws
+
+# Local environment variables
 .env
-.venv
+.env.*
+*.env.bak
+
+# VS Code settings (if applicable)
+.vscode/
+
+# macOS files
 .DS_Store
-.idea
+
+# Thumbnails
+Thumbs.db
+
+# Logs and crash reports
+*.log
+*.out
+
+# Temporary / miscellaneous files
+*.tmp
+.temp/
+*.swp
+*.swo
+*~
