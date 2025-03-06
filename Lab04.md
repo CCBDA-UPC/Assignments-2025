@@ -7,10 +7,10 @@
 In this lab session you will learn how to extract data from webpages and then analyze the images and videos using AWS Rekognition to obtain some interesting insights.
 
 * [Task 4.1: Extract images from a website](#Tasks41)
-* [Task 4.2: Obtain a subset of the movie industry to do some research](#Tasks42) 
+* [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
 * [Task 4.3: Study the obtained data using the AWS Rekognition](#Tasks43) 
 
-<a name="Tasks61"/>
+<a name="Tasks41"/>
 
 ## Task 4.1: Extract images from a website
 
@@ -175,6 +175,12 @@ cmdline.execute("scrapy crawl image -o image.json".split())
 
 
 **Q41** Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository. Add your thoughts about the task.
+
+
+
+<a name="Tasks42"/>
+
+## Task 4.2: Obtain insights about an image using AWS Rekognition
 
 
 
