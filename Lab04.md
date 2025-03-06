@@ -321,6 +321,7 @@ _$ python Recognize_1.py
 **Q422 Add your thoughts about the above task.** 
 
 <a name="Tasks43"/>
+
 ## Task 4.3: Get insights of a website images using AWS Rekognition
 
 Using the code above build a python application that obtains some insights out of a website images. You are free to use any AWS Rekognition functionality.
