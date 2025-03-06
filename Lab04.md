@@ -226,7 +226,7 @@ Using the "AWS Academy Learner Lab" AWS console it is only posible to execute py
 
 Currently, the terminal shown in the screenshot above includes Python 3.7 which is incompatible with the boto3 version. You can also obtain a terminal by clicking on the icon shown in blue in the screenshot below.
 
-[Lab04-terminal.png.html](images/Lab04-terminal.png.html)
+[Lab04-terminal.png](images/Lab04-terminal.png)
 
 
 #### Create a Personal Access Token on GitHub
