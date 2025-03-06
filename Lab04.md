@@ -18,10 +18,14 @@ Watch the videos
 - Demo - How to Launch Services through AWS Console
 
 If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab).
-![Lab04-LearnerLab.jpeg](images/Lab04-LearnerLab.jpeg)
+
+  <img src="images/Lab04-LearnerLab.jpeg" alt="Lab04-LearnerLab.jpeg"  style="width: 50%; padding-left: 25%;">
+
+
  You can go back into stopping 3rd party cookies after working with the environment.
 
-![Lab04-3rd-party-cookies.png](images/Lab04-3rd-party-cookies.png)
+  <img src="images/Lab04-3rd-party-cookies.png" alt="Lab04-3rd-party-cookies.png"  style="width: 50%; padding-left: 25%;">
+
 
 * [Task 4.1: Extract images from a website](#Tasks41)
 * [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
@@ -65,7 +69,7 @@ _$ scrapy startproject imageScraper
 The above command will create the following file structure in the current directory:
 
 
-  <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png"  style="height: 200px; padding-left: 25%">
+  <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png"  style="height: 400px; padding-left: 25%;">
 
 
 The most important components are the file `imageScraper/settings.py` containing the settings for the project and the directory `imageScraper/spiders/` that keeps all the custom spiders.
