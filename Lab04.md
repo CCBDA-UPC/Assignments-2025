@@ -218,6 +218,8 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ![Lab04-sampleImage.jpeg](images/Lab04-sampleImage.jpeg)
 
+![Lab04-RekognitionDemo.png](images/Lab04-RekognitionDemo.png)
+
 **Q421 Add your thoughts about the above task.** 
 
 ### Create a python script that sends an image to AWS Rekognition and retrieves the analysis
