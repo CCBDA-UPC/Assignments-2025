@@ -18,10 +18,10 @@ Watch the videos
 - Demo - How to Launch Services through AWS Console
 
 If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab).
-![Lab04-LearnerLab.jpeg](images/Lab03-LearnerLab.jpeg)
+![Lab04-LearnerLab.jpeg](images/Lab04-LearnerLab.jpeg)
  You can go back into stopping 3rd party cookies after working with the environment.
 
-![Lab04-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
+![Lab04-3rd-party-cookies.png](images/Lab04-3rd-party-cookies.png)
 
 * [Task 4.1: Extract images from a website](#Tasks41)
 * [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
