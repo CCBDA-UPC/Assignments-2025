@@ -315,15 +315,16 @@ Get the file named [`BlueSky_1.py`](BlueSky_1.py) from this repository and execu
 ### Task 2.2.2: Accessing Posts
 By default, a request returns 10 Posts. If you want more than 10 Posts per request, you can specify that using the max_results parameter. The maximum Posts per request is 100.
 
+The code below uses `BLUESKY_USER`that needs to be instantiated in the `.env` file.
+
 ```python
-def list_posts(client, handle):
+def list_all_posts(client, handle):
     """
     List posts for the given BlueSky handle.
 
     Args:
         client (Client): Logged-in AT Proto client instance.
         handle (str): The handle of the user to retrieve posts for.
-        limit (int): Number of posts to retrieve.
     """
     try:
         i = 1
@@ -349,7 +350,7 @@ def main():
         client, profile = login_to_client()
 
         # List all posts.
-        posts = list_posts(client, os.getenv("BLUESKY_USER"))
+        list_all_posts(client, os.getenv("BLUESKY_USER"))
 
     except Exception as e:
         logger.error("An unexpected error occurred: %s", e)
