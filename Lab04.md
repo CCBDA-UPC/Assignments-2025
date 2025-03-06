@@ -326,6 +326,8 @@ _$ python Recognize_1.py
 
 Using the code above build a Python application that obtains some insights out of website images. You are free to use any AWS Rekognition functionality.
 
+You may want to use the [requests](https://pypi.org/project/requests/) Python library to interact with the images.
+
 **Q431 What is the goal of your application?**
 
 Include the code modifications and eventual new files in the repo.
