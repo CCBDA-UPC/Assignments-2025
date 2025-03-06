@@ -328,6 +328,8 @@ Using the code above build a python application that obtains some insights out o
 
 **Q431 What is the goal of your application?**
 
+**Q432 Include the code modifications and eventual new files in the repo. Add your thoughts about the above task.**
+
 
 Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with all the files generated during this session. 
 
