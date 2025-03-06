@@ -6,6 +6,23 @@
 
 In this lab session, you will learn how to extract data from webpages and then analyze the images and videos using AWS Rekognition to obtain some interesting insights.
 
+#  Pre-lab homework
+
+<a name="aws"/>
+
+Go to the AWS Academy and log into the course [AWS Academy Learner Lab](https://awsacademy.instructure.com/courses/109367). 
+
+Watch the videos
+- Demo - How to Access Learner Lab
+- Demo - General Troubleshooting Tips
+- Demo - How to Launch Services through AWS Console
+
+If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab).
+![Lab04-LearnerLab.jpeg](images/Lab03-LearnerLab.jpeg)
+ You can go back into stopping 3rd party cookies after working with the environment.
+
+![Lab04-3rd-party-cookies.png](images/Lab03-3rd-party-cookies.png)
+
 * [Task 4.1: Extract images from a website](#Tasks41)
 * [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
 * [Task 4.3: Study the obtained data using the AWS Rekognition](#Tasks43) 
