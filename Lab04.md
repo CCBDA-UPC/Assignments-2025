@@ -47,9 +47,9 @@ _$ scrapy startproject imageScraper
 
 The above command will create the following file structure in the current directory:
 
-<div style="text-align: center;">
+<p style="text-align: center;">
   <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png" style="width: 50%;">
-</div>
+</p>
 
 The most important components are the file `imageScraper/settings.py` containing the settings for the project and the directory `imageScraper/spiders/` that keeps all the custom spiders.
 
@@ -165,9 +165,9 @@ _$ scrapy crawl image -o image.json
 
 To debug the code using PyCharm we can add a new file named `main.py`, in the same directory containing `scrapy.cnf`, that will contain the command line that we typed before. I strongly advise you to use this option to speed up the creation of your parsers.
 
-<div style="text-align: center;">
+<p style="text-align: center;">
   <img src="images/Lab04-pycharmConfig.png" alt="Lab04-pycharmConfig" style="width: 50%;">
-</div>
+</p>
 
 
 ```python
