@@ -65,7 +65,7 @@ _$ scrapy startproject imageScraper
 The above command will create the following file structure in the current directory:
 
 
-  <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png"  style="width: 50%; padding-left: 25%">
+  <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png"  style="height: 200px; padding-left: 25%">
 
 
 The most important components are the file `imageScraper/settings.py` containing the settings for the project and the directory `imageScraper/spiders/` that keeps all the custom spiders.
