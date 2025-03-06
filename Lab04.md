@@ -199,7 +199,7 @@ cmdline.execute("scrapy crawl image -o image.json".split())
 ```
 
 
-**Q41** Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository. Add your thoughts about the task.
+**Q41** Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository. Add your thoughts about the above task.
 
 
 
@@ -218,7 +218,7 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ![Lab04-sampleImage.jpeg](images/Lab04-sampleImage.jpeg)
 
-**Q421 Add your thoughts about the task.** 
+**Q421 Add your thoughts about the above task.** 
 
 ### Create a python script that sends a text to AWS Rekognition and retrieves the analysis
 
@@ -311,7 +311,7 @@ _$ python Recognize_1.py
                 },
 ...
 ```
-**Q422 Add your thoughts about the task.** 
+**Q422 Add your thoughts about the above task.** 
 
 <a name="Tasks43"/>
 ## Task 4.3: Get insights of a website images using AWS Rekognition
