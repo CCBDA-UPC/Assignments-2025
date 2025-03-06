@@ -4,7 +4,7 @@
 
 [AWS Rekognition](https://aws.amazon.com/rekognition/)  is an image recognition service that detects objects, scenes, activities, landmarks, faces, dominant colors, and image quality. AWS Rekognition also extracts text, recognizes celebrities, and identifies inappropriate image content.
 
-In this lab session, you will learn how to extract data from webpages and then analyze the images and videos using AWS Rekognition to obtain some interesting insights.
+In this lab session, you will learn how to extract data from web pages and then analyze the images and videos using AWS Rekognition to obtain some interesting insights.
 
 #  Pre-lab homework
 
@@ -30,7 +30,7 @@ If you cannot see the Learner Lab as shown below you may need to check that your
 
 * [Task 4.1: Extract images from a website](#Tasks41)
 * [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
-* [Task 4.3: Get insights of a website images using AWS Rekognition](#Tasks43) 
+* [Task 4.3: Get insights into a website images using AWS Rekognition](#Tasks43) 
 
 <a name="Tasks41"/>
 
@@ -48,7 +48,7 @@ _$ pip install scrapy
 
 ### Scrapy shell
 
-Once the Scrapy package is installed, you can use the Scrapy shell to do some testing before programming your web data extraction. In the following example, we download the home page of ["Universitat Politècnica de Catalunya"](https://www.upc.edu/), take a look at the structure of the HTML and extract the images included in each page. As you can see we can use a CSS syntax to select the HTML elements of the page.
+Once the Scrapy package is installed, you can use the Scrapy shell to do some testing before programming your web data extraction. In the following example, we download the home page of ["Universitat Politècnica de Catalunya"](https://www.upc.edu/). Please, inspect the structure of the HTML, and extract the images included in each page. As you can see we can use a CSS syntax to select the HTML elements of the page.
 
 ```python
 fetch("https://www.upc.edu/")
@@ -57,7 +57,7 @@ response.css("img").extract_first()
 response.css("a").extract_first()
 ```
 
-To find the "search path" you may want to use Google Chrome, find the URL, inspect the code and use the search bar at the botom of the code to match the path.
+To find the "search path" you may want to use Google Chrome, find the URL, inspect the code, and use the search bar at the bottom of the code to match the path.
 
 ### Scrapy custom spyders
 
@@ -146,7 +146,7 @@ We can feed the crawler with all the URLs found. The only URLs that will be craw
 ```python
     allowed_domains = ["www.upc.edu"]
 ```
-We'd like to get the list of unique images found. It is possible to define `unique_images` inside the `ImagesSpider` class.
+We need to get the list of unique images found. It is possible to define `unique_images` inside the `ImagesSpider` class.
 ```python
     unique_images = []
 ```
@@ -207,7 +207,7 @@ cmdline.execute("scrapy crawl image -o image.json".split())
 
 ## Task 4.2: Obtain insights about an image using AWS Rekognition
 
-Open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up and then click "AWS" at the top of the window and open the AWS Console.
+Open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up, and then click "AWS" at the top of the window and open the AWS Console.
 
 <img src="./images/Lab04-LearnerLab.jpeg" alt="Learner lab" title="Learner lab"/>
 
@@ -222,9 +222,9 @@ Play with the demo using the provided image some of the images obtained in the p
 
 **Q421 Add your thoughts about the above task.** 
 
-### Create a python script that sends an image to AWS Rekognition and retrieves the analysis
+### Create a Python script that sends an image to AWS Rekognition and retrieves the analysis
 
-Using the "AWS Academy Learner Lab" AWS console it is only posible to execute python code in the browser terminal of the environment.
+Using the "AWS Academy Learner Lab" AWS console it is only possible to execute Python code in the browser terminal of the environment.
 
 Currently, the terminal shown in the screenshot above includes Python 3.7 which is incompatible with the boto3 version. You can also obtain a terminal by clicking on the icon shown in blue in the screenshot below.
 
@@ -240,11 +240,11 @@ From your GitHub account,
 3. Personal Access Token 
 4. Generate New Token (Classic)
 5. Fillup the form 
-6. Click Full control of private repositories
+6. Click full control of private repositories
 7. Click Generate token
 8. Copy the generated Token, it will be something like ``ghp_sFhFsSHhTzMDreGRLjmks4Tzuzgthdvfsrta``
 
-Keep the token on a safe place, such as a password manager, for future use.
+Keep the token in a safe place, such as a password manager, for future use.
 
 
 #### Clone your repository
@@ -322,15 +322,17 @@ _$ python Recognize_1.py
 
 <a name="Tasks43"/>
 
-## Task 4.3: Get insights of a website images using AWS Rekognition
+## Task 4.3: Get insights of website images using AWS Rekognition
 
-Using the code above build a python application that obtains some insights out of a website images. You are free to use any AWS Rekognition functionality.
+Using the code above build a Python application that obtains some insights out of website images. You are free to use any AWS Rekognition functionality.
 
 **Q431 What is the goal of your application?**
 
-**Q432 Include the code modifications and eventual new files in the repo. Add your thoughts about the above task.**
+Include the code modifications and eventual new files in the repo.
+
+**Q432  Add your thoughts about the application developed and the results that you have obtained.**
 
 
-Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with all the files generated during this session. 
+Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with all the files generated during this session. 
 
 **Before the deadline**, all team members shall push their responses to their private *https://github.com/CCBDA-UPC/2024-4-xx* repository.
