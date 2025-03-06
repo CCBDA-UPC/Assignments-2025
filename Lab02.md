@@ -429,7 +429,7 @@ With the previous essential tokenizer code, some particular types of tokens are 
 
 In this example, regular expressions are compiled with the flags re.VERBOSE, to ignore spaces in the regexp (see the multi-line emoticons regexp), and re.IGNORECASE to match both upper and lowercase text. The tokenize() function catches all the tokens in a string and returns them as a list. preprocess() uses tokenize() to pre-process the string: in this case, we only add a lowercasing feature for all the tokens that are not emoticons (e.g., :D doesn’t become :d).
 
-Keep track of the execution examining ten different posts extracted using tweepy, as shown above. In this initial exercise using BlueSky, if you don't want to have extra problems with *special characters* filter posts *in the English language*.
+Keep track of the execution examining ten different posts extracted using the API, as shown above. In this initial exercise using BlueSky, if you don't want to have extra problems with *special characters* filter posts *in the English language*.
 
 **Q23: Add the code to `BlueSky_3.py` and your comments to `README.md`.**
 
