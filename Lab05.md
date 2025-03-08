@@ -212,12 +212,12 @@ _$ eb deploy
 Creating application version archive "app-3a7a-230322_155801427873".
 Uploading eb-django-express-signup/app-3a7a-230322_155801427873.zip to S3. This may take a while.
 Upload Complete.
-2024-03-22 14:58:05    INFO    Environment update is starting.      
-2024-03-22 14:58:10    INFO    Deploying new version to instance(s).
-2024-03-22 14:58:14    INFO    Instance deployment successfully generated a 'Procfile'.
-2024-03-22 14:58:18    INFO    Instance deployment completed successfully.
-2024-03-22 14:58:24    INFO    New application version was deployed to running EC2 instances.
-2024-03-22 14:58:24    INFO    Environment update completed successfully.
+2025-03-22 14:58:05    INFO    Environment update is starting.      
+2025-03-22 14:58:10    INFO    Deploying new version to instance(s).
+2025-03-22 14:58:14    INFO    Instance deployment successfully generated a 'Procfile'.
+2025-03-22 14:58:18    INFO    Instance deployment completed successfully.
+2025-03-22 14:58:24    INFO    New application version was deployed to running EC2 instances.
+2025-03-22 14:58:24    INFO    Environment update completed successfully.
 
 ```
 
@@ -234,7 +234,7 @@ You can check the health of your Docker environment.
 
 ```bash
 _$ eb health
-  eb-django-express-signup-dev2                  Ok                  2024-03-22 16:02:05
+  eb-django-express-signup-dev2                  Ok                  2025-03-22 16:02:05
 WebServer                              Python 3.8 running on 64bit Amazon Linux 2/3.5.0
   total      ok    warning  degraded  severe    info   pending  unknown 
     1        1        0        0        0        0        0        0    
@@ -684,7 +684,7 @@ command `python manage.py collectstatic`.
 
 # How to submit this assignment:
 
-Use the **private** repo named *https://github.com/CCBDA-UPC/2022-5-xx*. It needs to have, at least, two
+Use the **private** repo named *https://github.com/CCBDA-UPC/2025-5-xx*. It needs to have, at least, two
 files `README.md` with your responses to the above questions and `authors.json` with both members email addresses:
 
 ```json5
@@ -713,4 +713,4 @@ Make sure that you have updated your local GitHub repository (using the `git`com
 all the files generated during this session.
 
 **Before the deadline**, all team members shall push their responses to their private
-*https://github.com/CCBDA-UPC/2022-5-xx* repository.
+*https://github.com/CCBDA-UPC/2025-5-xx* repository.
