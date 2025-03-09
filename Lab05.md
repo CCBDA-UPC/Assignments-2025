@@ -485,45 +485,6 @@ services:
      - .env
 ```
 
-### Update Django settings and configuration files
-1. 
-2. Configure database settings. 
-
-Update settings.py to use PostgreSQL:
-
-```python
-DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.{}'.format(
-             os.getenv('DATABASE_ENGINE', 'sqlite3')
-         ),
-         'NAME': os.getenv('DATABASE_NAME', 'polls'),
-         'USER': os.getenv('DATABASE_USERNAME', 'myprojectuser'),
-         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-         'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'),
-         'PORT': os.getenv('DATABASE_PORT', 5432),
-     }
- }
-```
-
-2. Set ALLOWED_HOSTS to read from environment files. 
-
-In settings.py, set ALLOWED_HOSTS to:
-
-
-# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a , between each.
-# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1,[::1]'
-3. Set the SECRET_KEY to read from environment files.
-
-In settings.py, set SECRET_KEY to:
-
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-4. Set DEBUG to read from environment files.
-
-
-
 ### Build and run your new Django project
 To build and start your containers, run:
 
