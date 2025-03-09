@@ -54,7 +54,7 @@ Content owners pay CDN operators to deliver the content that they produce to the
 
 ## Prerequisites
 
-Make sure you :
+Make sure that you :
 
 - Have [Django](https://www.djangoproject.com/start/) installed on your system.
 - Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) on your machine.
@@ -62,7 +62,7 @@ Make sure you :
 If you need help with the installation, you can find detailed instructions on the Docker and Django websites.
 
 
-
+## Session taks
 
 * [Task 5.1: Download the code for the Web App](#Task51)
 * [Task 5.2: Create a DynamoDB Table](#Task52)
@@ -78,15 +78,14 @@ If you need help with the installation, you can find detailed instructions on th
 ## Task 5.1: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
-as a *[zip file](ccbda-signup.zip)*. Inside of your responses repository for the current Lab session, unzip the file and change the name of the folder to *ccbda-signup*.
-
+as a *[zip file](ccbda-signup.zip)*. Unzip the file inside of your responses repository for the current Lab session, and change the name of the folder to *ccbda-signup*.
 
 
 <a name="Task52"/>
 
 ## Task 5.2: Create a DynamoDB Table
 
-Our signup app uses a DynamoDB table to store the contact information that users submit.
+The signup app uses a DynamoDB table to store the contact information that users submit.
 
 #### To create a DynamoDB table
 
@@ -109,12 +108,15 @@ Once you are inside the directory create a `.env` file with the configuration of
 ```bash
 DEBUG=True
 STARTUP_SIGNUP_TABLE=ccbda-signup-table
+AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
 AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 ```
 
-To obtain the values, at your CLI type the following command that will provide the necessary values
+All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service console page in another AWS Region you will see access error messages.
+
+To obtain the values missing above, at your CLI type the following command that will provide the necessary values
 
 ````bash
 ddd_v1_w_3cWf_628331@runweb75472:~$ cat $HOME/.aws/credentials
