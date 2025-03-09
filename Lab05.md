@@ -212,7 +212,7 @@ That Python virtual environment is re-created remotely by Docker through the use
 other configuration that you are going to set up later.
 
 
-<img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="550"/>
+<img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="80%"/>
 
 <a name="Task54"/>
 
