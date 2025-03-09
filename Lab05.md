@@ -80,7 +80,7 @@ If you need help with the installation, you can find detailed instructions on th
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
 as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to *ccbda-signup*.
 
-![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png)
+![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png){ width=50% }
 
 
 <a name="Task52"/>
