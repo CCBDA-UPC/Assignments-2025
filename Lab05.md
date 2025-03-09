@@ -1,10 +1,3 @@
-<style>
-img{
-    border:1px solid red;
-    width: 50%;
-}
-</style>
-
 # Lab session 5: Deploy a custom web app using additional cloud services
 
 ### Django: web framework
@@ -70,7 +63,7 @@ A content delivery network or content distribution network (CDN) is a geographic
 servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low
 latency, and high performance.
 
-![Lab05-CDN.png](images/Lab05-CDN.png)
+<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
 
 The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
 part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
@@ -118,7 +111,7 @@ You are going to make a few changes to the base Python code. Therefore, download
 as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and
 change the name of the folder to *ccbda-signup*.
 
-![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png)
+<img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
 
 
 <a name="Task52"/>
