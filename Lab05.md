@@ -1,66 +1,103 @@
+<style>
+img{
+    border:1px solid red;
+    width: 50%;
+}
+</style>
+
 # Lab session 5: Deploy a custom web app using additional cloud services
 
 ### Django: web framework
 
-[Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
+[Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and
+clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
+to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
 
 ### AWS ECS: Elastic Container Service
 
-Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying, managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible solution for running workloads in the cloud or on-premises with Amazon ECS Anywhere.
+Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
+managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
+solution for running workloads in the cloud or on-premises with Amazon ECS Anywhere.
 
 Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
 
-- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across different systems and servers, making local development, testing, and deployment more reliable.
+- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
+  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
+  different systems and servers, making local development, testing, and deployment more reliable.
 
-- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces compatibility issues.
+- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
+  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
+  compatibility issues.
 
-- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
+- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
+  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
 
-- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can start coding right away. It ensures uniformity across development, staging, and production, making it easier to integrate and deploy changes.
+- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
+  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
+  integrate and deploy changes.
 
 ## Deploying an example Web App Using Docker
 
-We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website visitors who sign up to hear more. The signup app will help you reach potential students who might take part in a private beta test of the laboratory sessions.
+We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
+yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website
+visitors who sign up to hear more. The signup app will help you reach potential students who might take part in a
+private beta test of the laboratory sessions.
 
 ### The Signup App
 
-The app will allow your future students to submit contact information and express interest in a preview of the new subject on Cloud Computing that you're developing.
+The app will allow your future students to submit contact information and express interest in a preview of the new
+subject on Cloud Computing that you're developing.
 
-To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that started as a Twitter project.
+To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that
+started as a Twitter project.
 
 ### AWS DynamoDB
 
 **Amazon DynamoDB**, a NoSQL database service, is going to be used to store the contact information that users submit.
 
-DynamoDB is a schema-less database, so you need to specify only a primary key attribute. Let us use the email field as a key for each register.
+DynamoDB is a schema-less database, so you need to specify only a primary key attribute. Let us use the email field as a
+key for each register.
 
 ### AWS Simple Notification Service (SNS)
 
-We want to know when customers submit a form, therefore we are going to use **AWS Simple Notification Service** (AWS SNS), a message pushing service that can deliver notifications over various protocols. For our web app, we are going to push notifications to an email address.
+We want to know when customers submit a form, therefore we are going to use **AWS Simple Notification Service** (AWS
+SNS), a message pushing service that can deliver notifications over various protocols. For our web app, we are going to
+push notifications to an email address.
 
 ### AWS CloudFront CDN
 
-A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low latency, and high performance.
+A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy
+servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low
+latency, and high performance.
 
 ![Lab05-CDN.png](images/Lab05-CDN.png)
 
-The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic" part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as possible to improve the "user experience".
+The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
+part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
+balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
+possible to improve the "user experience".
 
-Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts, downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media, social networks and so much more.
+Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
+downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
+social networks and so much more.
 
-Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
+Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
+Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
 
-**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation, **AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run custom code close to final viewers.
+**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
+speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation, **AWS S3
+**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run custom code
+close to final viewers.
 
 ## Prerequisites
 
 Make sure that you :
 
 - Have [Django](https://www.djangoproject.com/start/) installed on your system.
-- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [Docker Compose](https://docs.docker.com/compose/) on your machine.
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+  and [Docker Compose](https://docs.docker.com/compose/) on your machine.
 
 If you need help with the installation, you can find detailed instructions on the Docker and Django websites.
-
 
 ## Session taks
 
@@ -78,9 +115,10 @@ If you need help with the installation, you can find detailed instructions on th
 ## Task 5.1: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
-as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to *ccbda-signup*.
+as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and
+change the name of the folder to *ccbda-signup*.
 
-![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png){ width=50% }
+![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png)
 
 
 <a name="Task52"/>
@@ -91,7 +129,8 @@ The signup app uses a DynamoDB table to store the contact information that users
 
 #### To create a DynamoDB table
 
-Go to the course "AWS Academy Learner Lab", open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up and then click "AWS" at the top of the window and open the AWS Console.
+Go to the course "AWS Academy Learner Lab", open the modules and open the "Learner Lab". Click the button "Start Lab",
+wait until the environment is up and then click "AWS" at the top of the window and open the AWS Console.
 
 1. At the console search for "DynamoDB".
 
@@ -116,7 +155,9 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 ```
 
-All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service console page in another AWS Region you will see access error messages.
+All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless
+mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service
+console page in another AWS Region you will see access error messages.
 
 To obtain the values missing above, at your CLI type the following command that will provide the necessary values
 
@@ -130,13 +171,18 @@ aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 
 **DO NOT PUSH AWS CREDENTIALS TO YOUR PRIVATE REPOSITORY !!!**
 
-Next, create a **new Python 3.10 virtual environment** specially for this web app and install the packages required to run it.
+Next, create a **new Python 3.10 virtual environment** specially for this web app and install the packages required to
+run it.
 
-Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and its version, that it requires to be executed successfully.
+Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and
+its version, that it requires to be executed successfully.
 
-The package `boto3` is a library that hides de AWS REST API to the programmer and manages the communication between the web app and all the AWS services. Check [**Boto 3 Documentation**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
+The package `boto3` is a library that hides de AWS REST API to the programmer and manages the communication between the
+web app and all the AWS services. Check [**Boto 3 Documentation
+**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
 
-Please, note the different prompt  `(.env) _$`  vs. `_$` when you are inside or outside of the Python virtual environment.
+Please, note the different prompt  `(.env) _$`  vs. `_$` when you are inside or outside of the Python virtual
+environment.
 
 ```
 _$ virtualenv -p python3 ../.venv
@@ -159,13 +205,18 @@ Quit the server with CONTROL-C.
 (.venv)_$ deactivate
 ```
 
-Check that you have configured the access to DynamoDB correctly by interacting with the web app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+Check that you have configured the access to DynamoDB correctly by interacting with the web app through your
+browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
-Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
+Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the
+web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
 
-We are creating a new Python virtual environment locally only to keep the packages that the web app uses. Having a small Python environment implies a faster web app startup and avoids, as much as possible, any hidden dependencies and ambiguities.
+We are creating a new Python virtual environment locally only to keep the packages that the web app uses. Having a small
+Python environment implies a faster web app startup and avoids, as much as possible, any hidden dependencies and
+ambiguities.
 
-That Python virtual environment is re-created remotely by Docker through the use of the file *requirements.txt* and other configuration that you are going to set up later.
+That Python virtual environment is re-created remotely by Docker through the use of the file *requirements.txt* and
+other configuration that you are going to set up later.
 
 
 <p align="center"><img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="550"/></p>
@@ -173,8 +224,6 @@ That Python virtual environment is re-created remotely by Docker through the use
 <a name="Task54"/>
 
 ## Task 5.4: Configure Docker and deploy the target web app
-
-
 
 ### Test the Web App
 
@@ -312,9 +361,9 @@ Add the code below to *form/models.py* as a new operation of the model *Leads()*
 ```python
 def send_notification(self, email):
     sns = boto3.client('sns', region_name=AWS_REGION,
-                                      aws_access_key_id=AWS_ACCESS_KEY_ID,
-                                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                      aws_session_token=AWS_SESSION_TOKEN)
+                       aws_access_key_id=AWS_ACCESS_KEY_ID,
+                       aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                       aws_session_token=AWS_SESSION_TOKEN)
     try:
         sns.publish(
             TopicArn=NEW_SIGNUP_TOPIC,
@@ -361,8 +410,6 @@ SNS message sent.
 Now that the web app is working in your computer, commit the changes. Deploy the new version to your Docker
 environment and test that it works correctly. For that, you need to update the Elastinc Beanstalk Environment
 
-
-
 ```bash
 _$ eb setenv "NEW_SIGNUP_TOPIC=arn:aws:sns:us-east-1:YOUR-ACCOUNT-ID:gsg-signup-notifications"
 _$ eb printenv
@@ -375,15 +422,6 @@ Environment Variables:
      STARTUP_SIGNUP_TABLE = ccbda-signup-table
      NEW_SIGNUP_TOPIC = arn:aws:sns:us-east-1:YOUR-ACCOUNT-ID:gsg-signup-notifications
 ```
-
-
-
-
-
-
-
-
-
 
 **Q52: Has everything gone alright?** Add your answers to the `README.md` file in the responses repository.
 
@@ -444,10 +482,10 @@ values from the table.
 def get_leads(self, domain, preview):
     try:
         dynamodb = boto3.resource('dynamodb',
-                                      region_name=AWS_REGION,
-                                      aws_access_key_id=AWS_ACCESS_KEY_ID,
-                                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                      aws_session_token=AWS_SESSION_TOKEN)
+                                  region_name=AWS_REGION,
+                                  aws_access_key_id=AWS_ACCESS_KEY_ID,
+                                  aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                  aws_session_token=AWS_SESSION_TOKEN)
         table = dynamodb.Table('ccbda-signup-table')
     except Exception as e:
         logger.error(
@@ -491,15 +529,25 @@ runs in your computer.
 ```html
 
 <div class="collapse navbar-collapse" id="navbarResponsive">
-    <ul class="navbar-nav">
-        <li class="nav-item active"><a class="nav-link active" href="{% url 'form:home' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Press</a></li>
-    </ul>
-    <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'form:search' %}">Admin search</a></li>
-    </ul>
+	<ul class="navbar-nav">
+		<li class="nav-item active">
+			<a class="nav-link active" href="{% url 'form:home' %}">Home</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">About</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">Blog</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">Press</a>
+		</li>
+	</ul>
+	<ul class="nav navbar-nav ml-auto">
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'form:search' %}">Admin search</a>
+		</li>
+	</ul>
 </div>
 ```
 
@@ -543,6 +591,7 @@ Bootstrap 4 CSS, we are already using a CDN to retrieve the CSS and send it to t
 *maxcdn.bootstrapcdn.com* as their CDN distribution point.
 
 ```html
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 ```
 
@@ -551,8 +600,7 @@ following line just before closing the **head** HTML tag:
 
 ```html
 
-<link href="{% static 'custom.css' %}" rel="stylesheet">
-</head>
+<link href="{% static 'custom.css' %}" rel="stylesheet"></head>
 ```
 
 If you check the contents of the file *static/custom.css* you will see that it includes some images, also available in
@@ -680,8 +728,7 @@ access them using a CDN.
 
 ```html
 
-<link href="{% static 'custom.css' %}" rel="stylesheet">
-</head>
+<link href="{% static 'custom.css' %}" rel="stylesheet"></head>
 ```
 
 This should be the last step on the deployment of the web app and you can activate it only if the variable DEBUG is set
