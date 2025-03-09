@@ -1,8 +1,10 @@
 # Lab session 5: Deploy a custom web app using additional cloud services
 
+### Django: web framework
+
 [Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
 
-## AWS ECS: Elastic Container Service
+### AWS ECS: Elastic Container Service
 
 Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying, managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible solution for running workloads in the cloud or on-premises with Amazon ECS Anywhere.
 
@@ -28,7 +30,7 @@ To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobi
 
 ### AWS DynamoDB
 
-We are going to use **Amazon DynamoDB**, a NoSQL database service, to store the contact information that users submit.
+**Amazon DynamoDB**, a NoSQL database service, is going to be used to store the contact information that users submit.
 
 DynamoDB is a schema-less database, so you need to specify only a primary key attribute. Let us use the email field as a key for each register.
 
@@ -39,6 +41,8 @@ We want to know when customers submit a form, therefore we are going to use **AW
 ### AWS CloudFront CDN
 
 A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low latency, and high performance.
+
+![Lab05-CDN.png](images/Lab05-CDN.png)
 
 The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic" part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as possible to improve the "user experience".
 
