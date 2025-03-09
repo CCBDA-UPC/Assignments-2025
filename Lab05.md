@@ -78,7 +78,9 @@ If you need help with the installation, you can find detailed instructions on th
 ## Task 5.1: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
-as a *[zip file](ccbda-signup.zip)*. Unzip the file inside of your responses repository for the current Lab session, and change the name of the folder to *ccbda-signup*.
+as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to *ccbda-signup*.
+
+![Lab05-webapp-zip.png](images/Lab05-webapp-zip.png)
 
 
 <a name="Task52"/>
@@ -128,7 +130,7 @@ aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 
 **DO NOT PUSH AWS CREDENTIALS TO YOUR PRIVATE REPOSITORY !!!**
 
-Next, create a **new Python 3.10 virtual environment** specially for this web app and install the packages required to run it. (**MS-Windows OS** users read the note at the end of this section)
+Next, create a **new Python 3.10 virtual environment** specially for this web app and install the packages required to run it.
 
 Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and its version, that it requires to be executed successfully.
 
