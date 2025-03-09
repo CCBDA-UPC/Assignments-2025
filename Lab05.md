@@ -533,7 +533,6 @@ django-docker  | [2025-03-09 17:31:35 +0000] [7] [INFO] Booting worker with pid:
 django-docker  | [2025-03-09 17:31:35 +0000] [8] [INFO] Booting worker with pid: 8
 django-docker  | [2025-03-09 17:31:35 +0000] [9] [INFO] Booting worker with pid: 9
 
-
 v View in Docker Desktop   o View Config   w Enable Watch
 ```
 
@@ -544,7 +543,7 @@ This command will download any necessary Docker images, build the project, and s
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome page, indicating that your app is up and running. To verify the database connection, try running a migration:
 
 ```
-docker compose run django-web python manage.py migrate
+_% docker compose run django-web python manage.py migrate
 ```
 
 
@@ -568,8 +567,6 @@ To authorize your VS Code IDE Docker client, run the following command. Replace 
 ```bash
 _% aws ecr get-login-password --region us-east-1 --profile learning-lab | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 Login Succeeded
-
-aws ecr get-login-password --region us-east-1 --profile learning-lab  | docker login --username AWS --password-stdin 383312122003.dkr.ecr.us-east-1.amazonaws.com
 ```
 
 A message indicates that the login succeeded.
@@ -605,8 +602,6 @@ Run the following command. Replace <registry-id> with your actual registry ID nu
 
 ```
 _% docker tag django-webapp-web:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
-
-docker tag django-webapp-web:latest 248707822150.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
 ```
 
 The command does not provide a response.
@@ -629,9 +624,6 @@ To push your image to Amazon ECR, run the following command. Replace <registry-i
 ```bash
 
 _% docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
-
-docker push 248707822150.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
-
 ```
 The output is similar to the following:
 
@@ -699,7 +691,7 @@ link in the email to confirm your subscription.
 
 Do not forget that before testing the new functionality you need to have the AWS SNS subscription approved.
 
-<p align="center"><img src="./images/Lab05-2.png " alt="Confirmed" title="Confirmed"/></p>
+<img src="./images/Lab05-2.png " alt="Confirmed" title="Confirmed"/>
 
 Add the *unique identifier* for the AWS SNS topic to the configuration environment of your local deployment.
 
@@ -877,7 +869,7 @@ from the view controller and creates the HTML to show the results.
 Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8000/search*
 in your browser.
 
-<p align="center"><img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/></p>
+<img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/>
 
 To add the new option to the menu bar, simply edit the file *form/templates/generic.html*, go to line 28 and add the
 second navbar as shown below. Save the file and, with no further delay, check that you have it added in the version that
@@ -908,7 +900,7 @@ runs in your computer.
 </div>
 ```
 
-<p align="center"><img src="./images/Lab05-7.png " alt="Search" title="Search"/></p>
+<img src="./images/Lab05-7.png " alt="Search" title="Search"/>
 
 If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change
 whatever is necessary to make it work.
@@ -983,13 +975,13 @@ will not be allowed to create two buckets with the same name, regardless the own
 AWS has recently set some restrictions when creating an S3 bucket with public access. Make sure that you uncheck all the
 following options before uploading files. You can later check them back.
 
- <p align="center"><img src="./images/Lab06-S3-public-access.png" alt="S3 public access" title="S3 public access"/></p>
+ <img src="./images/Lab06-S3-public-access.png" alt="S3 public access" title="S3 public access"/>
 
- <p align="center"><img src="./images/Lab05-8.png " alt="S3 bucket" title="S3 bucket"/></p>
+ <img src="./images/Lab05-8.png " alt="S3 bucket" title="S3 bucket"/>
 
 This time add the files manually and grant them public read permission.
 
-  <p align="center"><img src="./images/Lab05-9.png " alt="S3 bucket" title="S3 bucket"/></p>
+  <img src="./images/Lab05-9.png " alt="S3 bucket" title="S3 bucket"/>
 
 You can also use AWS CLI to sync the contents of your static folder with that
 bucket. [Synchronize with your S3 bucket](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html) using the
@@ -1009,7 +1001,7 @@ access the contents of that URL, making the file public if it was not already.
 https://s3-us-east-1.amazonaws.com/eb-django-express-signup-YOUR-ID/CCBDA-Square.png
 ```
 
-<p align="center"><img src="./images/Lab05-12.png " alt="S3 address" title="S3 address"/></p>
+<img src="./images/Lab05-12.png " alt="S3 address" title="S3 address"/>
 
 ### Create a CloudFront CDN Web Distribution
 
@@ -1018,7 +1010,7 @@ at ["Getting Started with CloudFront CDN"](https://docs.aws.amazon.com/AmazonClo
 we end up having to wait until the files are distributed. It takes five minutes or more, be patient. Once the first
 distribution is set up, whenever you resync your static contents it will take much less.
 
- <p align="center"><img src="./images/Lab05-10.png " alt="CloudFront CDN distribution" title="CloudFront CDN distribution"/></p>
+ <img src="./images/Lab05-10.png " alt="CloudFront CDN distribution" title="CloudFront CDN distribution"/>
 
 ### Change the code and test your links
 
@@ -1038,7 +1030,7 @@ setup, we will use a URL from our domain, something like *static.mydomain.com* t
 Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
 Google Chrome and check the origin of the files that you are loading (attach a screen shot similar to the one below)**:
 
- <p align="center"><img src="./images/Lab05-11.png " alt="Files loaded" title="Files loaded"/></p>
+ <img src="./images/Lab05-11.png " alt="Files loaded" title="Files loaded"/>
 
 **Q56: How long have you been working on this session (including the optional part)? What have been the main
 difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
