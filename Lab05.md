@@ -465,9 +465,7 @@ You could use docker init as a command to generate the Dockerfile and compose.ym
 
 ### Configure the Docker Compose file
 
-A `compose.yml` file allows you to manage multi-container applications. Here, we’ll define both a Django container and a PostgreSQL database container.
-
-The compose file makes use of the `.env` file. The environment variables listed here are standard for most applications:
+A `compose.yml` file allows you to manage multi-container applications. Here, we’ll define both a Django container and a PostgreSQL database container. The compose file makes use of the `.env` file. 
 
 ```yaml
 services:
