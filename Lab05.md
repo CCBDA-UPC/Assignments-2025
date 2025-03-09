@@ -108,11 +108,11 @@ If you need help with the installation, you can find detailed instructions on th
 ## Task 5.1: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
-as a *[zip file](ccbda-signup.zip)*. Unzip the file inside your responses repository for the current Lab session, and
-change the name of the folder to *ccbda-signup*.
+as a **zip file**. 
 
 <img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
 
+Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to **django-webapp*.
 
 <a name="Task52"/>
 
@@ -212,7 +212,7 @@ That Python virtual environment is re-created remotely by Docker through the use
 other configuration that you are going to set up later.
 
 
-<p align="center"><img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="550"/></p>
+<img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="550"/>
 
 <a name="Task54"/>
 
