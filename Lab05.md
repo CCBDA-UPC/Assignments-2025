@@ -6,7 +6,7 @@
 clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
 to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
 
-## Deploying an example Web App Using Docker
+## Deploying an example Web App
 
 We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
 yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website
