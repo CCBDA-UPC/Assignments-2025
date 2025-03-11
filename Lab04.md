@@ -833,8 +833,9 @@ print(json.dumps(labels_list, indent=4))
   }
 }
 ```
+Compare the JSON output with the result of the console demo, in particular the values of "BoundingBox" and "Confidence".
 
-**Q422 Compare the JSON output with the result of the console demo, in particular the values of "BoundingBox" and "Confidence".** 
+**Q422  Share your thoughts about what you have found out.** 
 
 <a name="Tasks43"/>
 

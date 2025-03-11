@@ -1076,18 +1076,6 @@ command `python manage.py collectstatic`.
 
 # How to submit this assignment:
 
-Use the **private** repo named *https://github.com/CCBDA-UPC/2025-5-xx*. It needs to have, at least, two
-files `README.md` with your responses to the above questions and `authors.json` with both members email addresses:
-
-```json5
-{
-  "authors": [
-    "FIRSTNAME1.LASTNAME1@estudiantat.upc.edu",
-    "FIRSTNAME2.LASTNAME2@estudiantat.upc.edu"
-  ]
-}
-```
-
 1. Create some screen captures of your:
 
 - DyanmoDB table with the data of the new leads.
@@ -1095,14 +1083,7 @@ files `README.md` with your responses to the above questions and `authors.json` 
 
 2. Add any comment that you consider necessary at the end of the 'README.md' file
 
-Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with
-all the files generated during this session.
 
-Commit the `README.md` file to your **responses repository** and commit all changes to the **web app repository**. Do
-not mix the repository containing the course answers with the repository that holds the changes to your web app.
+Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with all the files generated during this session. 
 
-Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with
-all the files generated during this session.
-
-**Before the deadline**, all team members shall push their responses to their private
-*https://github.com/CCBDA-UPC/2025-5-xx* repository.
+**Before the deadline**, all team members shall push their responses to their private *https://github.com/CCBDA-UPC/2024-5-xx* repository.
