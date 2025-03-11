@@ -834,7 +834,7 @@ print(json.dumps(labels_list, indent=4))
 }
 ```
 
-**Q422 Add your thoughts about the above tasks.** 
+**Q422 Compare the JSON output with the result of the console demo, in particular the values of "BoundingBox" and "Confidence".** 
 
 <a name="Tasks43"/>
 
