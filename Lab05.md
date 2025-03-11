@@ -6,29 +6,6 @@
 clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
 to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
 
-### AWS ECS: Elastic Container Service
-
-Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
-managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
-solution for running workloads in the cloud or on-premises with Amazon ECS Anywhere.
-
-Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
-
-- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
-  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
-  different systems and servers, making local development, testing, and deployment more reliable.
-
-- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
-  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
-  compatibility issues.
-
-- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
-  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
-
-- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
-  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
-  integrate and deploy changes.
-
 ## Deploying an example Web App Using Docker
 
 We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
@@ -108,11 +85,12 @@ If you need help with the installation, you can find detailed instructions on th
 ## Task 5.1: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
-as a **zip file**. 
+as a **zip file**.
 
 <img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
 
-Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to **django-webapp*.
+Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to *
+*django-webapp*.
 
 <a name="Task52"/>
 
@@ -148,14 +126,14 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 ```
 
-
-
 **DO NOT PUSH AWS CREDENTIALS TO YOUR PRIVATE REPOSITORY !!!**
 
 Next, create a **new Python 3.10 virtual environment** specially for this web app and install the packages required to
 run it.
 
-We are creating a new Python virtual environment locally only to keep the packages that the web app uses. Having a small Python environment implies a faster web app startup avoiding, as much as possible, any hidden dependencies and ambiguities.
+We are creating a new Python virtual environment locally only to keep the packages that the web app uses. Having a small
+Python environment implies a faster web app startup avoiding, as much as possible, any hidden dependencies and
+ambiguities.
 
 Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and
 its version, that it requires to be executed successfully.
@@ -187,25 +165,31 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 (.venv)_$ deactivate
 ```
+
 You can also create a PyCharm configuration tu run or debug the code.
 
 <img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="80%"/>
 
-Once the web app is running, check that you have configured the access to DynamoDB correctly by interacting with the web app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+Once the web app is running, check that you have configured the access to DynamoDB correctly by interacting with the web
+app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 
-Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
+Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the
+web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
 
-The Python virtual environment will be re-created remotely by Docker through the use of the file *requirements.txt* and other configuration that you are going to set up later.
+The Python virtual environment will be re-created remotely by Docker through the use of the file *requirements.txt* and
+other configuration that you are going to set up later.
 
 <a name="Task54"/>
 
 ## Task 5.4: Configure Docker and deploy the target web app
 
-In this task, you will migrate the web application to run in a Docker container. The Docker container is portable and could run on any OS that has the Docker engine installed.
+In this task, you will migrate the web application to run in a Docker container. The Docker container is portable and
+could run on any OS that has the Docker engine installed.
 
 ### Create a Dockerfile
 
-A Dockerfile is a script that tells Docker how to build your Docker image. Put it in the root directory of your Django project. Here’s a basic Dockerfile setup for Django:
+A Dockerfile is a script that tells Docker how to build your Docker image. Put it in the root directory of your Django
+project. Here’s a basic Dockerfile setup for Django:
 
 ```dockerfile
 # Use the official Python runtime image
@@ -254,11 +238,12 @@ Each line in the Dockerfile serves a specific purpose:
 
 - **EXPOSE** and **CMD**: Expose the Django server port and define the startup command.
 
-Go to your Docker Desktop and open the terminal, move to the directory where the web application is stored and build the docker image.
+Go to your Docker Desktop and open the terminal, move to the directory where the web application is stored and build the
+docker image.
 
 ```bash
-_% cd django-webapp               
-_% docker build -t django-docker .
+_$ cd django-webapp               
+_$ docker build -t django-docker .
 [+] Building 46.9s (13/13) FINISHED                                                                 docker:desktop-linux
  => [internal] load build definition from Dockerfile                                                                0.0s
  => => transferring dockerfile: 837B                                                                                0.0s
@@ -303,20 +288,20 @@ View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux
 
 What's next:
     View a summary of image vulnerabilities and recommendations → docker scout quickview 
-_% 
+_$ 
 ```
-
 
 To see your image, you can run:
 
-
 ```bash 
-_% docker image list
+_$ docker image list
 REPOSITORY                 TAG       IMAGE ID       CREATED         SIZE
 django-docker              latest    ce7ad84af491   4 minutes ago   1.71GB
 docker/welcome-to-docker   latest    eedaff45e3c7   16 months ago   29.5MB
 ```
-Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it ready for production.
+
+Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
+ready for production.
 
 - The CMD manage.py is only meant for development purposes and should be changed for a WSGI server.
 - Reduce the size of the image by using a smaller image.
@@ -326,7 +311,8 @@ Let’s get started with these improvements.
 
 ### Update requirements.txt
 
-Make sure to add `gunicorn` and `psycopg2-binary` to your `requirements.txt`. The updated file  should include something like this:
+Make sure to add `gunicorn` and `psycopg2-binary` to your `requirements.txt`. The updated file should include something
+like this:
 
 ```text
 gunicorn==23.0.0
@@ -338,8 +324,13 @@ psycopg2-binary==2.9.10
 
 The Dockerfile below has changes that solve the three items on the list. The changes to the file are as follows:
 
-- Updated the FROM python:3.10 image to FROM python:3.10.16-slim. This change reduces the size of the image considerably, as the image now only contains what is needed to run the application.
-- Added a multi-stage build process to the Dockerfile. When you build applications, there are usually many files left on the file system that are only needed during build time and are not needed once the application is built and running. By adding a build stage, you use one image to build the application and then move the built files to the second image, leaving only the built code. Read more about [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) in the documentation.
+- Updated the FROM python:3.10 image to FROM python:3.10.16-slim. This change reduces the size of the image
+  considerably, as the image now only contains what is needed to run the application.
+- Added a multi-stage build process to the Dockerfile. When you build applications, there are usually many files left on
+  the file system that are only needed during build time and are not needed once the application is built and running.
+  By adding a build stage, you use one image to build the application and then move the built files to the second image,
+  leaving only the built code. Read more about [multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
+  in the documentation.
 - Add the Gunicorn WSGI server to the server to enable a production-ready deployment of the application.
 
 ```dockerfile
@@ -399,7 +390,7 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "my_docker_django_a
 Build the Docker container image again.
 
 ```bash
-_% docker build -t django-docker .
+_$ docker build -t django-docker .
 [+] Building 17.1s (17/17) FINISHED                                                                 docker:desktop-linux
  => [internal] load build definition from Dockerfile                                                                0.0s
  => => transferring dockerfile: 1.31kB                                                                              0.0s
@@ -439,7 +430,7 @@ What's next:
 After making these changes, we can run a docker image list again:
 
 ```text
-_% docker image list   
+_$ docker image list   
 REPOSITORY                 TAG       IMAGE ID       CREATED          SIZE
 django-docker              latest    e9bb759c1f1a   About a minute ago   472MB
 docker/welcome-to-docker   latest    eedaff45e3c7   16 months ago        29.5MB
@@ -447,33 +438,37 @@ docker/welcome-to-docker   latest    eedaff45e3c7   16 months ago        29.5MB
 
 You can see a significant improvement in the size of the container.
 
-The size was reduced from 1.71GB to 472MB, which leads to faster a deployment process when images are downloaded and cheaper storage costs when storing images.
+The size was reduced from 1.71GB to 472MB, which leads to faster a deployment process when images are downloaded and
+cheaper storage costs when storing images.
 
-You could use docker init as a command to generate the Dockerfile and compose.yml file for your application to get you started.
+You could use docker init as a command to generate the Dockerfile and compose.yml file for your application to get you
+started.
 
 ### Configure the Docker Compose file
 
-A `compose.yml` file allows you to manage multi-container applications. Here, we’ll define both a Django container and a PostgreSQL database container. The compose file makes use of the `.env` file. 
+A `compose.yml` file allows you to manage multi-container applications. Here, we’ll define both a Django container and a
+PostgreSQL database container. The compose file makes use of the `.env` file.
 
 ```yaml
 services:
- django-web:
-   build: .
-   container_name: django-docker
-   ports:
-     - "8000:8000"
-   depends_on:
-     - db
-   environment:
-     DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-     DEBUG: ${DEBUG}
-     DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
-     DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
-   env_file:
-     - .env
+  django-web:
+    build: .
+    container_name: django-docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DEBUG: ${DEBUG}
+      DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+    env_file:
+      - .env
 ```
 
 ### Build and run your new Django project
+
 To build and start your containers, run:
 
 ```bash
@@ -524,19 +519,22 @@ django-docker  | [2025-03-09 17:31:35 +0000] [9] [INFO] Booting worker with pid:
 v View in Docker Desktop   o View Config   w Enable Watch
 ```
 
-This command will download any necessary Docker images, build the project, and start the containers. Once complete, your Django application should be accessible at http://localhost:8000.
+This command will download any necessary Docker images, build the project, and start the containers. Once complete, your
+Django application should be accessible at http://localhost:8000.
 
 ### Test and access your application
 
-Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome page, indicating that your app is up and running. To verify the database connection, try running a migration:
+Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
+page, indicating that your app is up and running. To verify the database connection, try running a migration:
 
 ```
-_% docker compose run django-web python manage.py migrate
+_$ docker compose run django-web python manage.py migrate
 ```
-
 
 ### Adding the Docker images to Amazon ECR
-In this task you will add the Docker images that you created to an Amazon Elastic Container Registry (Amazon ECR) repository.
+
+In this task you will add the Docker images that you created to an Amazon Elastic Container Registry (Amazon ECR)
+repository.
 
 Authorize your Docker client to connect to the Amazon ECR service.
 
@@ -550,10 +548,11 @@ Copy the My Account value from the menu. This is your AWS account ID.
 
 Next, return to the VS Code IDE Bash terminal.
 
-To authorize your VS Code IDE Docker client, run the following command. Replace `<account-id>` with the actual account ID that you just found:
+To authorize your VS Code IDE Docker client, run the following command. Replace `<account-id>` with the actual account
+ID that you just found:
 
 ```bash
-_% aws ecr get-login-password --region us-east-1 --profile learning-lab | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+_$ aws ecr get-login-password --region us-east-1 --profile learning-lab | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 Login Succeeded
 ```
 
@@ -562,14 +561,14 @@ A message indicates that the login succeeded.
 To create the repository, run the following command:
 
 ```bash
-_% aws ecr create-repository --repository-name django-webapp-web --profile learning-lab --region us-east-1
+_$ aws ecr create-repository --region us-east-1 --profile learning-lab --repository-name django-webapp-web
 {
     "repository": {
-        "repositoryArn": "arn:aws:ecr:us-east-1:248707822150:repository/django-webapp-web",
-        "registryId": "248707822150",
+        "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-web",
+        "registryId": "383312122003",
         "repositoryName": "django-webapp-web",
-        "repositoryUri": "248707822150.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web",
-        "createdAt": "2025-03-09T19:19:52.741000+01:00",
+        "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web",
+        "createdAt": "2025-03-11T19:34:44.374000+01:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
             "scanOnPush": false
@@ -578,80 +577,130 @@ _% aws ecr create-repository --repository-name django-webapp-web --profile learn
 }
 ```
 
-The response data is in JSON format and includes a repositoryArn value. This is the URI that you would use to reference your image for future deployments.
+The response data is in JSON format and includes a repositoryArn value. This is the URI that you would use to reference
+your image for future deployments.
 
 The response also includes a registryId, which you will use in a moment.
 
 ### Tag the Docker image.
 
-In this step, you will tag the image with your unique registryId value to make it easier to manage and keep track of this image.
+In this step, you will tag the image with your unique registryId value to make it easier to manage and keep track of
+this image.
 
 Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_% docker tag django-webapp-web:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
+_$ docker tag django-webapp-web:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
 ```
 
 The command does not provide a response.
 
 To verify that the tag was applied, run the following command:
+
 ```bash
-_% docker images
-django-webapp-web                                                latest    267825271330   50 minutes ago   472MB
-248707822150.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web   latest    267825271330   50 minutes ago   472MB
-django-docker                                                    latest    76fe7cceb54c   52 minutes ago   472MB
-docker/welcome-to-docker                                         latest    eedaff45e3c7   16 months ago    29.5MB
+_$ docker images
+REPOSITORY                                                       TAG       IMAGE ID       CREATED         SIZE
+383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web   latest    267825271330   50 minutes ago      472MB
+django-webapp-web                                                latest    267825271330   50 minutes ago      472MB
+django-docker                                                    latest    76fe7cceb54c   50 minutes ago      472MB
+docker/welcome-to-docker                                         latest    eedaff45e3c7   16 months ago      29.5MB
 ```
 
-This time, notice that the latest tag was applied and the image name includes the remote repository name where you intend to store it.
+This time, notice that the latest tag was applied and the image name includes the remote repository name where you
+intend to store it.
 
 ### Push the Docker image to the Amazon ECR repository.
 
 To push your image to Amazon ECR, run the following command. Replace <registry-id> with your actual registry ID number:
 
 ```bash
-
-_% docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
+_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
+The push refers to repository [383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web]
+4b785e93aa71: Pushed 
+be1449717b1e: Pushed 
+ff1399ac0930: Pushed 
+7cf63256a31a: Pushed 
+dac1d3453b30: Pushed 
+e1599d0f5c4d: Pushed 
+8b6fcbaf930d: Pushed 
+000e068808cd: Pushed 
+latest: digest: sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df size: 856
 ```
-The output is similar to the following:
 
-The push refers to repository [642015801240.dkr.ecr.us-east-1.amazonaws.com/node-app]
-006e0ec54dba: Pushed
-59762f95cb06: Pushed
-22736f780b31: Pushed
-d81d715330b7: Pushed
-1dc7f3bb09a4: Pushed
-dcaceb729824: Pushed
-f1b5933fe4b5: Pushed
-latest: digest: sha256:f75b60adddb8d6343b9dff690533a1cd1fbb34ccce6f861e84c857ba7a27b77d size: 1783
- 
+To confirm that the django-webapp-web image is now stored in Amazon ECR, run the following aws ecr list-images command:
 
-To confirm that the node-app image is now stored in Amazon ECR, run the following aws ecr list-images command:
-
-aws ecr list-images --repository-name node-app
-The command returns information about the image that you just uploaded. The output is similar to the following:
-
+```bash
+_$ aws ecr list-images --region us-east-1 --profile learning-lab --repository-name django-webapp-web
 {
-  "imageIds": [
-    {
-      "imageDigest": "sha256:f75b60adddb8d6343b9dff690533a1cd1fbb34ccce6f861e84c857ba7a27b77d",
-      "imageTag": "latest"
-     }
-   ]
+    "imageIds": [
+        {
+            "imageDigest": "sha256:f7148ebbf59e9d417787189935b5b1db8f2de609a2bfbde559a13fed2125fc09"
+        },
+        {
+            "imageDigest": "sha256:15d7d9cbdd1c90804fc4beea182006d6212497d936182a5c19e3b52ca24932e6"
+        },
+        {
+            "imageDigest": "sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df",
+            "imageTag": "latest"
+        }
+    ]
 }
- 
+```
 
+You can also find more details about the repositories that you have created.
 
+```bash
+_$ aws ecr --region us-east-1 --profile learning-lab describe-repositories
+{
+    "repositories": [
+        {
+            "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-web",
+            "registryId": "383312122003",
+            "repositoryName": "django-webapp-web",
+            "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web",
+            "createdAt": "2025-03-09T19:34:44.374000+01:00",
+            "imageTagMutability": "MUTABLE",
+            "imageScanningConfiguration": {
+                "scanOnPush": false
+            }
+        }
+    ]
+}
+```
 
+And information about the images of the repository.
 
-**Q51b: What has happened? Why do you think that has happened?** Check both EC2 and EB consoles. Add your responses
-to `README.md`.
-
-**Q51c: Can you terminate the application using the command line? What is the command? if it exists.**
-
-**Q51d: What parameters have you added to the `eb create` command to create your environment? Explain why you have
-selected each parameter.**
-
+```bash
+_$ aws ecr --region us-east-1 --profile learning-lab describe-images --repository-name django-webapp-web 
+{
+    "imageDetails": [
+        {
+            "registryId": "383312122003",
+            "repositoryName": "django-webapp-web",
+            "imageDigest": "sha256:f7148ebbf59e9d417787189935b5b1db8f2de609a2bfbde559a13fed2125fc09",
+            "imageSizeInBytes": 1347,
+            "imagePushedAt": "2025-03-09T19:36:55.306000+01:00"
+        },
+        {
+            "registryId": "383312122003",
+            "repositoryName": "django-webapp-web",
+            "imageDigest": "sha256:15d7d9cbdd1c90804fc4beea182006d6212497d936182a5c19e3b52ca24932e6",
+            "imageSizeInBytes": 107561397,
+            "imagePushedAt": "2025-03-09T19:36:55.302000+01:00"
+        },
+        {
+            "registryId": "383312122003",
+            "repositoryName": "django-webapp-web",
+            "imageDigest": "sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df",
+            "imageTags": [
+                "latest"
+            ],
+            "imageSizeInBytes": 107561397,
+            "imagePushedAt": "2025-03-09T19:36:55.949000+01:00"
+        }
+    ]
+}
+```
 
 <a name="Tasks55" />
 
@@ -1083,7 +1132,8 @@ command `python manage.py collectstatic`.
 
 2. Add any comment that you consider necessary at the end of the 'README.md' file
 
+Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with
+all the files generated during this session.
 
-Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with all the files generated during this session. 
-
-**Before the deadline**, all team members shall push their responses to their private *https://github.com/CCBDA-UPC/2024-5-xx* repository.
+**Before the deadline**, all team members shall push their responses to their private
+*https://github.com/CCBDA-UPC/2024-5-xx* repository.
