@@ -246,8 +246,11 @@ aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 If the file does not contain the credentials use the second method.
 
 ##### Use AWS Details
+Click on `AWS Details` to have the window below shown.
 
 <img alt="Lab04-aws-details1.png" src="images/Lab04-aws-details1.png" width="50%"/>
+
+Click on the button `Show` next to `AWS CLI`. Copy the values.
 
 <img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%"/>
 
