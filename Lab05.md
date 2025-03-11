@@ -84,7 +84,8 @@ If you need help with the installation, you can find detailed instructions on th
 
 ## Task 5.1: Download the code for the Web App
 
-You are going to make a few changes to the base Python code. Therefore, download the repository on your local disk drive
+You are going to make a few changes to the base Python code. Therefore, download
+the [repository](https://github.com/CCBDA-UPC/django-webapp) on your local disk drive
 as a **zip file**.
 
 <img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
