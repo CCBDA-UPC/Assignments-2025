@@ -55,9 +55,9 @@ Content owners pay CDN operators to deliver the content that they produce to the
 Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
 
 **AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
-speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation, **AWS S3
-**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run custom code
-close to final viewers.
+speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
+**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
+custom code close to final viewers.
 
 ## Prerequisites
 
