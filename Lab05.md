@@ -590,7 +590,7 @@ page, indicating that your app is up and running. To verify the database connect
 _$ docker compose run django-web python manage.py migrate
 ```
 
-**Q55: Share your thoughts on the task developed above.** 
+**Q55: Share your thoughts on the task developed above.**
 
 # How to submit this assignment:
 
