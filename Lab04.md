@@ -835,53 +835,54 @@ print(json.dumps(labels_list, indent=4))
 }
 ```
 
-Commit the Python file to the session repo, add the image file [`sample.jpg`](../images/Lab04-sampleimage.jpg) and push them both it. At the AWS console pull the code and execute it.
-
-```bash
-_$ git pull
-_$ python Recognize_1.py
-{
-    "Labels": [
-        {
-            "Name": "Crowd",
-            "Confidence": 99.99995422363281,
-            "Instances": [],
-            "Parents": [
-                {
-                    "Name": "Person"
-                }
-            ],
-            "Aliases": [],
-            "Categories": [
-                {
-                    "Name": "Person Description"
-                }
-            ]
-        },
-        {
-            "Name": "Person",
-            "Confidence": 99.99995422363281,
-            "Instances": [
-                {
-                    "BoundingBox": {
-                        "Width": 0.12894393503665924,
-                        "Height": 0.35750454664230347,
-                        "Left": 0.4808120131492615,
-                        "Top": 0.3740279972553253
-                    },
-                    "Confidence": 99.70088958740234
-                },
-...
-```
 **Q422 Add your thoughts about the above task.** 
 
 <a name="Tasks43"/>
 
 ## Task 4.3: Get insights of website images using AWS Rekognition
 
-Using the code above build a Python application that obtains some insights out of website images. You are free to use any AWS Rekognition functionality.
+Using the code in the prevous sections build a Python application that obtains some insights out of website images. You are free to use any AWS Rekognition functionality.
 
 You may want to use the [requests](https://pypi.org/project/requests/) Python library to interact with the images.
+
+You may also want to create an AWS S3 Bucket to [store the images](./S3.py), depending on the AWS Rekognition functionality. The example below considers that the bucket `lab04-main.ccbda.upc.edu` already exists. Remember that AWS S3 buckets **must** have a globally unique name.
+
+```python
+import boto3
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Define the name of the S3 bucket
+BUCKET = 'lab04-main.ccbda.upc.edu'
+
+# Create an S3 client using boto3 and credentials loaded from environment variables
+s3 = boto3.client(
+    's3',  # Specify that it is an S3 client
+    region_name=os.getenv('AWS_REGION'),
+    aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+    aws_session_token=os.getenv('AWS_SESSION_TOKEN')
+)
+
+# Specify the name of the object to be uploaded to S3
+objectName = 'sample_image.jpg'
+
+# Open the file located at './images/Lab04-sampleImage.jpeg' in binary read mode
+with open('./images/Lab04-sampleImage.jpeg', 'rb') as fd:
+    # Read the content of the file as binary data
+    image = fd.read()
+    # Upload the binary data (image) to the specified S3 bucket with the given object name
+    s3.put_object(Bucket=BUCKET, Body=image, Key=objectName)
+
+# Open (or create) a file named 'downloaded.jpeg' in binary write mode to save the downloaded object
+with open('./downloaded.jpeg', 'wb') as fd:
+    # Retrieve the object from the S3 bucket using its key
+    response = s3.get_object(Bucket=BUCKET, Key=objectName)
+    # Write the content of the downloaded object to the local file
+    fd.write(response['Body'].read())
+```
 
 **Q431 What is the goal of your application?**
 
