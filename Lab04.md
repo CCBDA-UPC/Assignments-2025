@@ -224,12 +224,6 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ### Create a Python script that sends an image to AWS Rekognition and retrieves the analysis
 
-Using the "AWS Academy Learner Lab" AWS console it is only possible to execute Python code in the browser terminal of the environment.
-
-Currently, the terminal shown in the screenshot above includes Python 3.7 which is incompatible with the boto3 version. You can also obtain a terminal by clicking on the icon shown in blue in the screenshot below.
-
-![Lab04-terminal.png](images/Lab04-terminal.png)
-
 #### Obtain the AWS credentials
 
 All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless
