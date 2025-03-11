@@ -230,39 +230,31 @@ Currently, the terminal shown in the screenshot above includes Python 3.7 which 
 
 ![Lab04-terminal.png](images/Lab04-terminal.png)
 
+#### Obtain the AWS credentials
 
-#### Create a Personal Access Token on GitHub
+All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless
+mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service
+console page in another AWS Region you will see access error messages.
 
-From your GitHub account, 
+##### List the contents of the configuration file
 
-1. go to Settings 
-2. Developer Settings 
-3. Personal Access Token 
-4. Generate New Token (Classic)
-5. Fillup the form 
-6. Click full control of private repositories
-7. Click Generate token
-8. Copy the generated Token, it will be something like ``ghp_sFhFsSHhTzMDreGRLjmks4Tzuzgthdvfsrta``
+At your CLI type the following command that will provide the necessary values
 
-Keep the token in a safe place, such as a password manager, for future use.
+````bash
+ddd_v1_w_3cWf_628331@runweb75472:~$ cat $HOME/.aws/credentials
+[default]
+aws_access_key_id = <YOUR-ACCESS-KEY-ID>
+aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
+aws_session_token = <YOUR-AWS-SESSION-TOKEN>
+````
+If the file does not contain the credentials use the second method.
 
+##### Use AWS Details
 
-#### Clone your repository
+<img alt="Lab04-aws-details1.png" src="images/Lab04-aws-details1.png" width="50%"/>
 
-Use the following command to clone your repository inside the AWS command line environment. For the password use the Personal Access Token created before.
+<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%"/>
 
-```bash
-_$ git clone https://github.com/CCBDA-UPC/2025-4-XX.git Lab4
-Cloning into 'Lab4'...
-Username for 'https://github.com': YOUR@EMAIL.COM
-Password for 'https://YOUR@EMAIL.COM@github.com': ghp_sFhFsSHhTzMDreGRLjmks4Tzuzgthdvfsrta
-remote: Enumerating objects: 9, done.
-remote: Counting objects: 100% (9/9), done.
-remote: Compressing objects: 100% (7/7), done.
-remote: Total 9 (delta 1), reused 3 (delta 0), pack-reused 0
-Unpacking objects: 100% (9/9), done.
-Checking connectivity... done.
-```
 
 #### Add a script to interact with AWS Comprehend
 
@@ -271,13 +263,576 @@ Use the code in [`Recognize_1.py`](Recognize_1.py) which uses the [boto3 library
 ```python
 import boto3
 import json
+import os
+from dotenv import load_dotenv
 
-with open('sample.jpeg', 'rb') as fd:
+load_dotenv()
+
+with open('./images/Lab04-sampleImage.jpeg', 'rb') as fd:
     image = fd.read()
 
-recognize = boto3.client('rekognition')
+recognize = boto3.client('rekognition',
+                         region_name=os.getenv('AWS_REGION'),
+                         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+                         aws_session_token=os.getenv('AWS_SESSION_TOKEN'))
 labels_list = recognize.detect_labels(Image={'Bytes': image}, MaxLabels=10, MinConfidence=70)
 print(json.dumps(labels_list, indent=4))
+```
+
+```json
+{
+  "Labels": [
+    {
+      "Name": "Crowd",
+      "Confidence": 99.99995422363281,
+      "Instances": [],
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    },
+    {
+      "Name": "Person",
+      "Confidence": 99.99995422363281,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.12894393503665924,
+            "Height": 0.35750454664230347,
+            "Left": 0.4808120131492615,
+            "Top": 0.3740279972553253
+          },
+          "Confidence": 99.70088958740234
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.11610560119152069,
+            "Height": 0.4229159355163574,
+            "Left": 0.0818672701716423,
+            "Top": 0.2698194086551666
+          },
+          "Confidence": 99.66973876953125
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.21254201233386993,
+            "Height": 0.37966635823249817,
+            "Left": 0.7135862112045288,
+            "Top": 0.40775251388549805
+          },
+          "Confidence": 99.6224136352539
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1125546246767044,
+            "Height": 0.32264119386672974,
+            "Left": 0.27944132685661316,
+            "Top": 0.3795841634273529
+          },
+          "Confidence": 99.5901870727539
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1910828799009323,
+            "Height": 0.30100688338279724,
+            "Left": 0.20694220066070557,
+            "Top": 0.6622647047042847
+          },
+          "Confidence": 99.55730438232422
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.18923720717430115,
+            "Height": 0.3014851212501526,
+            "Left": 0.39241740107536316,
+            "Top": 0.6974440217018127
+          },
+          "Confidence": 98.555419921875
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.22100703418254852,
+            "Height": 0.281598836183548,
+            "Left": 0.5547536611557007,
+            "Top": 0.7183756232261658
+          },
+          "Confidence": 98.39226531982422
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.2582959532737732,
+            "Height": 0.2904464602470398,
+            "Left": 0.6936929821968079,
+            "Top": 0.7093237042427063
+          },
+          "Confidence": 98.30375671386719
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.15318384766578674,
+            "Height": 0.30458614230155945,
+            "Left": 0.7919331192970276,
+            "Top": 0.6382029056549072
+          },
+          "Confidence": 97.72750091552734
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.13399796187877655,
+            "Height": 0.2561280429363251,
+            "Left": 0.6102837324142456,
+            "Top": 0.611282229423523
+          },
+          "Confidence": 97.62276458740234
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.14009936153888702,
+            "Height": 0.15651848912239075,
+            "Left": 0.17773200571537018,
+            "Top": 0.618211567401886
+          },
+          "Confidence": 95.98444366455078
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.14211870729923248,
+            "Height": 0.179799884557724,
+            "Left": 0.03909475356340408,
+            "Top": 0.5740248560905457
+          },
+          "Confidence": 95.24139404296875
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1584833562374115,
+            "Height": 0.29877763986587524,
+            "Left": 0.0796993225812912,
+            "Top": 0.700888454914093
+          },
+          "Confidence": 95.08063507080078
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.16035592555999756,
+            "Height": 0.2708810567855835,
+            "Left": 0.0003941879840567708,
+            "Top": 0.7290992140769958
+          },
+          "Confidence": 92.44922637939453
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.035537686198949814,
+            "Height": 0.07679184526205063,
+            "Left": 0.01201602816581726,
+            "Top": 0.6788983941078186
+          },
+          "Confidence": 84.72416687011719
+        }
+      ],
+      "Parents": [],
+      "Aliases": [
+        {
+          "Name": "Human"
+        }
+      ],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    },
+    {
+      "Name": "Audience",
+      "Confidence": 99.96797943115234,
+      "Instances": [],
+      "Parents": [
+        {
+          "Name": "Crowd"
+        },
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Performing Arts"
+        }
+      ]
+    },
+    {
+      "Name": "Chair",
+      "Confidence": 99.93281555175781,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.14681798219680786,
+            "Height": 0.2093701958656311,
+            "Left": 0.4752836525440216,
+            "Top": 0.5199379920959473
+          },
+          "Confidence": 99.93281555175781
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.153163880109787,
+            "Height": 0.17988941073417664,
+            "Left": 0.24217256903648376,
+            "Top": 0.55253666639328
+          },
+          "Confidence": 99.77008819580078
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.14017456769943237,
+            "Height": 0.08491340279579163,
+            "Left": 0.7451263666152954,
+            "Top": 0.9150865077972412
+          },
+          "Confidence": 97.67218780517578
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.15577459335327148,
+            "Height": 0.2323492467403412,
+            "Left": 0.7789000868797302,
+            "Top": 0.5389119982719421
+          },
+          "Confidence": 97.0833740234375
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.06615076959133148,
+            "Height": 0.08635266125202179,
+            "Left": 0.6475703716278076,
+            "Top": 0.8072365522384644
+          },
+          "Confidence": 75.36813354492188
+        }
+      ],
+      "Parents": [
+        {
+          "Name": "Furniture"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Furniture and Furnishings"
+        }
+      ]
+    },
+    {
+      "Name": "Microphone",
+      "Confidence": 99.73712921142578,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.04608222842216492,
+            "Height": 0.05529649555683136,
+            "Left": 0.07135389000177383,
+            "Top": 0.3253592550754547
+          },
+          "Confidence": 99.73712921142578
+        }
+      ],
+      "Parents": [
+        {
+          "Name": "Electrical Device"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Technology and Computing"
+        }
+      ]
+    },
+    {
+      "Name": "Adult",
+      "Confidence": 99.70088958740234,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.12894393503665924,
+            "Height": 0.35750454664230347,
+            "Left": 0.4808120131492615,
+            "Top": 0.3740279972553253
+          },
+          "Confidence": 99.70088958740234
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.11610560119152069,
+            "Height": 0.4229159355163574,
+            "Left": 0.0818672701716423,
+            "Top": 0.2698194086551666
+          },
+          "Confidence": 99.66973876953125
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.21254201233386993,
+            "Height": 0.37966635823249817,
+            "Left": 0.7135862112045288,
+            "Top": 0.40775251388549805
+          },
+          "Confidence": 99.6224136352539
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1910828799009323,
+            "Height": 0.30100688338279724,
+            "Left": 0.20694220066070557,
+            "Top": 0.6622647047042847
+          },
+          "Confidence": 99.55730438232422
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.2582959532737732,
+            "Height": 0.2904464602470398,
+            "Left": 0.6936929821968079,
+            "Top": 0.7093237042427063
+          },
+          "Confidence": 98.30375671386719
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.15318384766578674,
+            "Height": 0.30458614230155945,
+            "Left": 0.7919331192970276,
+            "Top": 0.6382029056549072
+          },
+          "Confidence": 97.72750091552734
+        }
+      ],
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    },
+    {
+      "Name": "Female",
+      "Confidence": 99.70088958740234,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.12894393503665924,
+            "Height": 0.35750454664230347,
+            "Left": 0.4808120131492615,
+            "Top": 0.3740279972553253
+          },
+          "Confidence": 99.70088958740234
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.11610560119152069,
+            "Height": 0.4229159355163574,
+            "Left": 0.0818672701716423,
+            "Top": 0.2698194086551666
+          },
+          "Confidence": 99.66973876953125
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.21254201233386993,
+            "Height": 0.37966635823249817,
+            "Left": 0.7135862112045288,
+            "Top": 0.40775251388549805
+          },
+          "Confidence": 99.6224136352539
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1910828799009323,
+            "Height": 0.30100688338279724,
+            "Left": 0.20694220066070557,
+            "Top": 0.6622647047042847
+          },
+          "Confidence": 99.55730438232422
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.2582959532737732,
+            "Height": 0.2904464602470398,
+            "Left": 0.6936929821968079,
+            "Top": 0.7093237042427063
+          },
+          "Confidence": 98.30375671386719
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.15318384766578674,
+            "Height": 0.30458614230155945,
+            "Left": 0.7919331192970276,
+            "Top": 0.6382029056549072
+          },
+          "Confidence": 97.72750091552734
+        }
+      ],
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    },
+    {
+      "Name": "Woman",
+      "Confidence": 99.70088958740234,
+      "Instances": [
+        {
+          "BoundingBox": {
+            "Width": 0.12894393503665924,
+            "Height": 0.35750454664230347,
+            "Left": 0.4808120131492615,
+            "Top": 0.3740279972553253
+          },
+          "Confidence": 99.70088958740234
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.11610560119152069,
+            "Height": 0.4229159355163574,
+            "Left": 0.0818672701716423,
+            "Top": 0.2698194086551666
+          },
+          "Confidence": 99.66973876953125
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.21254201233386993,
+            "Height": 0.37966635823249817,
+            "Left": 0.7135862112045288,
+            "Top": 0.40775251388549805
+          },
+          "Confidence": 99.6224136352539
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.1910828799009323,
+            "Height": 0.30100688338279724,
+            "Left": 0.20694220066070557,
+            "Top": 0.6622647047042847
+          },
+          "Confidence": 99.55730438232422
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.2582959532737732,
+            "Height": 0.2904464602470398,
+            "Left": 0.6936929821968079,
+            "Top": 0.7093237042427063
+          },
+          "Confidence": 98.30375671386719
+        },
+        {
+          "BoundingBox": {
+            "Width": 0.15318384766578674,
+            "Height": 0.30458614230155945,
+            "Left": 0.7919331192970276,
+            "Top": 0.6382029056549072
+          },
+          "Confidence": 97.72750091552734
+        }
+      ],
+      "Parents": [
+        {
+          "Name": "Adult"
+        },
+        {
+          "Name": "Female"
+        },
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    },
+    {
+      "Name": "Speech",
+      "Confidence": 99.23688507080078,
+      "Instances": [],
+      "Parents": [
+        {
+          "Name": "Audience"
+        },
+        {
+          "Name": "Crowd"
+        },
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [
+        {
+          "Name": "Public Speaking"
+        }
+      ],
+      "Categories": [
+        {
+          "Name": "Actions"
+        }
+      ]
+    },
+    {
+      "Name": "People",
+      "Confidence": 98.7227783203125,
+      "Instances": [],
+      "Parents": [
+        {
+          "Name": "Person"
+        }
+      ],
+      "Aliases": [],
+      "Categories": [
+        {
+          "Name": "Person Description"
+        }
+      ]
+    }
+  ],
+  "LabelModelVersion": "3.0",
+  "ResponseMetadata": {
+    "RequestId": "0ea0a699-dc16-45e9-8a13-028aac977a45",
+    "HTTPStatusCode": 200,
+    "HTTPHeaders": {
+      "x-amzn-requestid": "0ea0a699-dc16-45e9-8a13-028aac977a45",
+      "content-type": "application/x-amz-json-1.1",
+      "content-length": "7779",
+      "date": "Tue, 11 Mar 2025 17:32:47 GMT"
+    },
+    "RetryAttempts": 0
+  }
+}
 ```
 
 Commit the Python file to the session repo, add the image file [`sample.jpg`](../images/Lab04-sampleimage.jpg) and push them both it. At the AWS console pull the code and execute it.

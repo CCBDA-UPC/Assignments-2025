@@ -135,7 +135,7 @@ wait until the environment is up and then click "AWS" at the top of the window a
 
 <a name="Task53"/>
 
-## Task 5.3: Test the web app locally
+## boto3
 
 Once you are inside the directory create a `.env` file with the configuration of the project:
 
@@ -148,19 +148,7 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 ```
 
-All service access to the *AWS Learner Lab account* is limited to the **us-east-1** and **us-west-2** regions unless
-mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service
-console page in another AWS Region you will see access error messages.
 
-To obtain the values missing above, at your CLI type the following command that will provide the necessary values
-
-````bash
-ddd_v1_w_3cWf_628331@runweb75472:~$ cat $HOME/.aws/credentials
-[default]
-aws_access_key_id = <YOUR-ACCESS-KEY-ID>
-aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
-aws_session_token = <YOUR-AWS-SESSION-TOKEN>
-````
 
 **DO NOT PUSH AWS CREDENTIALS TO YOUR PRIVATE REPOSITORY !!!**
 
