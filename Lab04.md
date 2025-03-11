@@ -198,9 +198,9 @@ from scrapy import cmdline
 cmdline.execute("scrapy crawl image -o image.json".split())
 ```
 
+Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository.
 
-**Q41** Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository. Add your thoughts about the above task.
-
+**Q41  Add your thoughts about the above tasks.**
 
 
 <a name="Tasks42"/>
@@ -220,7 +220,7 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ![Lab04-RekognitionDemo.png](images/Lab04-RekognitionDemo.png)
 
-**Q421 Add your thoughts about the above task.** 
+**Q421 Add your thoughts about the above tasks.** 
 
 ### Create a Python script that sends an image to AWS Rekognition and retrieves the analysis
 
@@ -835,7 +835,7 @@ print(json.dumps(labels_list, indent=4))
 }
 ```
 
-**Q422 Add your thoughts about the above task.** 
+**Q422 Add your thoughts about the above tasks.** 
 
 <a name="Tasks43"/>
 
