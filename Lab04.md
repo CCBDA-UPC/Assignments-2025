@@ -230,6 +230,8 @@ All service access to the *AWS Learner Lab account* is limited to the **us-east-
 mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service
 console page in another AWS Region you will see access error messages.
 
+**Caveat:** the credentials value change every time that you initiate a new *AWS Learner Lab session*.
+
 ##### List the contents of the configuration file
 
 At your CLI type the following command that will provide the necessary values
