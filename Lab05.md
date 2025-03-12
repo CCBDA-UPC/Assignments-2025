@@ -185,14 +185,14 @@ link in the email to confirm your subscription.
 
 Do not forget that before testing the new functionality you need to have the AWS SNS subscription approved.
 
+### Modify the web app to send messages
+
 Add the *unique identifier* for the AWS SNS topic to the configuration environment of your local deployment. It needs to
 be instantiated in the  `settings.py` and `.env` files.
 
 ```bash
 NEW_SIGNUP_TOPIC=arn:aws:sns:us-east-1:<YOUR-ACCOUNT-ID>:ccbda-signup-notifications
 ```
-
-### Modify the web app to send messages
 
 Open the files *form/models.py* and *form/views.py* read and understand what the code does.
 
