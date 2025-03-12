@@ -66,6 +66,7 @@ wait until the environment is up and then click "AWS" at the top of the window a
 5. For the `Partition key`, type `email`. Choose **Create**.
 
 <a name="Task52"/>
+
 ## Task 5.2: Download the code for the Web App
 
 You are going to make a few changes to the base Python code. Therefore, download
@@ -78,6 +79,7 @@ Unzip the file inside your responses repository for the current Lab session, and
 *django-webapp**.
 
 <a name="Task53"/>
+
 ## Task 5.3: Test the web app locally
 
 Create a `.env` file with the configuration of the project:
@@ -234,6 +236,7 @@ SNS message sent.
 **Q54: Has everything gone alright? Share your thoughts on the task developed above.** 
 
 <a name="Tasks55" />
+
 ## Task 5.5: Configure Docker and deploy the target web app
 
 In this task, you will migrate the web application to run in a Docker container. The Docker container is portable and
