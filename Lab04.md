@@ -135,6 +135,7 @@ class ImagesSpider(scrapy.Spider):
 
 Once the homepage has been crawled we can continue crawling the rest of the URLs that appear in the page by selecting the tag **a** (anchor) with the attribute **href**.
 ```python
+        self.links.append(response.url)
         # Extract and follow hyperlinks
         for link in response.css("a[href]"):
             link_href = link.attrib.get('href')
