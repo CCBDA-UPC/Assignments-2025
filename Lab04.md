@@ -100,7 +100,7 @@ import scrapy
 class ImageSpider(scrapy.Spider):
     name = 'image'
     allowed_domains = ['www.upc.edu']
-    start_urls = ['http://www.upc.edu/']
+    start_urls = ['http://www.upc.edu/en/']
 
     def parse(self, response):
         pass
