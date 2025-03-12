@@ -91,19 +91,18 @@ The most important components are the file `imageScraper/settings.py` containing
 directory `imageScraper/spiders/` that keeps all the custom spiders.
 
 We can use the DEPTH_LIMIT configuration variable to restrict image retrieval to first-level pages. By setting
-DEPTH_LIMIT to 0, which is the default value, the crawler will access pages at all levels within the website.
-
-The [crawl depth](https://www.wordstream.com/crawl-depth) is not referred to the URL's path but to the distance between
-the first page visited and the page in question.
-
-<img alt="Lab04-crawl-depth-tree.jpg" src="images/Lab04-crawl-depth-tree.jpg" width="50%"/>
+DEPTH_LIMIT to 0, which is the default value, the crawler will access all pages within the website.
 
 ```python
 DEPTH_LIMIT = 1
 ```
 
+The [crawl depth](https://www.wordstream.com/crawl-depth) is referred to the distance between the first page visited and the page in question.
+
 If you begin by crawling the home page of a website, pages with low depth limit are more important than pages with high
 depth limit because users are not going to be reaching them as easily.
+
+<img alt="Lab04-crawl-depth-tree.jpg" src="images/Lab04-crawl-depth-tree.jpg" width="50%"/>
 
 Now you can create a new spider by typing:
 

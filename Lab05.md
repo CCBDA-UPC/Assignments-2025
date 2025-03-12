@@ -350,6 +350,8 @@ You can now create a **container** based on the image by typing the command belo
 
 Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you shall be able to add a new entry to the database.
 
+The command will not return and will be updating the output with the requests that it is receiving. You need to type CONTROL-C to stop the container. Open a new terminal if you need to issue additional commands such as "docker stop" to alternativelly stop the container.
+
 ```bash
 _$ docker run -p 8000:8000 --env-file .env django-docker
 Watching for file changes with StatReloader
@@ -360,6 +362,13 @@ March 09, 2025 - 20:22:05
 Django version 5.1.7, using settings 'ccbda.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.
+
+"GET / HTTP/1.1" 200 7299
+New item added to database.
+"POST /signup HTTP/1.1" 200 0
+"GET / HTTP/1.1" 200 7299
+New item added to database.
+"POST /signup HTTP/1.1" 200 0
 ```
 
 <a name="Tasks56" />
