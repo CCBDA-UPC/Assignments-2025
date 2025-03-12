@@ -1,10 +1,22 @@
 # Lab session 5: Deploy a custom web app using additional cloud services
 
+We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
+yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website
+visitors who sign up to hear more. The signup app will help you reach potential students who might take part in a
+private beta test of the laboratory sessions.
+
 ### Django: web framework
 
 [Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and
 clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
 to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
+
+### The Signup App
+
+The app will allow your future students to submit contact information and express interest in a preview of the new
+subject on Cloud Computing that you're developing.
+
+To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that started as a Twitter project.
 
 ### AWS DynamoDB
 
@@ -19,20 +31,6 @@ We want to know when customers submit a form, therefore we are going to use **AW
 SNS), a message pushing service that can deliver notifications over various protocols. For our web app, we are going to
 push notifications to an email address.
 
-## Deploying an example Web App
-
-We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
-yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website
-visitors who sign up to hear more. The signup app will help you reach potential students who might take part in a
-private beta test of the laboratory sessions.
-
-### The Signup App
-
-The app will allow your future students to submit contact information and express interest in a preview of the new
-subject on Cloud Computing that you're developing.
-
-To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that
-started as a Twitter project.
 
 ## Prerequisites
 
@@ -593,8 +591,6 @@ _$ docker compose run django-web python manage.py migrate
 **Q55: Share your thoughts on the task developed above.**
 
 # How to submit this assignment:
-
-2. Add any comment that you consider necessary at the end of the 'README.md' file
 
 Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with
 all the files generated during this session.
