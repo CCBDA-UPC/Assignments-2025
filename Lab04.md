@@ -75,7 +75,11 @@ The above command will create the following file structure in the current direct
 
 The most important components are the file `imageScraper/settings.py` containing the settings for the project and the directory `imageScraper/spiders/` that keeps all the custom spiders.
 
-We can use the DEPTH_LIMIT configuration variable to restrict image retrieval to first-level pages (e.g., www.upc.edu/xxx/) and exclude second-level (e.g., www.upc.edu/xxx/yyy/) and third-level URLs (e.g., www.upc.edu/xxx/yyy/zzz/) and beyond. By setting DEPTH_LIMIT to 0, which is the default value, the crawler will access pages at all levels within the website.
+We can use the DEPTH_LIMIT configuration variable to restrict image retrieval to first-level pages. By setting DEPTH_LIMIT to 0, which is the default value, the crawler will access pages at all levels within the website.
+
+The [crawl depth](https://www.wordstream.com/crawl-depth) is not referred to the URL's path but to the distance between the first page visited and the page in question.
+
+<img alt="Lab04-crawl-depth-tree.jpg" src="images/Lab04-crawl-depth-tree.jpg" width="50%"/>
 
 ```python
 DEPTH_LIMIT = 1
@@ -135,7 +139,6 @@ class ImagesSpider(scrapy.Spider):
 
 Once the homepage has been crawled we can continue crawling the rest of the URLs that appear in the page by selecting the tag **a** (anchor) with the attribute **href**.
 ```python
-        self.links.append(response.url)
         # Extract and follow hyperlinks
         for link in response.css("a[href]"):
             link_href = link.attrib.get('href')
