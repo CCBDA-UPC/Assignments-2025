@@ -123,7 +123,7 @@ from urllib.parse import urljoin
 class ImagesSpider(scrapy.Spider):
     name = "images"
     allowed_domains = ["www.upc.edu"]
-    start_urls = ["https://www.upc.edu"]
+    start_urls = ["https://www.upc.edu/en/"]
 
     def parse(self, response):
         # Extract image URLs
