@@ -364,7 +364,7 @@ docker/welcome-to-docker   latest    eedaff45e3c7   16 months ago   29.5MB
 Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
 ready for production.
 
-- The CMD manage.py is only meant for development purposes and should be changed for a WSGI server.
+- The CMD manage.py is only meant for development purposes and should be changed for a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
 - Reduce the size of the image by using a smaller image.
 - Optimize the image by using a multistage build process.
 
@@ -372,7 +372,7 @@ Let’s get started with these improvements.
 
 ### Update requirements.txt
 
-Make sure to add `gunicorn` and `psycopg2-binary` to your `requirements.txt`. The updated file should include something
+Make sure to add [`gunicorn`](https://gunicorn.org/) and `psycopg2-binary` to your `requirements.txt`. The updated file should include something
 like this:
 
 ```text
