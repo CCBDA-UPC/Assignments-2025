@@ -117,7 +117,6 @@ following basic code:
 ```python
 import scrapy
 
-
 class ImagesSpider(scrapy.Spider):
     name = 'images'
     allowed_domains = ['www.upc.edu']
@@ -143,7 +142,6 @@ For our example, we decide that we want to extract the list of images from the h
 ```python
 import scrapy
 from urllib.parse import urljoin
-
 
 class ImagesSpider(scrapy.Spider):
     name = "images"
@@ -223,7 +221,6 @@ the parser and tell it to output the result to a file that will contain a list o
 
 ```bash
 _$ scrapy crawl images -o images.json
-
 ```
 
 To debug the code using PyCharm we can add a new file named `main.py`, in the same directory containing `scrapy.cnf`,
