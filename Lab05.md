@@ -31,6 +31,12 @@ We want to know when customers submit a form, therefore we are going to use **AW
 SNS), a message pushing service that can deliver notifications over various protocols. For our web app, we are going to
 push notifications to an email address.
 
+### Docker
+
+Docker is a **Platform as a Service (PaaS)** solution that leverages OS-level virtualization to package software into units known as **containers**. These containers ensure that applications can run consistently and efficiently across various environments. Docker provides both free and premium options and operates through its core software, Docker Engine, which has been maintained by Docker, Inc. since its initial release in 2013. 
+
+The primary purpose of Docker is to streamline the deployment process by isolating applications in lightweight containers, enabling smooth operation in diverse environments.
+
 # Pre-lab homework
 
 Make sure that you install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
