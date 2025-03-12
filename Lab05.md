@@ -10,7 +10,8 @@ private beta test of the laboratory sessions.
 The app will allow your future students to submit contact information and express interest in a preview of the new
 subject on Cloud Computing that you're developing.
 
-To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that started as a Twitter project.
+To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that
+started as a Twitter project.
 
 #### Django: web framework
 
@@ -33,14 +34,18 @@ push notifications to an email address.
 
 ### Docker
 
-Docker is a **Platform as a Service (PaaS)** solution that leverages OS-level virtualization to package software into units known as **containers**. These containers ensure that applications can run consistently and efficiently across various environments. Docker provides both free and premium options and operates through its core software, Docker Engine, which has been maintained by Docker, Inc. since its initial release in 2013. 
+Docker is a **Platform as a Service (PaaS)** solution that leverages OS-level virtualization to package software into
+units known as **containers**. These containers ensure that applications can run consistently and efficiently across
+various environments. Docker provides both free and premium options and operates through its core software, Docker
+Engine, which has been maintained by Docker, Inc. since its initial release in 2013.
 
-The primary purpose of Docker is to streamline the deployment process by isolating applications in lightweight containers, enabling smooth operation in diverse environments.
+The primary purpose of Docker is to streamline the deployment process by isolating applications in lightweight
+containers, enabling smooth operation in diverse environments.
 
 # Pre-lab homework
 
 Make sure that you install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-  and [Docker Compose](https://docs.docker.com/compose/) on your machine.
+and [Docker Compose](https://docs.docker.com/compose/) on your machine.
 
 If you need help with the installation, you can find detailed instructions on the Docker and Django websites.
 
@@ -81,7 +86,7 @@ as a **zip file**.
 
 <img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
 
-Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to 
+Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to
 **django-webapp**.
 
 <a name="Task53"/>
@@ -152,7 +157,7 @@ Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** 
 web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
 
 **Q53: Create some screen captures of your DyanmoDB table with the data of the new leads. Add your thoughts on the above
-tasks**
+tasks.**
 
 <a name="Tasks54" />
 
@@ -171,7 +176,7 @@ subscription that tells AWS SNS where and how to send the notifications.
 At the "AWS" console search for "Simple Notification Service"
 
 - Choose **Create topic**.
-- For Topic name, type *gsg-signup-notifications*. Choose **Standard** type and **Create topic**.
+- For Topic name, type *ccbda-signup-notifications*. Choose **Standard** type and **Create topic**.
 - Choose  **Create subscription**.
 - For **Protocol**, choose *Email*. For **Endpoint**, enter *your email address*. Choose **Create Subscription**.
 
@@ -180,15 +185,12 @@ link in the email to confirm your subscription.
 
 Do not forget that before testing the new functionality you need to have the AWS SNS subscription approved.
 
-<img src="./images/Lab05-2.png " alt="Confirmed" title="Confirmed"/>
-
-Add the *unique identifier* for the AWS SNS topic to the configuration environment of your local deployment.
+Add the *unique identifier* for the AWS SNS topic to the configuration environment of your local deployment. It needs to
+be instantiated in the  `settings.py` and `.env` files.
 
 ```bash
-_$ export NEW_SIGNUP_TOPIC="arn:aws:sns:us-east-1:YOUR-ACCOUNT-ID:gsg-signup-notifications"
+NEW_SIGNUP_TOPIC=arn:aws:sns:us-east-1:<YOUR-ACCOUNT-ID>:ccbda-signup-notifications
 ```
-
-Before you forget, you can also add a new variable to the configuration file.
 
 ### Modify the web app to send messages
 
@@ -215,9 +217,6 @@ def send_notification(self, email):
             'Error sending AWS SNS message: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
 ```
 
-You have probably noticed that there is a Python variable *NEW_SIGNUP_TOPIC*  that needs to be instantiated in the files
-`settings.py` and `.env`.
-
 Go to *form/views.py* and modify the signup view: if the lead has been correctly inserted in our DynamoDB table we can
 send the notification.
 
@@ -239,7 +238,7 @@ SNS message sent.
 "POST /signup HTTP/1.1" 200 0
 ```
 
-**Q54: Has everything gone alright? Share your thoughts on the task developed above.** 
+**Q54: Has everything gone alright? Share your thoughts on the task developed above.**
 
 <a name="Tasks55" />
 
