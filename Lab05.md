@@ -75,8 +75,8 @@ as a **zip file**.
 
 <img alt="Lab05-webapp-zip.png" src="images/Lab05-webapp-zip.png" width="50%"/>
 
-Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to *
-*django-webapp**.
+Unzip the file inside your responses repository for the current Lab session, and change the name of the folder to 
+**django-webapp**.
 
 <a name="Task53"/>
 
