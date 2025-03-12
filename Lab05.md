@@ -31,14 +31,14 @@ We want to know when customers submit a form, therefore we are going to use **AW
 SNS), a message pushing service that can deliver notifications over various protocols. For our web app, we are going to
 push notifications to an email address.
 
-## Pre-lab homework
+# Pre-lab homework
 
 Make sure that you install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   and [Docker Compose](https://docs.docker.com/compose/) on your machine.
 
 If you need help with the installation, you can find detailed instructions on the Docker and Django websites.
 
-## Tasks for Lab session #5
+# Tasks for Lab session #5
 
 * [Task 5.1: Create a DynamoDB Table](#Task51)
 * [Task 5.2: Download the code for the Web App](#Task52)
