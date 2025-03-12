@@ -55,7 +55,8 @@ If you need help with the installation, you can find detailed instructions on th
 * [Task 5.2: Download the code for the Web App](#Task52)
 * [Task 5.3: Test the web app locally](#Task53)
 * [Task 5.4: Use AWS Simple Notification Service in your web app](#Tasks54)
-* [Task 5.5: Configure Docker and deploy the target web app](#Tasks55)
+* [Task 5.5: Configure Docker](#Tasks55)
+* [Task 5.6: Deploy the target web app](#Tasks56)
 
 <a name="Task51"/>
 
@@ -242,7 +243,7 @@ SNS message sent.
 
 <a name="Tasks55" />
 
-## Task 5.5: Configure Docker and deploy the target web app
+## Task 5.5: Configure Docker
 
 In this task, you will migrate the web application to run in a Docker container. The Docker container is portable and
 could run on any OS that has the Docker engine installed.
@@ -305,66 +306,65 @@ docker image.
 ```bash
 _$ cd django-webapp               
 _$ docker build -t django-docker .
-[+] Building 46.9s (13/13) FINISHED                                                                 docker:desktop-linux
- => [internal] load build definition from Dockerfile                                                                0.0s
- => => transferring dockerfile: 837B                                                                                0.0s
- => [internal] load metadata for docker.io/library/python:3.10.16                                                   1.7s
- => [auth] library/python:pull token for registry-1.docker.io                                                       0.0s
- => [internal] load .dockerignore                                                                                   0.0s
- => => transferring context: 2B                                                                                     0.0s
- => [1/7] FROM docker.io/library/python:3.10.16@sha256:e70cd7b54564482c0dee8cd6d8e314450aac59ea0ff669ffa715207ea0  19.7s
- => => resolve docker.io/library/python:3.10.16@sha256:e70cd7b54564482c0dee8cd6d8e314450aac59ea0ff669ffa715207ea0e  0.1s
- => => sha256:2268f82e627e15f49be0d4a2ea64b579609dd1e83f7109001c1ba2b503d25c0a 21.38MB / 21.38MB                    0.9s
- => => sha256:7fda9d093afe6ee82a63b57b784201a3ff4cdc44bc37993859b2235396f03a39 250B / 250B                          0.4s
- => => sha256:a6c2fd51c72cc349607cc3d9f533a6b1b06da6bdd9ad1fb45853184de242cf15 6.16MB / 6.16MB                      1.0s
- => => sha256:1d281e50d3e435595c266df06531a7e8c2ebb0c185622c8ab2eed8d760e6576b 64.39MB / 64.39MB                    2.9s
- => => sha256:447713e77b4fc3658cfba0c1e816b70ff6d9bf06563dc8cfcb0459406aed33b4 211.34MB / 211.34MB                  6.2s
- => => sha256:155ad54a8b2812a0ec559ff82c0c6f0f0dddb337a226b11879f09e15f67b69fc 48.48MB / 48.48MB                    3.2s
- => => sha256:8031108f3cda87bb32f090262d0109c8a0db99168050967becefad502e9a681b 24.06MB / 24.06MB                    1.7s
- => => extracting sha256:155ad54a8b2812a0ec559ff82c0c6f0f0dddb337a226b11879f09e15f67b69fc                           2.8s
- => => extracting sha256:8031108f3cda87bb32f090262d0109c8a0db99168050967becefad502e9a681b                           0.7s
- => => extracting sha256:1d281e50d3e435595c266df06531a7e8c2ebb0c185622c8ab2eed8d760e6576b                           2.5s
- => => extracting sha256:447713e77b4fc3658cfba0c1e816b70ff6d9bf06563dc8cfcb0459406aed33b4                           7.3s
- => => extracting sha256:a6c2fd51c72cc349607cc3d9f533a6b1b06da6bdd9ad1fb45853184de242cf15                           0.7s
- => => extracting sha256:2268f82e627e15f49be0d4a2ea64b579609dd1e83f7109001c1ba2b503d25c0a                           1.1s
- => => extracting sha256:7fda9d093afe6ee82a63b57b784201a3ff4cdc44bc37993859b2235396f03a39                           0.0s
- => [internal] load build context                                                                                   4.4s
- => => transferring context: 71.02MB                                                                                4.3s
- => [2/7] RUN mkdir /app                                                                                            0.9s
- => [3/7] WORKDIR /app                                                                                              0.0s
- => [4/7] RUN pip install --upgrade pip                                                                             4.4s
- => [5/7] COPY requirements.txt  /app/                                                                              0.0s
- => [6/7] RUN pip install --no-cache-dir -r requirements.txt                                                        8.4s
- => [7/7] COPY . /app/                                                                                              1.8s
- => exporting to image                                                                                              9.7s
- => => exporting layers                                                                                             4.1s
- => => exporting manifest sha256:d87943d350d33c0c740353df3bcea16d2deac8c7b44b5707c2da351931f97f67                   0.0s
- => => exporting config sha256:d640e1522ea15b0f8031ecbd330582bed81a840d193bdd29e3895e98807dd490                     0.0s
- => => exporting attestation manifest sha256:02829dc4a862290e2162b98e564e2469800e39fe76a06e713515d1f7e701c0f7       0.0s
- => => exporting manifest list sha256:ce7ad84af491aee38a9ddd1aa48c3091ef95db73bddaed0edd097b891cdd13d1              0.0s
- => => naming to docker.io/library/django-docker:latest                                                             0.0s
- => => unpacking to docker.io/library/django-docker:latest                                                          5.5s
+[+] Building 26.9s (12/12) FINISHED                                                                     docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                    0.0s
+ => => transferring dockerfile: 837B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/python:3.10.16                                                       0.9s
+ => [internal] load .dockerignore                                                                                       0.0s
+ => => transferring context: 2B                                                                                         0.0s
+ => [internal] load build context                                                                                       2.2s
+ => => transferring context: 1.79MB                                                                                     2.0s
+ => [1/7] FROM docker.io/library/python:3.10.16@sha256:e70cd7b54564482c0dee8cd6d8e314450aac59ea0ff669ffa715207ea0e04fa6 0.0s
+ => => resolve docker.io/library/python:3.10.16@sha256:e70cd7b54564482c0dee8cd6d8e314450aac59ea0ff669ffa715207ea0e04fa6 0.0s
+ => CACHED [2/7] RUN mkdir /app                                                                                         0.0s
+ => CACHED [3/7] WORKDIR /app                                                                                           0.0s
+ => CACHED [4/7] RUN pip install --upgrade pip                                                                          0.0s
+ => [5/7] COPY requirements.txt  /app/                                                                                  0.1s
+ => [6/7] RUN pip install --no-cache-dir -r requirements.txt                                                           11.4s
+ => [7/7] COPY . /app/                                                                                                  3.0s
+ => exporting to image                                                                                                  9.2s
+ => => exporting layers                                                                                                 3.9s
+ => => exporting manifest sha256:8717e3fdff9eb094e4b073f895942d2527052758a977d28a1102a75b3ae704a9                       0.0s
+ => => exporting config sha256:feeade2953f95f2f620bf64f05ca7ef680cf605ef691127104d195e5c2a1a129                         0.0s
+ => => exporting attestation manifest sha256:ab68966ec1ee48d54a16ef6df680ad40a7ebc1a9e2bd30e6b5c522428e0ec6ec           0.0s
+ => => exporting manifest list sha256:a2585b195dbffdb6da39fce70fd5abd6db34ad2cc430d52da76af5892c27daff                  0.0s
+ => => naming to docker.io/library/django-docker:latest                                                                 0.0s
+ => => unpacking to docker.io/library/django-docker:latest                                                              5.2s
 
-View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/5ij0nji3h7am2wijladmaaxf1
-
-What's next:
-    View a summary of image vulnerabilities and recommendations → docker scout quickview 
-_$ 
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/1frldhnwo0b89dirzjuqbnum2
 ```
 
 To see your image, you can run:
 
 ```bash 
 _$ docker image list
-REPOSITORY                 TAG       IMAGE ID       CREATED         SIZE
-django-docker              latest    ce7ad84af491   4 minutes ago   1.71GB
-docker/welcome-to-docker   latest    eedaff45e3c7   16 months ago   29.5MB
+REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
+django-docker   latest    a2585b195dbf   1 minuts ago    1.74GB
 ```
+
+You can now create a container based on the image by typing the command below. It also associates the container internal port 8000 to the local computer port 8000. Open the URL http://0.0.0.0:8000/ in your browser and test the web application.
+
+```bash
+_$ docker run -p 8000:8000 django-docker
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+March 09, 2025 - 20:22:05
+Django version 5.1.7, using settings 'ccbda.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+```
+
+<a name="Tasks56" />
+
+## Task 5.6: Deploy the target web app
 
 Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
 ready for production.
 
-- The CMD manage.py is only meant for development purposes and should be changed for a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
+- The CMD manage.py is only meant for development purposes and should be changed for
+  a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
 - Reduce the size of the image by using a smaller image.
 - Optimize the image by using a multistage build process.
 
@@ -372,7 +372,8 @@ Let’s get started with these improvements.
 
 ### Update requirements.txt
 
-Make sure to add [`gunicorn`](https://gunicorn.org/) and `psycopg2-binary` to your `requirements.txt`. The updated file should include something
+Make sure to add [`gunicorn`](https://gunicorn.org/) and `psycopg2-binary` to your `requirements.txt`. The updated file
+should include something
 like this:
 
 ```text
@@ -385,7 +386,7 @@ psycopg2-binary==2.9.10
 
 The Dockerfile below has changes that solve the three items on the list. The changes to the file are as follows:
 
-- Updated the FROM python:3.10 image to FROM python:3.10.16-slim. This change reduces the size of the image
+- Updated the FROM python:3.10.16 image to FROM python:3.10.16-slim. This change reduces the size of the image
   considerably, as the image now only contains what is needed to run the application.
 - Added a multi-stage build process to the Dockerfile. When you build applications, there are usually many files left on
   the file system that are only needed during build time and are not needed once the application is built and running.
@@ -418,7 +419,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
  
 # Stage 2: Production stage
-FROM python:3.13-slim
+FROM python:3.10.16-slim
  
 RUN useradd -m -r appuser && \
    mkdir /app && \
