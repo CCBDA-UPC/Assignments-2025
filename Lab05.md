@@ -248,6 +248,10 @@ SNS message sent.
 In this task, you will migrate the web application to run in a Docker container. The Docker container is portable and
 could run on any OS that has the Docker engine installed.
 
+The [Docker daemon](https://docs.docker.com/get-started/docker-overview/#docker-architecture) (dockerd) listens for Docker API requests and manages Docker objects such as images, containers, networks, and volumes. A daemon can also communicate with other daemons to manage Docker services.
+
+For Windows and OSx operating systems, the Docker daemon is started by opening the Docker [Desktop application](https://docs.docker.com/desktop/). Therefore, start the Docker Desktop application before continuing.
+
 ### Create a Dockerfile
 
 A Dockerfile is a script that tells Docker how to build your Docker image. Put it in the root directory of your Django
@@ -334,18 +338,20 @@ _$ docker build -t django-docker .
 View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/1frldhnwo0b89dirzjuqbnum2
 ```
 
-To see your image, you can run:
+To see the new image created, you can run:
 
 ```bash 
 _$ docker image list
 REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
-django-docker   latest    a2585b195dbf   1 minuts ago    1.74GB
+django-docker   latest    a2585b195dbf   1 minute ago    1.74GB
 ```
 
-You can now create a container based on the image by typing the command below. It also associates the container internal port 8000 to the local computer port 8000. Open the URL http://0.0.0.0:8000/ in your browser and test the web application.
+You can now create a **container** based on the image by typing the command below. The command also associates the container internal port 8000 to the local computer port 8000 and sends the latest value of the configuration variables using the [unix environment](https://en.wikipedia.org/wiki/Environment_variable). 
+
+Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you shall be able to add a new entry to the database.
 
 ```bash
-_$ docker run -p 8000:8000 django-docker
+_$ docker run -p 8000:8000 --env-file .env django-docker
 Watching for file changes with StatReloader
 Performing system checks...
 
@@ -363,9 +369,9 @@ Quit the server with CONTROL-C.
 Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
 ready for production.
 
-- The CMD manage.py is only meant for development purposes and should be changed for
+- The CMD `manage.py` is only meant for development purposes and should be changed for
   a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
-- Reduce the size of the image by using a smaller image.
+- Reduce the size of the image by using a smaller linux image.
 - Optimize the image by using a multistage build process.
 
 Let’s get started with these improvements.
@@ -373,8 +379,7 @@ Let’s get started with these improvements.
 ### Update requirements.txt
 
 Make sure to add [`gunicorn`](https://gunicorn.org/) and `psycopg2-binary` to your `requirements.txt`. The updated file
-should include something
-like this:
+should include something like this:
 
 ```text
 gunicorn==23.0.0
