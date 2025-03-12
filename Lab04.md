@@ -134,16 +134,19 @@ class ImagesSpider(scrapy.Spider):
                 yield {
                     'img_url': full_image_url,
                     'appears_url': response.url,
+                    'depth': response.meta.get('depth', 0)
                 }
 ```
 
 Once the homepage has been crawled we can continue crawling the rest of the URLs that appear in the page by selecting the tag **a** (anchor) with the attribute **href**.
 ```python
         # Extract and follow hyperlinks
-        for link in response.css("a[href]"):
-            link_href = link.attrib.get('href')
-            if link_href and link_href.startswith('https://'):  # Validating full link
-                yield response.follow(link_href, callback=self.parse)
+        for link in response.css('a::attr(href)').getall():
+            # Ensure the link is absolute
+            absolute_link = urljoin(response.url, link)
+            # Follow the link and call the parse method recursively
+            if absolute_link and absolute_link.startswith('https://'):  # Validating full link
+                yield scrapy.Request(url=absolute_link, callback=self.parse)
 ```
 We can feed the crawler with all the URLs found. The only URLs that will be crawled will be the ones matching the allowed_domains and the DEPTH_LIMIT defined.
 
