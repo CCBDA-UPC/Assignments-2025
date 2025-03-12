@@ -108,7 +108,7 @@ Now you can create a new spider by typing:
 
 ```bash
 _$ cd imageScraper
-_$ scrapy genspider image www.upc.edu
+_$ scrapy genspider images www.upc.edu
 ```
 
 The execution creates a file named `imageScraper/spiders/image.py` inside the project directory. The file contains the
@@ -118,8 +118,8 @@ following basic code:
 import scrapy
 
 
-class ImageSpider(scrapy.Spider):
-    name = 'image'
+class ImagesSpider(scrapy.Spider):
+    name = 'images'
     allowed_domains = ['www.upc.edu']
     start_urls = ['http://www.upc.edu/en/']
 
@@ -222,7 +222,7 @@ To obtain the results of parsing the home page of the UPC we can type at the com
 the parser and tell it to output the result to a file that will contain a list of JSON records.
 
 ```bash
-_$ scrapy crawl image -o image.json
+_$ scrapy crawl images -o images.json
 
 ```
 
@@ -236,7 +236,7 @@ creation of your parsers.
 ```python
 from scrapy import cmdline
 
-cmdline.execute("scrapy crawl image -o image.json".split())
+cmdline.execute("scrapy crawl images -o images.json".split())
 ```
 
 Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository.
