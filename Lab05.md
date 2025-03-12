@@ -374,6 +374,9 @@ New item added to database.
 "POST /signup HTTP/1.1" 200 0
 ```
 
+**Q55: Has everything gone alright? Share your thoughts on the task developed above.**
+
+
 <a name="Tasks56" />
 
 ## Task 5.6: Deploy the target web app
@@ -410,7 +413,7 @@ The Dockerfile below has changes that solve the three items on the list. The cha
   By adding a build stage, you use one image to build the application and then move the built files to the second image,
   leaving only the built code. Read more about [multi-stage builds](https://docs.docker.com/build/building/multi-stage/)
   in the documentation.
-- Add the Gunicorn WSGI server to the server to enable a production-ready deployment of the application.
+- Add the Gunicorn WSGI server to enable a production-ready deployment of the application.
 
 ```dockerfile
 # Stage 1: Base build stage
@@ -520,9 +523,6 @@ You can see a significant improvement in the size of the container.
 The size was reduced from 1.71GB to 472MB, which leads to faster a deployment process when images are downloaded and
 cheaper storage costs when storing images.
 
-You could use docker init as a command to generate the Dockerfile and compose.yml file for your application to get you
-started.
-
 ### Configure the Docker Compose file
 
 A `compose.yml` file allows you to manage multi-container applications. Here, we’ll define both a Django container and a
@@ -539,11 +539,49 @@ services:
       - db
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
-      DEBUG: ${DEBUG}
+      DJANGO_DEBUG: ${DEBUG}
       DJANGO_LOGLEVEL: ${DJANGO_LOGLEVEL}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
     env_file:
       - .env
+```
+
+You could have used `docker init` as a command to generate a base Dockerfile and compose.yml files for your application to get you started.
+
+```bash
+_$ docker init
+
+Welcome to the Docker Init CLI!
+
+This utility will walk you through creating the following files with sensible defaults for your project:
+  - .dockerignore
+  - Dockerfile
+  - compose.yaml
+  - README.Docker.md
+
+Let's get started!
+
+? What application platform does your project use?  [Use arrows to move, type to filter]
+  Python - suitable for a Python server application
+? What application platform does your project use? Python
+? What version of Python do you want to use? 3.10.16
+? What port do you want your app to listen on? 8000
+? What is the command you use to run your app (e.g., gunicorn 'myapp.example:app' --bind=0.0.0.0:8000)? y
+
+✔ Created → .dockerignore
+✔ Created → Dockerfile
+✔ Created → compose.yaml
+✔ Created → README.Docker.md
+
+→ Your Docker files are ready!
+  Review your Docker files and tailor them to your application.
+  Consult README.Docker.md for information about using the generated files.
+
+! Warning → No requirements.txt file found. Create one with the dependencies for your application before running it.
+
+What's next?
+  Start your application by running → docker compose up --build
+  Your application will be available at http://localhost:8000
 ```
 
 ### Build and run your new Django project
