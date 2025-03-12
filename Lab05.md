@@ -160,7 +160,7 @@ app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the
 web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
 
-**Q53: Create some screen captures of your DyanmoDB table with the data of the new leads. Add your thoughts on the above
+**Q53: Create a screen capture of your DyanmoDB table with the data of the new leads. Add your thoughts on the above
 tasks.**
 
 <a name="Tasks54" />
