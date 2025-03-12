@@ -34,10 +34,7 @@ push notifications to an email address.
 
 ## Prerequisites
 
-Make sure that you :
-
-- Have [Django](https://www.djangoproject.com/start/) installed on your system.
-- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+Make sure that you install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
   and [Docker Compose](https://docs.docker.com/compose/) on your machine.
 
 If you need help with the installation, you can find detailed instructions on the Docker and Django websites.
