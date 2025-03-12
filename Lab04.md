@@ -152,7 +152,7 @@ class ImagesSpider(scrapy.Spider):
 
     def parse(self, response):
         # Extract image URLs
-        for img in response.css("img"):
+        for img in response.css("img").getall():
             image_src = img.attrib.get('src') or img.attrib.get('data-src')  # Fallback to 'data-src'
             if image_src is not None:
                 full_image_url = urljoin(response.url, image_src)
@@ -211,7 +211,8 @@ The above code yields a JSON record containing something like the following exam
 ```json
 {
   "img_url": "https://www.upc.edu/++theme++homeupc/assets/images/Logo.svg",
-  "appears_url": "https://www.upc.edu/ca"
+  "appears_url": "https://www.upc.edu/ca",
+  "depth": 0
 }
 ```
 
