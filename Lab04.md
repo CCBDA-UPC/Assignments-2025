@@ -1,42 +1,51 @@
 # Lab session #4: Use of services programmatically through their API
 
-[Scrapy](https://scrapy.org/) is a Python framework for large-scale web scraping. It provides all the tools needed to extract data from websites efficiently, process them as required, and [store them in the most suitable structure and format](https://doc.scrapy.org/en/latest/topics/feed-exports.html).
+[Scrapy](https://scrapy.org/) is a Python framework for large-scale web scraping. It provides all the tools needed to
+extract data from websites efficiently, process them as required,
+and [store them in the most suitable structure and format](https://doc.scrapy.org/en/latest/topics/feed-exports.html).
 
-[AWS Rekognition](https://aws.amazon.com/rekognition/)  is an image recognition service that detects objects, scenes, activities, landmarks, faces, dominant colors, and image quality. AWS Rekognition also extracts text, recognizes celebrities, and identifies inappropriate image content.
+[AWS Rekognition](https://aws.amazon.com/rekognition/)  is an image recognition service that detects objects, scenes,
+activities, landmarks, faces, dominant colors, and image quality. AWS Rekognition also extracts text, recognizes
+celebrities, and identifies inappropriate image content.
 
-In this lab session, you will learn how to extract data from web pages and then analyze the images and videos using AWS Rekognition to obtain some interesting insights.
+In this lab session, you will learn how to extract data from web pages and then analyze the images and videos using AWS
+Rekognition to obtain some interesting insights.
 
-#  Pre-lab homework
+# Pre-lab homework
 
 <a name="aws"/>
 
-Go to the AWS Academy and log into the course [AWS Academy Learner Lab](https://awsacademy.instructure.com/courses/109367). 
+Go to the AWS Academy and log into the
+course [AWS Academy Learner Lab](https://awsacademy.instructure.com/courses/109367).
 
 Watch the videos
+
 - Demo - How to Access Learner Lab
 - Demo - General Troubleshooting Tips
 - Demo - How to Launch Services through AWS Console
 
-If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (at least to execute the Learner Lab).
+If you cannot see the Learner Lab as shown below you may need to check that your browser is allowing 3rd party cookies (
+at least to execute the Learner Lab).
 
   <img src="images/Lab04-LearnerLab.jpeg" alt="Lab04-LearnerLab.jpeg"  style="width: 50%; padding-left: 25%;">
 
 
- You can go back into stopping 3rd party cookies after working with the environment.
+You can go back into stopping 3rd party cookies after working with the environment.
 
   <img src="images/Lab04-3rd-party-cookies.png" alt="Lab04-3rd-party-cookies.png"  style="width: 50%; padding-left: 25%;">
 
-#  Tasks for Lab session #4
+# Tasks for Lab session #4
 
 * [Task 4.1: Extract images from a website](#Tasks41)
-* [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42) 
-* [Task 4.3: Get insights into a website images using AWS Rekognition](#Tasks43) 
+* [Task 4.2: Obtain insights about an image using AWS Rekognition](#Tasks42)
+* [Task 4.3: Get insights into a website images using AWS Rekognition](#Tasks43)
 
 <a name="Tasks41"/>
 
 ## Task 4.1: Extract images from a website
 
-Learn more about Scrapy by reading a detailed [Scrapy Tutorial](https://doc.scrapy.org/en/latest/intro/tutorial.html) and [Scrapy documentation](https://doc.scrapy.org/en/latest/).
+Learn more about Scrapy by reading a detailed [Scrapy Tutorial](https://doc.scrapy.org/en/latest/intro/tutorial.html)
+and [Scrapy documentation](https://doc.scrapy.org/en/latest/).
 
 ### Scrapy installation
 
@@ -48,7 +57,11 @@ _$ pip install scrapy
 
 ### Scrapy shell
 
-Once the Scrapy package is installed, you can use the Scrapy shell to do some testing before programming your web data extraction. In the following example, we download the home page of ["Universitat Politècnica de Catalunya"](https://www.upc.edu/). Please, inspect the structure of the HTML, and extract the images included in each page. As you can see we can use a CSS syntax to select the HTML elements of the page.
+Once the Scrapy package is installed, you can use the Scrapy shell to do some testing before programming your web data
+extraction. In the following example, we download the home page
+of ["Universitat Politècnica de Catalunya"](https://www.upc.edu/). Please, inspect the structure of the HTML, and
+extract the images included in each page. As you can see we can use a CSS syntax to select the HTML elements of the
+page.
 
 ```python
 fetch("https://www.upc.edu/")
@@ -57,7 +70,8 @@ response.css("img").extract_first()
 response.css("a").extract_first()
 ```
 
-To find the "search path" you may want to use Google Chrome, find the URL, inspect the code, and use the search bar at the bottom of the code to match the path.
+To find the "search path" you may want to use Google Chrome, find the URL, inspect the code, and use the search bar at
+the bottom of the code to match the path.
 
 ### Scrapy custom spyders
 
@@ -73,17 +87,23 @@ The above command will create the following file structure in the current direct
   <img src="images/Lab04-imageScraper.png" alt="Lab04-imageScraper.png"  style="height: 400px; padding-left: 25%;">
 
 
-The most important components are the file `imageScraper/settings.py` containing the settings for the project and the directory `imageScraper/spiders/` that keeps all the custom spiders.
+The most important components are the file `imageScraper/settings.py` containing the settings for the project and the
+directory `imageScraper/spiders/` that keeps all the custom spiders.
 
-We can use the DEPTH_LIMIT configuration variable to restrict image retrieval to first-level pages. By setting DEPTH_LIMIT to 0, which is the default value, the crawler will access pages at all levels within the website.
+We can use the DEPTH_LIMIT configuration variable to restrict image retrieval to first-level pages. By setting
+DEPTH_LIMIT to 0, which is the default value, the crawler will access pages at all levels within the website.
 
-The [crawl depth](https://www.wordstream.com/crawl-depth) is not referred to the URL's path but to the distance between the first page visited and the page in question.
+The [crawl depth](https://www.wordstream.com/crawl-depth) is not referred to the URL's path but to the distance between
+the first page visited and the page in question.
 
 <img alt="Lab04-crawl-depth-tree.jpg" src="images/Lab04-crawl-depth-tree.jpg" width="50%"/>
 
 ```python
 DEPTH_LIMIT = 1
 ```
+
+If you begin by crawling the home page of a website, pages with low depth limit are more important than pages with high
+depth limit because users are not going to be reaching them as easily.
 
 Now you can create a new spider by typing:
 
@@ -92,7 +112,9 @@ _$ cd imageScraper
 _$ scrapy genspider image www.upc.edu
 ```
 
-The execution creates a file named `imageScraper/spiders/image.py` inside the project directory. The file contains the following basic code:
+The execution creates a file named `imageScraper/spiders/image.py` inside the project directory. The file contains the
+following basic code:
+
 ```python
 import scrapy
 
@@ -108,17 +130,21 @@ class ImageSpider(scrapy.Spider):
 
 Few things to note here:
 
-- **name**: Name of the spider, in this case, it is “image”. Naming spiders properly is essential when you have to maintain hundreds of spiders.
-- **allowed_domains**: An optional list of strings containing domains that this spider is allowed to crawl. Requests for URLs not belonging to the domain names specified in this list won’t be followed.
-- **parse(self, response)**: This function is called whenever the crawler successfully crawls a URL. Remember the response object from earlier?.
+- **name**: Name of the spider, in this case, it is “image”. Naming spiders properly is essential when you have to
+  maintain hundreds of spiders.
+- **allowed_domains**: An optional list of strings containing domains that this spider is allowed to crawl. Requests for
+  URLs not belonging to the domain names specified in this list won’t be followed.
+- **parse(self, response)**: This function is called whenever the crawler successfully crawls a URL. Remember the
+  response object from earlier?.
 
-After every successful crawl the *parse(..)* method is called, and so that’s where you write your extraction logic. 
+After every successful crawl the *parse(..)* method is called, and so that’s where you write your extraction logic.
 
 For our example, we decide that we want to extract the list of images from the homepage.
 
 ```python
 import scrapy
 from urllib.parse import urljoin
+
 
 class ImagesSpider(scrapy.Spider):
     name = "images"
@@ -138,22 +164,29 @@ class ImagesSpider(scrapy.Spider):
                 }
 ```
 
-Once the homepage has been crawled we can continue crawling the rest of the URLs that appear in the page by selecting the tag **a** (anchor) with the attribute **href**.
+Once the homepage has been crawled we can continue crawling the rest of the URLs that appear in the page by selecting
+the tag **a** (anchor) with the attribute **href**.
+
 ```python
         # Extract and follow hyperlinks
-        for link in response.css('a::attr(href)').getall():
-            # Ensure the link is absolute
-            absolute_link = urljoin(response.url, link)
-            # Follow the link and call the parse method recursively
-            if absolute_link and absolute_link.startswith('https://'):  # Validating full link
-                yield scrapy.Request(url=absolute_link, callback=self.parse)
+for link in response.css('a::attr(href)').getall():
+    # Ensure the link is absolute
+    absolute_link = urljoin(response.url, link)
+    # Follow the link and call the parse method recursively
+    if absolute_link and absolute_link.startswith('https://'):  # Validating full link
+        yield scrapy.Request(url=absolute_link, callback=self.parse)
 ```
-We can feed the crawler with all the URLs found. The only URLs that will be crawled will be the ones matching the allowed_domains and the DEPTH_LIMIT defined.
+
+We can feed the crawler with all the URLs found. The only URLs that will be crawled will be the ones matching the
+allowed_domains and the DEPTH_LIMIT defined.
 
 ```python
     allowed_domains = ["www.upc.edu"]
 ```
-We need to get the list of unique images found. It is possible to define `unique_images` inside the `ImagesSpider` class.
+
+We need to get the list of unique images found. It is possible to define `unique_images` inside the `ImagesSpider`
+class.
+
 ```python
     unique_images = []
 ```
@@ -162,42 +195,43 @@ We'll add the images to the list only if it is not already present.
 
 ```python
                 if full_image_url not in self.unique_images:
-                    self.unique_images.append(full_image_url)
+    self.unique_images.append(full_image_url)
 ```
 
 `closed` is a method that can be defined in class `ImagesSpider` and it is invoked once all the URLs have been crawled.
 
 ```python
 
-    def closed(self, cause):
-        self.unique_images.sort()
-        print(self.unique_images)
+def closed(self, cause):
+    self.unique_images.sort()
+    print(self.unique_images)
 ```
 
 The above code yields a JSON record containing something like the following example:
 
 ```json
    {
-    "img_url": "https://www.upc.edu/++theme++homeupc/assets/images/Logo.svg",
-    "appears_url": "https://www.upc.edu/ca"
-  }
+  "img_url": "https://www.upc.edu/++theme++homeupc/assets/images/Logo.svg",
+  "appears_url": "https://www.upc.edu/ca"
+}
 ```
 
 ### Extract your results to a JSON file
 
-To obtain the results of parsing the home page of the UPC we can type at the command line below. We use the *name* of the parser and tell it to output the result to a file that will contain a list of JSON records.
+To obtain the results of parsing the home page of the UPC we can type at the command line below. We use the *name* of
+the parser and tell it to output the result to a file that will contain a list of JSON records.
 
 ```bash
 _$ scrapy crawl image -o image.json
 
 ```
 
-To debug the code using PyCharm we can add a new file named `main.py`, in the same directory containing `scrapy.cnf`, that will contain the command line that we typed before. I strongly advise you to use this option to speed up the creation of your parsers.
+To debug the code using PyCharm we can add a new file named `main.py`, in the same directory containing `scrapy.cnf`,
+that will contain the command line that we typed before. I strongly advise you to use this option to speed up the
+creation of your parsers.
 
 
   <img src="images/Lab04-pycharmConfig.png" alt="Lab04-pycharmConfig" style="width: 50%; padding-left: 25%">
-
-
 
 ```python
 from scrapy import cmdline
@@ -207,19 +241,19 @@ cmdline.execute("scrapy crawl image -o image.json".split())
 
 Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository.
 
-**Q41  Add your thoughts about the above tasks.**
+**Q41 Add your thoughts about the above tasks.**
 
 
 <a name="Tasks42"/>
 
 ## Task 4.2: Obtain insights about an image using AWS Rekognition
 
-Open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up, and then click "AWS" at the top of the window and open the AWS Console.
+Open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up, and then
+click "AWS" at the top of the window and open the AWS Console.
 
 <img src="./images/Lab04-LearnerLab.jpeg" alt="Learner lab" title="Learner lab"/>
 
 Once the AWS Console is open find the service "Amazon Rekognition" and launch the demo.
-
 
 Play with the demo using the provided image some of the images obtained in the previous section.
 
@@ -227,7 +261,7 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ![Lab04-RekognitionDemo.png](images/Lab04-RekognitionDemo.png)
 
-**Q421 Add your thoughts about the above tasks.** 
+**Q421 Add your thoughts about the above tasks.**
 
 ### Create a Python script that sends an image to AWS Rekognition and retrieves the analysis
 
@@ -250,9 +284,11 @@ aws_access_key_id = <YOUR-ACCESS-KEY-ID>
 aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
 aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 ````
+
 If the file does not contain the credentials use the second method.
 
 ##### Use AWS Details
+
 Click on `AWS Details` to have the window below shown.
 
 <img alt="Lab04-aws-details1.png" src="images/Lab04-aws-details1.png" width="50%"/>
@@ -261,10 +297,12 @@ Click on the button `Show` next to `AWS CLI`. Copy the values.
 
 <img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%"/>
 
-
 #### Add a script to interact with AWS Comprehend
 
-Use the code in [`Recognize_1.py`](Recognize_1.py) which uses the [boto3 library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) to invoke the [image recognition service](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rekognition.html) and outputs the result.
+Use the code in [`Recognize_1.py`](Recognize_1.py) which uses
+the [boto3 library](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html) to invoke
+the [image recognition service](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/rekognition.html)
+and outputs the result.
 
 ```python
 import boto3
@@ -840,19 +878,23 @@ print(json.dumps(labels_list, indent=4))
   }
 }
 ```
+
 Compare the JSON output with the result of the console demo, in particular the values of "BoundingBox" and "Confidence".
 
-**Q422  Share your thoughts about what you have found out.** 
+**Q422 Share your thoughts about what you have found out.**
 
 <a name="Tasks43"/>
 
 ## Task 4.3: Get insights of website images using AWS Rekognition
 
-Using the code in the prevous sections build a Python application that obtains some insights out of website images. You are free to use any AWS Rekognition functionality.
+Using the code in the prevous sections build a Python application that obtains some insights out of website images. You
+are free to use any AWS Rekognition functionality.
 
 You may want to use the [requests](https://pypi.org/project/requests/) Python library to interact with the images.
 
-You may also want to create an AWS S3 Bucket to [store the images](./S3.py), depending on the AWS Rekognition functionality. The example below considers that the bucket `lab04-main.ccbda.upc.edu` already exists. Remember that AWS S3 buckets **must** have a globally unique name.
+You may also want to create an AWS S3 Bucket to [store the images](./S3.py), depending on the AWS Rekognition
+functionality. The example below considers that the bucket `lab04-main.ccbda.upc.edu` already exists. Remember that AWS
+S3 buckets **must** have a globally unique name.
 
 ```python
 import boto3
@@ -895,9 +937,10 @@ with open('./downloaded.jpeg', 'wb') as fd:
 
 Include the code modifications and eventual new files in the repo.
 
-**Q432  Add your thoughts about the application developed and the results that you have obtained.**
+**Q432 Add your thoughts about the application developed and the results that you have obtained.**
 
+Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with
+all the files generated during this session.
 
-Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with all the files generated during this session. 
-
-**Before the deadline**, all team members shall push their responses to their private *https://github.com/CCBDA-UPC/2024-4-xx* repository.
+**Before the deadline**, all team members shall push their responses to their private
+*https://github.com/CCBDA-UPC/2024-4-xx* repository.
