@@ -97,8 +97,11 @@ Unzip the file inside your responses repository for the current Lab session, and
 Create a `.env` file with the configuration of the project:
 
 ```bash
-DEBUG=True
-STARTUP_SIGNUP_TABLE=ccbda-signup-table
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_LOGLEVEL=info
+CCBDA_SIGNUP_TABLE=ccbda-signup-table
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
 AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
