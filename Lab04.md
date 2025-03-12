@@ -168,7 +168,7 @@ Once the homepage has been crawled we can continue crawling the rest of the URLs
 the tag **a** (anchor) with the attribute **href**.
 
 ```python
-        # Extract and follow hyperlinks
+# Extract and follow hyperlinks
 for link in response.css('a::attr(href)').getall():
     # Ensure the link is absolute
     absolute_link = urljoin(response.url, link)
@@ -194,7 +194,7 @@ class.
 We'll add the images to the list only if it is not already present.
 
 ```python
-                if full_image_url not in self.unique_images:
+if full_image_url not in self.unique_images:
     self.unique_images.append(full_image_url)
 ```
 
