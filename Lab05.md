@@ -5,18 +5,18 @@ yet, but in the meantime, you plan to deploy a small placeholder app that collec
 visitors who sign up to hear more. The signup app will help you reach potential students who might take part in a
 private beta test of the laboratory sessions.
 
-### Django: web framework
-
-[Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and
-clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
-to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
-
 ### The Signup App
 
 The app will allow your future students to submit contact information and express interest in a preview of the new
 subject on Cloud Computing that you're developing.
 
 To make the app look good, we use [Bootstrap](https://getbootstrap.com/), a mobile-first front-end framework that started as a Twitter project.
+
+#### Django: web framework
+
+[Django](https://www.djangoproject.com/start/) is a high-level Python web framework designed for rapid development and
+clean, pragmatic design. Built by experienced developers, it handles many complexities of web development, allowing you
+to focus on building your application without reinventing the wheel. Plus, it’s free and open source.
 
 ### AWS DynamoDB
 
