@@ -210,7 +210,7 @@ def closed(self, cause):
 The above code yields a JSON record containing something like the following example:
 
 ```json
-   {
+{
   "img_url": "https://www.upc.edu/++theme++homeupc/assets/images/Logo.svg",
   "appears_url": "https://www.upc.edu/ca"
 }
