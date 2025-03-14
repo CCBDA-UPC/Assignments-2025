@@ -571,6 +571,7 @@ DATABASES = {
 DATABASES['default'] = DATABASES[os.getenv('DATABASE', 'default')]
 ```
 
+
 ### Configure the Docker Compose file
 
 A `compose.yml` file allows you to manage multi-container applications.
@@ -594,9 +595,9 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
-  web:
+  code:
     build: .
-    container_name: django-docker
+    container_name: code
     ports:
       - "8000:8000"
     depends_on:
@@ -624,7 +625,8 @@ volumes:
 Let's create a new file named `production.env` to define the same `.env` variables and the ones related to using the
 PostGreSQL database.
 
-```text
+```bash
+_$ cat production.env
 DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
@@ -641,6 +643,25 @@ DB_PORT=5432
 DATABASE=postgresql
 ```
 
+We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders shall not be copied to the container when creating the Docker image.
+
+```bash
+_$ cat .dockerignore
+.venv
+*.env
+.gitignore
+README.md
+compose.yml
+*.sqlite
+*.sqlite3
+.DS_Store
+.git
+.idea
+.private
+```
+
+<img alt="Lab05-containers.png" src="images/Lab05-containers.png" width="50%"/>
+
 ### Build and run your new Django project
 
 By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then creates
@@ -653,37 +674,37 @@ _$ docker compose --env-file production.env up
 Compose now can delegate build to bake for better performances
 Just set COMPOSE_BAKE=true
 [+] Building 4.5s (18/18) FINISHED                                                                                                docker:desktop-linux
- => [web internal] load build definition from Dockerfile                                                                                          0.0s
+ => [code internal] load build definition from Dockerfile                                                                                          0.0s
  => => transferring dockerfile: 1.31kB                                                                                                            0.0s
- => [web internal] load metadata for docker.io/library/python:3.13.2-slim                                                                         0.8s
- => [web auth] library/python:pull token for registry-1.docker.io                                                                                 0.0s
- => [web internal] load .dockerignore                                                                                                             0.0s
+ => [code internal] load metadata for docker.io/library/python:3.13.2-slim                                                                         0.8s
+ => [code auth] library/python:pull token for registry-1.docker.io                                                                                 0.0s
+ => [code internal] load .dockerignore                                                                                                             0.0s
  => => transferring context: 130B                                                                                                                 0.0s
- => [web builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652           0.0s
+ => [code builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652           0.0s
  => => resolve docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652                       0.0s
- => [web internal] load build context                                                                                                             0.1s
+ => [code internal] load build context                                                                                                             0.1s
  => => transferring context: 22.11kB                                                                                                              0.1s
- => CACHED [web stage-1 2/6] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                                               0.0s
- => CACHED [web builder 2/6] RUN mkdir /app                                                                                                       0.0s
- => CACHED [web builder 3/6] WORKDIR /app                                                                                                         0.0s
- => CACHED [web builder 4/6] RUN pip install --upgrade pip                                                                                        0.0s
- => CACHED [web builder 5/6] COPY requirements.txt /app/                                                                                          0.0s
- => CACHED [web builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                                                   0.0s
- => CACHED [web stage-1 3/6] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/                0.0s
- => CACHED [web stage-1 4/6] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                                                  0.0s
- => CACHED [web stage-1 5/6] WORKDIR /app                                                                                                         0.0s
- => [web stage-1 6/6] COPY --chown=appuser:appuser . .                                                                                            0.7s
- => [web] exporting to image                                                                                                                      2.6s
+ => CACHED [code stage-1 2/6] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                                               0.0s
+ => CACHED [code builder 2/6] RUN mkdir /app                                                                                                       0.0s
+ => CACHED [code builder 3/6] WORKDIR /app                                                                                                         0.0s
+ => CACHED [code builder 4/6] RUN pip install --upgrade pip                                                                                        0.0s
+ => CACHED [code builder 5/6] COPY requirements.txt /app/                                                                                          0.0s
+ => CACHED [code builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                                                   0.0s
+ => CACHED [code stage-1 3/6] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/                0.0s
+ => CACHED [code stage-1 4/6] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                                                  0.0s
+ => CACHED [code stage-1 5/6] WORKDIR /app                                                                                                         0.0s
+ => [code stage-1 6/6] COPY --chown=appuser:appuser . .                                                                                            0.7s
+ => [code] exporting to image                                                                                                                      2.6s
  => => exporting layers                                                                                                                           0.1s
  => => exporting manifest sha256:2222b5f73ed85273f12efae0558757fa351bab444311dc2386452c4c2baa975c                                                 0.0s
  => => exporting config sha256:926f8eaca3f3e66e3477352e6ab02c545db461429749568cc737a41ee4e0faae                                                   0.0s
  => => exporting attestation manifest sha256:4098f7bccec9fe7fde841baacf7ded8be6b98e84b22e7c9851e4492cdfa23529                                     0.0s
  => => exporting manifest list sha256:5308235bfe9356bf00b3c907e44248d5daac8f7ffe18fb2fd05360e4ee685db2                                            0.0s
- => => naming to docker.io/library/django-webapp-web:latest                                                                                       0.0s
- => => unpacking to docker.io/library/django-webapp-web:latest                                                                                    2.4s
- => [web] resolving provenance for metadata file                                                                                                  0.0s
+ => => naming to docker.io/library/django-webapp-code:latest                                                                                       0.0s
+ => => unpacking to docker.io/library/django-webapp-code:latest                                                                                    2.4s
+ => [code] resolving provenance for metadata file                                                                                                  0.0s
 [+] Running 5/5
- ✔ web                                   Built                                                                                                    0.0s 
+ ✔ code                                   Built                                                                                                    0.0s 
  ✔ Network django-webapp_default         Created                                                                                                  0.1s 
  ✔ Volume "django-webapp_postgres_data"  Created                                                                                                  0.0s 
  ✔ Container postgress-db                Created                                                                                                  0.5s 
@@ -750,15 +771,15 @@ postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv4 address
 postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv6 address "::", port 5432
 postgress-db   | 2025-03-14 14:27:55.802 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
 postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut down at 2025-03-14 14:27:55 UTC
-postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                                                     
+postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                     
 ```
 
 Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning or every
-time that the Django code changes its data models. See that the command below **exec**utes in the container named "web"
+time that the Django code changes its data models. See that the command below **exec**utes in the container named "code"
 the command line `python manage.py migrate`.
 
 ```bash
-_$ docker compose --env-file production.env exec web python manage.py migrate
+_$ docker compose --env-file production.env exec code python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
 Running migrations:
@@ -782,12 +803,17 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-You can also create a command line connection with each container by issuing the commands below. See that the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt `appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to exit the CLI.
+### Test and access your application and its containers
+
+Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
+page, indicating that your app is up and running.
+
+Additionally, you can also create a command line connection with each container by issuing the commands below. See that the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt `appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to exit the CLI.
 
 ```bash
 _$ docker ps
 CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS                    PORTS                    NAMES
-07bd0798d09f   django-webapp-web   "gunicorn --bind 0.0…"   26 minutes ago   Up 26 minutes             0.0.0.0:8000->8000/tcp   django-docker
+07bd0798d09f   django-webapp-code   "gunicorn --bind 0.0…"   26 minutes ago   Up 26 minutes             0.0.0.0:8000->8000/tcp   django-docker
 de27f59e7644   postgres:17         "docker-entrypoint.s…"   26 minutes ago   Up 26 minutes (healthy)   0.0.0.0:5432->5432/tcp   postgress-db
 _$ docker exec -it 07 bash
 appuser@07bd0798d09f:/app$  ls -l
@@ -822,18 +848,6 @@ drwxr-xr-x   1 root root 4096 Feb 28 23:24 run
 lrwxrwxrwx   1 root root    8 Feb 24 00:00 sbin -> usr/sbin
 drwxr-xr-x   2 root root 4096 Feb 24 00:00 srv
 ^D
-```
-
-This command will download any necessary Docker images, build the project, and start the containers. Once complete, your
-Django application should be accessible at http://localhost:8000.
-
-### Test and access your application
-
-Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
-page, indicating that your app is up and running. To verify the database connection, try running a migration:
-
-```
-_$ docker compose run django-web python manage.py migrate
 ```
 
 **Q55: Share your thoughts on the task developed above.**
