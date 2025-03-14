@@ -576,6 +576,10 @@ DATABASES['default'] = DATABASES[os.getenv('DATABASE', 'default')]
 
 A `compose.yml` file allows you to manage multi-container applications.
 
+<img alt="Lab05-containers.png" src="images/Lab05-containers.png" width="50%"/>
+
+The following file creates two containers: `db` and `code` and one volume `postgres_data` that is used to store the database contents. Volumes are mounted to filesystem paths in your containers. Additionally, each container exposes some ports and connects them to external ports of the deployment.
+
 ```yaml
 services:
   db:
@@ -622,7 +626,7 @@ volumes:
   postgres_data:
 ```
 
-Let's create a new file named `production.env` to define the same `.env` variables and the ones related to using the
+Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to using the
 PostGreSQL database.
 
 ```bash
@@ -659,8 +663,6 @@ compose.yml
 .idea
 .private
 ```
-
-<img alt="Lab05-containers.png" src="images/Lab05-containers.png" width="50%"/>
 
 ### Build and run your new Django project
 
@@ -809,6 +811,8 @@ Once the webapp is running, you can test it by navigating to http://localhost:80
 page, indicating that your app is up and running.
 
 Additionally, you can also create a command line connection with each container by issuing the commands below. See that the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt `appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to exit the CLI.
+
+Please check that `.gitignore` has prevented some files to be copied.
 
 ```bash
 _$ docker ps
