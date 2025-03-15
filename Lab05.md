@@ -856,7 +856,6 @@ appuser@07bd0798d09f:/app$  ls -l
 total 168
 -rw-r--r-- 1 appuser appuser   1230 Mar 12 21:48 Dockerfile
 drwxr-xr-x 3 appuser appuser   4096 Mar 14 14:09 ccbda
-lrwxrwxrwx 1 appuser appuser     39 Mar  9 19:36 config.json -> /Users/angeltoribio/.docker/config.json
 drwxr-xr-x 3 appuser appuser   4096 Mar 14 14:09 form
 -rwxr-xr-x 1 appuser appuser    661 Mar  8 18:52 manage.py
 -rw-r--r-- 1 appuser appuser    285 Mar  9 15:11 requirements.txt
