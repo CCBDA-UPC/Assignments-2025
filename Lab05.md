@@ -133,8 +133,15 @@ _$ source ../.venv/bin/activate
 (.venv)_$ python --version
 Python 3.13.2
 (.venv)_$ pip install -r requirements.txt
-
 ```
+
+If necessary you can exit the virtual environment:
+
+```bash
+_$ (.venv)_$ deactivate
+_$ 
+```
+
 ### Web application running locally for testing and debugging
 
 You will now need to run a local testing server.
@@ -149,7 +156,6 @@ January 08, 2025 - 19:36:44
 Django version 5.1.7, using settings 'ccbda.settings'
 Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
-(.venv)_$ deactivate
 ```
 
 You can also create a PyCharm configuration tu run or debug the code.
