@@ -687,7 +687,7 @@ By running the following command, Docker pulls the PostGreSQL container image fr
 a database with the name, user and password that we have defined. For the second container it copies the code, creates
 the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the docker image created
 has a frozen copy of the code. If the web application code changes it will be necessary to rebuild the image and deploy
-it into its container. Check the log after the command to follow the creation process for the two containers.
+it into its container. Check the log after the command to follow the creation process for both containers.
 
 ```bash
 _$ docker compose --env-file production.env up
