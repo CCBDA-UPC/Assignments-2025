@@ -896,44 +896,43 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 - **Minimize divergence** between development and production, enabling **continuous deployment** for maximum agility;
 - And can **scale up** without significant changes to tooling, architecture, or development practices.
 
-1. Codebase
+1. **Codebase**: 
    One codebase tracked in revision control, many deploys
 
-1. Dependencies
+1. **Dependencies**: 
    Explicitly declare and isolate dependencies
 
-1. Config
+1. **Config**: 
    Store config in the environment
 
-1. Backing services
+1. **Backing services**: 
    Treat backing services as attached resources
 
-1. Build, release, run
+1. **Build, release, run**: 
    Strictly separate build and run stages
 
-1. Processes
+1. **Processes**: 
    Execute the app as one or more stateless processes
 
-1. Port binding
+1. **Port binding**: 
    Export services via port binding
 
-1. Concurrency
+1. **Concurrency**: 
    Scale out via the process model
 
-1. Disposability
+1. **Disposability**: 
    Maximize robustness with fast startup and graceful shutdown
 
-1. Dev/prod parity
+1. **Dev/prod parity**: 
    Keep development, staging, and production as similar as possible
 
-1. Logs
+1. **Logs**: 
    Treat logs as event streams
 
-1 Admin processes
+1. **Admin processes**: 
 Run admin/management tasks as one-off processes
 
-**Q56: For the above lab session, explain how each factor is taken into consideration, or what would you change or add
-to comply with each factor**
+**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you change or add to comply with each factor**
 
 # How to submit this assignment:
 
