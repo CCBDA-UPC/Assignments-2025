@@ -797,7 +797,7 @@ postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut
 postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                     
 ```
 
-Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning or every
+Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning, or every
 time that the Django code changes its data models. See that the command below **exec**utes in the container named "code"
 the command line `python manage.py migrate`.
 
@@ -844,7 +844,7 @@ the command `docker exec -it 07 bash` executes a `bash` interactive command line
 that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to
 exit the CLI.
 
-Please check that `.gitignore` has prevented some files to be copied.
+Please check that `.dockertignore` has prevented some files to be copied into the image of the code container.
 
 ```bash
 _$ docker ps
