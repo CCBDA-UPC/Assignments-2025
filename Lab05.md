@@ -556,6 +556,8 @@ You can see a significant improvement in the size of the container.
 The size was reduced from 1.62GB to 323MB, which leads to faster a deployment process when images are downloaded and
 cheaper storage costs when storing images.
 
+### Production-ready database
+
 Django is configured to, by default use a [SQLite](https://www.sqlite.org/) database which is not suitable for
 production environments. Let's add a [PostGreSQL](https://www.postgresql.org/) database that will be running in another
 container. See below the definition of the databases usage in the file `settings.py`.
