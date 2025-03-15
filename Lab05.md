@@ -831,6 +831,15 @@ Running migrations:
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
 page, indicating that your app is up and running.
 
+Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
+number of the docker host. That means that you can access the web application through port 8000 and the PostGreSQL
+through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to
+connect to the database hosted in Docker.
+
+<img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
+
+<img alt="Lab05-postgres-use.png" src="images/Lab05-postgres-use.png" width="50%"/>
+
 Additionally, you can also create a command line connection with each container by issuing the commands below. See that
 the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt
 `appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID
@@ -896,43 +905,44 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 - **Minimize divergence** between development and production, enabling **continuous deployment** for maximum agility;
 - And can **scale up** without significant changes to tooling, architecture, or development practices.
 
-1. **Codebase**: 
+1. **Codebase**:
    One codebase tracked in revision control, many deploys
 
-1. **Dependencies**: 
+1. **Dependencies**:
    Explicitly declare and isolate dependencies
 
-1. **Config**: 
+1. **Config**:
    Store config in the environment
 
-1. **Backing services**: 
+1. **Backing services**:
    Treat backing services as attached resources
 
-1. **Build, release, run**: 
+1. **Build, release, run**:
    Strictly separate build and run stages
 
-1. **Processes**: 
+1. **Processes**:
    Execute the app as one or more stateless processes
 
-1. **Port binding**: 
+1. **Port binding**:
    Export services via port binding
 
-1. **Concurrency**: 
+1. **Concurrency**:
    Scale out via the process model
 
-1. **Disposability**: 
+1. **Disposability**:
    Maximize robustness with fast startup and graceful shutdown
 
-1. **Dev/prod parity**: 
+1. **Dev/prod parity**:
    Keep development, staging, and production as similar as possible
 
-1. **Logs**: 
+1. **Logs**:
    Treat logs as event streams
 
-1. **Admin processes**: 
-Run admin/management tasks as one-off processes
+1. **Admin processes**:
+   Run admin/management tasks as one-off processes
 
-**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you change or add to comply with each factor**
+**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
+change or add to comply with each factor**
 
 # How to submit this assignment:
 
