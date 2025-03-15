@@ -65,8 +65,6 @@ If you need help with the installation, you can find detailed instructions on th
 
 The signup app uses a DynamoDB table to store the contact information that users submit.
 
-#### To create a DynamoDB table
-
 Go to the course "AWS Academy Learner Lab", open the modules and open the "Learner Lab". Click the button "Start Lab",
 wait until the environment is up and then click "AWS" at the top of the window and open the AWS Console.
 
@@ -124,9 +122,7 @@ ambiguities.
 Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and
 its version, that it requires to be executed successfully.
 
-The package `boto3` is a library that hides de AWS REST API to the programmer and manages the communication between the
-web app and all the AWS services.
-Check [**Boto 3 Documentation**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
+In particular, the package `boto3` is a library that hides de AWS REST API to the programmer and manages the communication between the web app and all the AWS services. Check [**Boto 3 Documentation**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
 
 Please, note the different prompt  `(.env)_$`  vs. `_$` when you are inside or outside the Python virtual
 environment.
@@ -134,8 +130,12 @@ environment.
 ```
 _$ virtualenv -p python3 ../.venv
 _$ source ../.venv/bin/activate
+(.venv)_$ python --version
+Python 3.13.2
 (.venv)_$ pip install -r requirements.txt
+
 ```
+### Web application running locally for testing and debugging
 
 You will now need to run a local testing server.
 
@@ -155,8 +155,6 @@ Quit the server with CONTROL-C.
 You can also create a PyCharm configuration tu run or debug the code.
 
 <img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="80%"/>
-
-### Web application running locally
 
 Once the web app is running, check that you have configured the access to DynamoDB correctly by interacting with the web
 app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
