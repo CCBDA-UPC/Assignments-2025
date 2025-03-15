@@ -902,6 +902,8 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 - **Minimize divergence** between development and production, enabling **continuous deployment** for maximum agility;
 - And can **scale up** without significant changes to tooling, architecture, or development practices.
 
+### The Twelve Factors
+
 1. **Codebase**:
    One codebase tracked in revision control, many deploys
 
