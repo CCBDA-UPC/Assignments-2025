@@ -34,7 +34,8 @@ push notifications to an email address.
 
 ### Docker
 
-Docker is a **Platform as a Service (PaaS)** solution that leverages OS-level virtualization to package software into
+[Docker](https://www.docker.com/) is a **Platform as a Service (PaaS)** solution that leverages OS-level virtualization
+to package software into
 units known as **containers**. These containers ensure that applications can run consistently and efficiently across
 various environments. Docker provides both free and premium options and operates through its core software, Docker
 Engine, which has been maintained by Docker, Inc. since its initial release in 2013.
@@ -94,7 +95,9 @@ Unzip the file inside your responses repository for the current Lab session, and
 
 ## Task 5.3: Test the web app locally
 
-Create a `.env` file with the configuration of the project:
+### Configuration of the web application
+
+Inside of the django-webapp folder, create a `.env` file with the configuration for the project:
 
 ```text
 DJANGO_DEBUG=True
@@ -108,14 +111,14 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 ```
 
-The .gitignore file contains rules to avoid pushing to the repository files such as `.env` containing sensitive
-information. **Make sure to have such functionality present in your future projects**.
+Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
+containing sensitive information. **Make sure to have such functionality present in your future projects**.
+
+### Web application Virtual environment 
 
 Next, create a **new Python 3.13 virtual environment** specially for this web app and install the packages required to
-run it.
-
-We are creating a new Python virtual environment locally only to keep the packages that the web app uses. Having a small
-Python environment implies a faster web app startup avoiding, as much as possible, any hidden dependencies and
+run it. The new Python virtual environment is created locally only to keep the packages that the web app uses. Having a
+small Python environment implies a faster web app startup avoiding, as much as possible, any hidden dependencies and
 ambiguities.
 
 Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and
@@ -153,6 +156,7 @@ You can also create a PyCharm configuration tu run or debug the code.
 
 <img src="./images/Lab04-pycharm-config.png" alt="AWS service" title="AWS service" width="80%"/>
 
+### Web application running locally
 
 Once the web app is running, check that you have configured the access to DynamoDB correctly by interacting with the web
 app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
@@ -571,14 +575,15 @@ DATABASES = {
 DATABASES['default'] = DATABASES[os.getenv('DATABASE', 'default')]
 ```
 
-
 ### Configure the Docker Compose file
 
 A `compose.yml` file allows you to manage multi-container applications.
 
 <img alt="Lab05-containers.png" src="images/Lab05-containers.png" width="50%"/>
 
-The following file creates two containers: `db` and `code` and one volume `postgres_data` that is used to store the database contents. Volumes are mounted to filesystem paths in your containers. Additionally, each container exposes some ports and connects them to external ports of the deployment.
+The following file creates two containers: `db` and `code` and one volume `postgres_data` that is used to store the
+database contents. Volumes are mounted to filesystem paths in your containers. Additionally, each container exposes some
+ports and connects them to external ports of the deployment.
 
 ```yaml
 services:
@@ -626,7 +631,8 @@ volumes:
   postgres_data:
 ```
 
-Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to using the
+Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to using
+the
 PostGreSQL database.
 
 ```bash
@@ -647,7 +653,8 @@ DB_PORT=5432
 DATABASE=postgresql
 ```
 
-We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders shall not be copied to the container when creating the Docker image.
+We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders
+shall not be copied to the container when creating the Docker image.
 
 ```bash
 _$ cat .dockerignore
@@ -810,7 +817,11 @@ Running migrations:
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
 page, indicating that your app is up and running.
 
-Additionally, you can also create a command line connection with each container by issuing the commands below. See that the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt `appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to exit the CLI.
+Additionally, you can also create a command line connection with each container by issuing the commands below. See that
+the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt
+`appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID
+that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to
+exit the CLI.
 
 Please check that `.gitignore` has prevented some files to be copied.
 
