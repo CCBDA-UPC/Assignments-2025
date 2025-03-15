@@ -138,7 +138,7 @@ Python 3.13.2
 If necessary you can exit the virtual environment:
 
 ```bash
-_$ (.venv)_$ deactivate
+(.venv)_$ deactivate
 _$ 
 ```
 
