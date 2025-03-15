@@ -112,7 +112,7 @@ AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
 containing sensitive information. **Make sure to have such functionality present in your future projects**.
 
-### Web application Virtual environment 
+### Web application Virtual environment
 
 Next, create a **new Python 3.13 virtual environment** specially for this web app and install the packages required to
 run it. The new Python virtual environment is created locally only to keep the packages that the web app uses. Having a
@@ -122,7 +122,9 @@ ambiguities.
 Check the contents of the file **requirements.txt** that the web application declares as the set of Python packages, and
 its version, that it requires to be executed successfully.
 
-In particular, the package `boto3` is a library that hides de AWS REST API to the programmer and manages the communication between the web app and all the AWS services. Check [**Boto 3 Documentation**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
+In particular, the package `boto3` is a library that hides de AWS REST API to the programmer and manages the
+communication between the web app and all the AWS services. Check [**Boto 3 Documentation
+**](https://boto3.readthedocs.io/en/latest/reference/services/index.html) for more details.
 
 Please, note the different prompt  `(.env)_$`  vs. `_$` when you are inside or outside the Python virtual
 environment.
@@ -682,7 +684,10 @@ compose.yml
 ### Build and run your new Django project
 
 By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then creates
-a database with the name, user and password that we have defined. Check the log after the command.
+a database with the name, user and password that we have defined. For the second container it copies the code, creates
+the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the docker image created
+has a frozen copy of the code. If the web application code changes it will be necessary to rebuild the image and deploy
+it into its container. Check the log after the command to follow the creation process for the two containers.
 
 ```bash
 _$ docker compose --env-file production.env up
