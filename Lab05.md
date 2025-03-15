@@ -832,9 +832,7 @@ Once the webapp is running, you can test it by navigating to http://localhost:80
 page, indicating that your app is up and running.
 
 Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
-number of the docker host. That means that you can access the web application through port 8000 and the PostGreSQL
-through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to
-connect to the database hosted in Docker.
+number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
