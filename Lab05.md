@@ -58,6 +58,7 @@ If you need help with the installation, you can find detailed instructions on th
 * [Task 5.4: Use AWS Simple Notification Service in your web app](#Tasks54)
 * [Task 5.5: Configure Docker](#Tasks55)
 * [Task 5.6: Deploy the target web app](#Tasks56)
+* [Task 5.7: Analisys of the twelve-factor app methodology](#Tasks57)
 
 <a name="Task51"/>
 
@@ -879,6 +880,60 @@ drwxr-xr-x   2 root root 4096 Feb 24 00:00 srv
 ```
 
 **Q55: Share your thoughts on the task developed above.**
+
+
+<a name="Task57"/>
+
+### Task 5.7: Analisys of the twelve-factor app methodology
+
+The [twelve-factor app](https://12factor.net/) is a methodology for building software-as-a-service apps that:
+
+- Use **declarative** formats for setup automation, to minimize time and cost for new developers joining the project;
+- Have a **clean contract** with the underlying operating system, offering **maximum portability** between execution
+  environments;
+- Are suitable for **deployment** on modern **cloud platforms**, obviating the need for servers and systems
+  administration;
+- **Minimize divergence** between development and production, enabling **continuous deployment** for maximum agility;
+- And can **scale up** without significant changes to tooling, architecture, or development practices.
+
+1. Codebase
+   One codebase tracked in revision control, many deploys
+
+1. Dependencies
+   Explicitly declare and isolate dependencies
+
+1. Config
+   Store config in the environment
+
+1. Backing services
+   Treat backing services as attached resources
+
+1. Build, release, run
+   Strictly separate build and run stages
+
+1. Processes
+   Execute the app as one or more stateless processes
+
+1. Port binding
+   Export services via port binding
+
+1. Concurrency
+   Scale out via the process model
+
+1. Disposability
+   Maximize robustness with fast startup and graceful shutdown
+
+1. Dev/prod parity
+   Keep development, staging, and production as similar as possible
+
+1. Logs
+   Treat logs as event streams
+
+1 Admin processes
+Run admin/management tasks as one-off processes
+
+**Q56: For the above lab session, explain how each factor is taken into consideration, or what would you change or add
+to comply with each factor**
 
 # How to submit this assignment:
 
