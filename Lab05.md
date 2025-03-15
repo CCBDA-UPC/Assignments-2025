@@ -388,9 +388,11 @@ Quit the server with CONTROL-C.
 
 "GET / HTTP/1.1" 200 7299
 New item added to database.
+SNS message sent.
 "POST /signup HTTP/1.1" 200 0
 "GET / HTTP/1.1" 200 7299
 New item added to database.
+SNS message sent.
 "POST /signup HTTP/1.1" 200 0
 ```
 
