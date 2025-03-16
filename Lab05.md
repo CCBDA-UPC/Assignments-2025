@@ -486,6 +486,10 @@ RUN useradd -m -r appuser && \
    mkdir /app && \
    chown -R appuser /app
  
+RUN apt-get update && \
+   DEBIAN_FRONTEND=noninteractive && \
+   apt-get install --no-install-recommends --assume-yes postgresql-client \
+    
 # Copy the Python dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
@@ -513,37 +517,39 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "my_docker_django_a
 Build the Docker container image again.
 
 ```bash
-_$ docker build -t django-docker .
-[+] Building 0.9s (16/16) FINISHED                                                                    docker:desktop-linux
- => [internal] load build definition from Dockerfile                                                                  0.0s
- => => transferring dockerfile: 1.31kB                                                                                0.0s
- => [internal] load metadata for docker.io/library/python:3.13.2-slim                                                 0.4s
- => [internal] load .dockerignore                                                                                     0.0s
- => => transferring context: 108B                                                                                     0.0s
- => [builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655d  0.0s
- => => resolve docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e2  0.0s
- => [internal] load build context                                                                                     0.0s
- => => transferring context: 17.80kB                                                                                  0.0s
- => CACHED [stage-1 2/6] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                       0.0s
- => CACHED [builder 2/6] RUN mkdir /app                                                                               0.0s
- => CACHED [builder 3/6] WORKDIR /app                                                                                 0.0s
- => CACHED [builder 4/6] RUN pip install --upgrade pip                                                                0.0s
- => CACHED [builder 5/6] COPY requirements.txt /app/                                                                  0.0s
- => CACHED [builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                           0.0s
- => CACHED [stage-1 3/6] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site  0.0s
- => CACHED [stage-1 4/6] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                          0.0s
- => CACHED [stage-1 5/6] WORKDIR /app                                                                                 0.0s
- => [stage-1 6/6] COPY --chown=appuser:appuser . .                                                                    0.0s
- => exporting to image                                                                                                0.2s
- => => exporting layers                                                                                               0.1s
- => => exporting manifest sha256:56db48fb15a56394b268acbe3c80d51b25d08f736d293ee89f62158b3ab619b8                     0.0s
- => => exporting config sha256:573556a701dae35a76b79413265d839d49ab2f7e402cb57aca462e1e9cca0432                       0.0s
- => => exporting attestation manifest sha256:f6b7d79f2dfdfdfef29bc20bae2f6b82dfbd21ab9d685482d92aaf704d8757ce         0.0s
- => => exporting manifest list sha256:bef8941dad38cae70d4b6cca04f98c5312074ce6b955c1af3d02ecbb1b86783f                0.0s
- => => naming to docker.io/library/django-docker:latest                                                               0.0s
- => => unpacking to docker.io/library/django-docker:latest                                                            0.0s
+_$  docker build -t django-docker .
+[+] Building 29.1s (18/18) FINISHED                                                                                                          docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                         0.1s
+ => => transferring dockerfile: 1.44kB                                                                                                                       0.0s
+ => [internal] load metadata for docker.io/library/python:3.13.2-slim                                                                                        0.9s
+ => [auth] library/python:pull token for registry-1.docker.io                                                                                                0.0s
+ => [internal] load .dockerignore                                                                                                                            0.0s
+ => => transferring context: 170B                                                                                                                            0.0s
+ => [internal] load build context                                                                                                                            0.1s
+ => => transferring context: 426.64kB                                                                                                                        0.1s
+ => [builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652                          0.0s
+ => => resolve docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652                                  0.0s
+ => CACHED [builder 2/6] RUN mkdir /app                                                                                                                      0.0s
+ => CACHED [builder 3/6] WORKDIR /app                                                                                                                        0.0s
+ => CACHED [builder 4/6] RUN pip install --upgrade pip                                                                                                       0.0s
+ => [builder 5/6] COPY requirements.txt /app/                                                                                                                0.1s
+ => [builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                                                                        13.6s
+ => CACHED [stage-1 2/7] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                                                              0.0s
+ => CACHED [stage-1 3/7] RUN apt-get update &&    DEBIAN_FRONTEND=noninteractive &&    apt-get install --no-install-recommends --assume-yes postgresql-clie  0.0s
+ => [stage-1 4/7] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/                                      2.3s
+ => [stage-1 5/7] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                                                                        0.2s
+ => [stage-1 6/7] WORKDIR /app                                                                                                                               0.0s
+ => [stage-1 7/7] COPY --chown=appuser:appuser . .                                                                                                           0.1s
+ => exporting to image                                                                                                                                      10.1s
+ => => exporting layers                                                                                                                                      5.0s
+ => => exporting manifest sha256:25c54e575e78c51a302769ade6a15a79d0cccea8e5a363e4b8b8bef68760712a                                                            0.0s
+ => => exporting config sha256:d7e9dc4b13b62eb2ae9a738fe510c784a45187559cf414670ebaa1892a0f8670                                                              0.0s
+ => => exporting attestation manifest sha256:063ca1fe56997fced695edce2e0009b3c1352b473cc23734cc3c05d1a069d459                                                0.0s
+ => => exporting manifest list sha256:d76d036c22f82a37d010dbf48d675e85ad8296fb907924505b688387f7cf3c73                                                       0.2s
+ => => naming to docker.io/library/django-docker:latest                                                                                                      0.0s
+ => => unpacking to docker.io/library/django-docker:latest                                                                                                   4.8s
 
-View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/eozjf8cg6oqlycu26ukdja5sb
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/pgn85nhr54gp8gufzuca5b5mt
 ```
 
 After making these changes, we can run a docker image list again:
@@ -551,12 +557,12 @@ After making these changes, we can run a docker image list again:
 ```text
 _$  docker image list  
 REPOSITORY          TAG       IMAGE ID       CREATED              SIZE
-django-docker       latest    bef8941dad38   About a minute ago   323MB
+django-docker       latest    bef8941dad38   About a minute ago   433MB
 ```
 
 You can see a significant improvement in the size of the container.
 
-The size was reduced from 1.62GB to 323MB, which leads to faster a deployment process when images are downloaded and
+The size was reduced from 1.62GB to 433MB, which leads to faster a deployment process when images are downloaded and
 cheaper storage costs when storing images.
 
 ### Production-ready database
@@ -631,7 +637,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - CCBDA_SIGNUP_TABLE=${CCBDA_SIGNUP_TABLE}
       - AWS_REGION=${AWS_REGION}
@@ -660,6 +666,7 @@ AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 DB_NAME=ccbdadb
 DB_USER=ccbdauser
 DB_PASSWORD=ccbdapassword
+DB_HOST=db
 DB_PORT=5432
 DATABASE=postgresql
 ```
@@ -684,11 +691,13 @@ compose.yml
 
 ### Build and run your new Django project
 
-By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then creates
-a database with the name, user and password that we have defined. For the second container it copies the code, creates
-the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the docker image created
-has a frozen copy of the code. If the web application code changes it will be necessary to rebuild the image and deploy
-it into its container. Check the log after the command to follow the creation process for both containers.
+By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then
+creates a database with the name, user and password that we have defined in the environment for the container. 
+For the second container it copies the
+code, creates the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the
+docker image created has a frozen copy of the code. If the web application code changes it will be necessary to
+rebuild the image and deploy it into its container. Check the log after the command to follow the creation process
+for both containers.
 
 ```bash
 _$ docker compose --env-file production.env up
@@ -794,12 +803,12 @@ postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv4 address
 postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv6 address "::", port 5432
 postgress-db   | 2025-03-14 14:27:55.802 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
 postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut down at 2025-03-14 14:27:55 UTC
-postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                     
+postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                    
 ```
 
-Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning, or every
-time that the Django code changes its data models. See that the command below **exec**utes in the container named "code"
-the command line `python manage.py migrate`.
+Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning,
+or every time that the Django code changes its data models. See that the command below **exec**utes in the
+container named "code" the command line `python manage.py migrate`.
 
 ```bash
 _$ docker compose --env-file production.env exec code python manage.py migrate
@@ -832,7 +841,9 @@ Once the webapp is running, you can test it by navigating to http://localhost:80
 page, indicating that your app is up and running.
 
 Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
-number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
+number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that
+you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or
+the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
