@@ -631,7 +631,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=db
+      - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - CCBDA_SIGNUP_TABLE=${CCBDA_SIGNUP_TABLE}
       - AWS_REGION=${AWS_REGION}
@@ -661,6 +661,7 @@ DB_NAME=ccbdadb
 DB_USER=ccbdauser
 DB_PASSWORD=ccbdapassword
 DB_PORT=5432
+DB_HOST=db
 DATABASE=postgresql
 ```
 

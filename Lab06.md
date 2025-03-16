@@ -1,163 +1,99 @@
-### CI/CD build using GitHub Actions
+## Pre-requisites
 
-This workflow will build and push a new container image to Amazon ECR,
-and then will deploy a new task definition to Amazon ECS, when there is a push to the "main" branch.
+Have **AWS Command Line Interface ([AWS CLI](https://aws.amazon.com/cli/))** installed and configured with the current
+value of your AWS credentials.
 
-To use this workflow, you will need to complete the following set-up steps:
+Check the instructions
+for [installing or updating to the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) depending on the operating system of your laptop.
 
-1. Create an ECR repository to store your images.
-   For example: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-1`.
-   Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
-   Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+You can save your frequently used configuration settings and credentials in files that are maintained by the AWS CLI.
 
-2. Create an ECS task definition, an ECS cluster, and an ECS service.
-   For example, follow the Getting Started guide on the ECS console:
-     https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun
-   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the Amazon ECS service.
-   Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the cluster.
+The files are divided into profiles. By default, the AWS CLI uses the settings found in the profile named **default**.
+To use alternate settings, you can create and reference additional profiles.
 
-3. Store your ECS task definition as a JSON file in your repository.
-   The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
-   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON file.
-   Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
-   in the `containerDefinitions` section of the task definition.
+Let's create a configuration file: `aws configure` asks you for the value of the different parameters that you've
+obtained from your current Learner Lab session. We are not going to enter any value for the credentials and only select
+the default AWS region and output format.
 
-4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-   See the documentation for each action used below for the recommended IAM policies for this IAM user,
-   and best practices on handling the access key credentials.
+<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%"/>
 
-
-Starter workflow outline
-
-trigger and branches
-
-permissions
-
-jobs and runner
-
-steps
-
-name and uses
-
-```yaml
-name: Deploy to Amazon ECS
-
-on:
-  push:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
+```bash
+_$ aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: us-east-1
+Default output format [None]: json
+_$ cat $HOME/.aws/config
+[default]
+region = us-east-1
+output = json
 ```
 
+We will edit the `$HOME/.aws/config` file and paste the values directly. Then we can check that the AWS CLI is correctly configured by showing its version, listing the AWS S3 buckets or the current account summary.
 
+```bash
+_$ cat $HOME/.aws/config
+[default]
+output = json
+region = us-east-1
+aws_access_key_id = <YOUR-ACCESS-KEY-ID>
+aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
+aws_session_token = <YOUR-AWS-SESSION-TOKEN>
+_$  aws --version
+aws-cli/2.0.16 Python/3.7.4 Darwin/24.3.0 botocore/2.0.0dev20
+_$  aws s3 ls
+2025-01-11 18:47:30 lab04-main.ccbda.upc.edu
+_$ aws iam get-account-summary
+{
+    "SummaryMap": {
+        "GroupPolicySizeQuota": 5120,
+        "InstanceProfilesQuota": 1000,
+        "Policies": 6,
+      ....
+        "GroupsQuota": 300
+    }
+} 
+```
 
+<a name="Task61"/>
 
+## Task 6.1: Adding the Docker images to AWS ECR
 
-### AWS CloudFront CDN
-
-A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy
-servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low
-latency, and high performance.
-
-<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
-
-The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
-part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
-balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
-possible to improve the "user experience".
-
-Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
-downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
-social networks and so much more.
-
-Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
-Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
-
-**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
-speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
-**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
-custom code close to final viewers.
-
-### AWS ECS: Elastic Container Service
-
-Amazon Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
-managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
-solution for running workloads in the cloud or on-premises with Amazon ECS Anywhere.
-
-Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
-
-- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
-  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
-  different systems and servers, making local development, testing, and deployment more reliable.
-
-- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
-  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
-  compatibility issues.
-
-- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
-  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
-
-- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
-  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
-  integrate and deploy changes.
-
-* [Task 5.5: Create a new option to retrieve the list of leads](#Tasks55)
-* [Task 5.6: Improve the web app transfer of information](#Tasks56)
-* [Task 5.7: Deliver static content using a Content Delivery Network](#Tasks57)
-
-
-The Python virtual environment will be re-created remotely by Docker through the use of the file *requirements.txt* and
-other configuration that you are going to set up later.
-
-
-<a name="Task54"/>
-
-
-### Adding the Docker images to Amazon ECR
-
-In this task you will add the Docker images that you created to an Amazon Elastic Container Registry (Amazon ECR)
+In this task you will add the Docker images that you created to an AWS Elastic Container Registry (AWS ECR)
 repository.
 
-Authorize your Docker client to connect to the Amazon ECR service.
+Authorize your Docker client to connect to the AWS ECR service.
 
 #### Discover your AWS account ID.
 
-In the AWS Management Console, in the upper-right corner, choose your user name. Your user name begins with voclab/user.
+In the AWS Management Console, in the upper-right corner, click on top of your username. Your username begins with
+voclab/user.
 
 <img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" width="50%"/>
 
-Copy the My Account value from the menu. This is your AWS account ID.
+Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
-Next, return to the VS Code IDE Bash terminal.
-
-To authorize your VS Code IDE Docker client, run the following command. Replace `<account-id>` with the actual account
+To authorize your Docker client, run the following command. Replacing `<account-id>` with the actual account
 ID that you just found:
 
 ```bash
-_$ aws ecr get-login-password --region us-east-1 --profile learning-lab | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+_$ aws ecr get-login-password | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
 Login Succeeded
 ```
 
-A message indicates that the login succeeded.
+Verify that the command responds with a message indicating that the login succeeded.
 
 To create the repository, run the following command:
 
 ```bash
-_$ aws ecr create-repository --region us-east-1 --profile learning-lab --repository-name django-webapp-web
+_$ aws ecr create-repository --repository-name django-webapp-code
 {
     "repository": {
-        "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-web",
+        "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-code",
         "registryId": "383312122003",
-        "repositoryName": "django-webapp-web",
-        "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web",
-        "createdAt": "2025-03-11T19:34:44.374000+01:00",
+        "repositoryName": "django-webapp-code",
+        "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+        "createdAt": "2025-03-15T16:44:17.171000+01:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
             "scanOnPush": false
@@ -167,44 +103,37 @@ _$ aws ecr create-repository --region us-east-1 --profile learning-lab --reposit
 ```
 
 The response data is in JSON format and includes a repositoryArn value. This is the URI that you would use to reference
-your image for future deployments.
-
-The response also includes a registryId, which you will use in a moment.
+your image for future deployments. The response also includes a registryId, which you will use in a moment.
 
 ### Tag the Docker image.
 
 In this step, you will tag the image with your unique registryId value to make it easier to manage and keep track of
-this image.
-
-Run the following command. Replace <registry-id> with your actual registry ID number.
+this image. Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-webapp-web:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
+_$ docker tag django-webapp-code:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp:latest
 ```
 
-The command does not provide a response.
-
-To verify that the tag was applied, run the following command:
+The command does not provide a response. To verify that the tag was applied, run the following command:
 
 ```bash
 _$ docker images
-REPOSITORY                                                       TAG       IMAGE ID       CREATED         SIZE
-383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web   latest    267825271330   50 minutes ago      472MB
-django-webapp-web                                                latest    267825271330   50 minutes ago      472MB
-django-docker                                                    latest    76fe7cceb54c   50 minutes ago      472MB
-docker/welcome-to-docker                                         latest    eedaff45e3c7   16 months ago      29.5MB
+REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
+383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code   latest    79e93509f63d   21 hours ago   321MB
+django-webapp-code                                                latest    79e93509f63d   21 hours ago   321MB
+postgres                                                          17        81f32a88ec56   2 weeks ago    621MB
 ```
 
 This time, notice that the latest tag was applied and the image name includes the remote repository name where you
 intend to store it.
 
-### Push the Docker image to the Amazon ECR repository.
+### Push the Docker image to the AWS ECR repository.
 
-To push your image to Amazon ECR, run the following command. Replace <registry-id> with your actual registry ID number:
+To push your image to AWS ECR, run the following command. Replace <registry-id> with your actual registry ID number:
 
 ```bash
-_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web:latest
-The push refers to repository [383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web]
+_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
+The push refers to repository [383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code]
 4b785e93aa71: Pushed 
 be1449717b1e: Pushed 
 ff1399ac0930: Pushed 
@@ -212,24 +141,25 @@ ff1399ac0930: Pushed
 dac1d3453b30: Pushed 
 e1599d0f5c4d: Pushed 
 8b6fcbaf930d: Pushed 
-000e068808cd: Pushed 
-latest: digest: sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df size: 856
+000e068808cd: Pushed
+
+latest: digest: sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125 size: 856
 ```
 
-To confirm that the django-webapp-web image is now stored in Amazon ECR, run the following aws ecr list-images command:
+To confirm that the django-webapp-code image is now stored in AWS ECR, run the following aws ecr list-images command:
 
 ```bash
-_$ aws ecr list-images --region us-east-1 --profile learning-lab --repository-name django-webapp-web
+_$ aws ecr list-images --repository-name django-webapp-code
 {
     "imageIds": [
         {
-            "imageDigest": "sha256:f7148ebbf59e9d417787189935b5b1db8f2de609a2bfbde559a13fed2125fc09"
+            "imageDigest": "sha256:e33b3087f42f9b5b23ee5ce33a8a279fc1c2a2d1070a9eaae3c298cd8d3c803f"
         },
         {
-            "imageDigest": "sha256:15d7d9cbdd1c90804fc4beea182006d6212497d936182a5c19e3b52ca24932e6"
+            "imageDigest": "sha256:8f1ee7414d796b6ed70dcfa9facff56438bba6b2665066362eea9b5dca2c667d"
         },
         {
-            "imageDigest": "sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df",
+            "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTag": "latest"
         }
     ]
@@ -239,15 +169,15 @@ _$ aws ecr list-images --region us-east-1 --profile learning-lab --repository-na
 You can also find more details about the repositories that you have created.
 
 ```bash
-_$ aws ecr --region us-east-1 --profile learning-lab describe-repositories
+_$ aws ecr describe-repositories
 {
     "repositories": [
         {
-            "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-web",
+            "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-code",
             "registryId": "383312122003",
-            "repositoryName": "django-webapp-web",
-            "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-web",
-            "createdAt": "2025-03-09T19:34:44.374000+01:00",
+            "repositoryName": "django-webapp-code",
+            "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+            "createdAt": "2025-03-15T16:44:17.171000+01:00",
             "imageTagMutability": "MUTABLE",
             "imageScanningConfiguration": {
                 "scanOnPush": false
@@ -260,36 +190,136 @@ _$ aws ecr --region us-east-1 --profile learning-lab describe-repositories
 And information about the images of the repository.
 
 ```bash
-_$ aws ecr --region us-east-1 --profile learning-lab describe-images --repository-name django-webapp-web 
+_$ aws ecr describe-images --repository-name django-webapp-code
 {
     "imageDetails": [
         {
             "registryId": "383312122003",
-            "repositoryName": "django-webapp-web",
-            "imageDigest": "sha256:f7148ebbf59e9d417787189935b5b1db8f2de609a2bfbde559a13fed2125fc09",
-            "imageSizeInBytes": 1347,
-            "imagePushedAt": "2025-03-09T19:36:55.306000+01:00"
+            "repositoryName": "django-webapp-code",
+            "imageDigest": "sha256:e33b3087f42f9b5b23ee5ce33a8a279fc1c2a2d1070a9eaae3c298cd8d3c803f",
+            "imageSizeInBytes": 1348,
+            "imagePushedAt": "2025-03-15T16:47:53.153000+01:00"
         },
         {
             "registryId": "383312122003",
-            "repositoryName": "django-webapp-web",
-            "imageDigest": "sha256:15d7d9cbdd1c90804fc4beea182006d6212497d936182a5c19e3b52ca24932e6",
-            "imageSizeInBytes": 107561397,
-            "imagePushedAt": "2025-03-09T19:36:55.302000+01:00"
+            "repositoryName": "django-webapp-code",
+            "imageDigest": "sha256:8f1ee7414d796b6ed70dcfa9facff56438bba6b2665066362eea9b5dca2c667d",
+            "imageSizeInBytes": 75387102,
+            "imagePushedAt": "2025-03-15T16:47:53.161000+01:00"
         },
         {
             "registryId": "383312122003",
-            "repositoryName": "django-webapp-web",
-            "imageDigest": "sha256:2678252713306015408b4236326c85c11e059cb3b10904650a299143789a90df",
+            "repositoryName": "django-webapp-code",
+            "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTags": [
                 "latest"
             ],
-            "imageSizeInBytes": 107561397,
-            "imagePushedAt": "2025-03-09T19:36:55.949000+01:00"
+            "imageSizeInBytes": 75387102,
+            "imagePushedAt": "2025-03-15T16:47:53.707000+01:00"
         }
     ]
 }
 ```
+<a name="Tasks62" />
+
+## Task 6.2: Running Containers on AWS Elastic Beanstalk
+
+Open your preferred text editor, and copy and paste the following text into a new file.
+
+
+```text
+Database endpoint:
+Database master User: postgres
+Database master Password: MyP4ssW0rd!
+IDE VPC ID:
+IDE Availability Zone:
+IDE subnet ID:
+extraSubnetForRds subnet ID:
+IDE security group ID:
+Repository URI:
+Elastic Beanstalk URL:
+
+```
+
+### AWS Relational Database Service
+
+AWS Relational Database Service (AWS RDS) is a web service that makes it easier to set up, operate, and scale a relational database in the AWS Cloud. It provides cost-efficient, resizable capacity for an industry-standard relational database and manages common database administration tasks.
+
+Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database that will replace the database used in the previous lab session.
+
+For the `database creation method` use `Easy create` and `PostGreSQL` for the `Configuration` box. A `DB instance size` of `Free tier` will be enough for the Lab session.
+
+In `DB instance identifier` type `database-lab`, for `Master username` keep `postgres`, for `Credentials management` select `self managed`, for `Master password` type `MyP4ssW0rd!`, and finally click on the `Create database` button. Skip the add-on screen and wait a few minutes until the database is created. Click on the database links, find and copy the database `Endpoint` in the text file.
+
+<img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="50%"/>
+
+Using the PyCharm database wizard you could access the database from your laptop as shown below.
+
+<img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="50%"/>
+
+To achieve that you'll need to make the RDS instance to be assigned a public IP and modify the network security group to allow connections to port 5432 from your IP.
+
+**QS621: (optional) If you have time and want to work on connecting to the DB explain the steps that you have followed. Would you open that access on a production system? Justify your response.**
+
+Let's now test the web application running in Docker and connect it to the AWS RDS database. We are now going to copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password.
+
+
+```bash
+_$ cat aws.env
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_LOGLEVEL=info
+CCBDA_SIGNUP_TABLE=ccbda-signup-table
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
+AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
+AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
+DB_NAME=ccbdadb
+DB_USER=ccbdauser
+DB_PASSWORD=ccbdapassword
+DB_PORT=5432
+DB_HOST=database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
+DATABASE=postgresql
+PGPASSWORD=MyP4ssW0rd!
+```
+
+```bash
+_$ psql \
+   --host=$DB_HOST \
+   --port=$DB_PORT \
+   --username=postgres \
+   --password
+```
+
+```sql
+CREATE DATABASE ccbdadb;
+CREATE USER ccbdauser WITH ENCRYPTED PASSWORD 'ccbdapassword';
+ALTER USER ccbdauser WITH PASSWORD 'ccbdapassword';
+GRANT ALL PRIVILEGES ON DATABASE ccbdadb TO ccbdauser;
+```
+
+
+### Elastic beanstalk
+
+- Navigate to the Amazon VPC console.
+    - Return to the AWS Management Console browser tab.
+    - From the Services menu, choose VPC. 
+    - In the left navigation pane, choose Your VPCs. 
+    - Select the checkbox for IDE VPC, and then copy the VPC ID into your text editor.
+
+<img alt="Lab06-vpc.png" src="images/Lab06-vpc.png" width="50%"/>
+
+- Review the Availability Zone for the IDE Subnet.
+    - In the left navigation pane, choose Subnets.
+    - Select the checkbox for IDE Public Subnet One. 
+    - In the bottom pane, locate the Availability Zone and copy the value into your text editor. 
+    - The Availability Zone looks similar to the following: us-east-1a 
+    - Copy the Subnet ID value into your text editor as the IDE Subnet ID. 
+
+
+
+
 
 
 <a name="Tasks56" />
@@ -446,6 +476,144 @@ Test the changes locally, commit them to your GitHub repository.
 **Q54: Describe the strategy used to fulfill the requirements of this section. What have you changed in the code and the
 configuration of the different resources used by the web app? What are the tradeoffs of your solution?** Add your
 responses to `README.md`.
+
+GitHub Actions is a powerful CI/CD platform that enables developers to build, test, and deploy pipelines efficiently.
+These pipelines are essential for maintaining consistency in deployments, identifying errors quickly, improving
+efficiency, and streamlining the development process.
+
+**Continuous Integration (CI)** and **Continuous Delivery (CD)** are critical practices for delivering high-quality
+software. They ensure a great user experience by preventing bugs from being pushed to production. GitHub Actions allows
+you to create custom workflows that are triggered based on specific events, such as pull requests, code commits, or
+pushes to a repository.
+
+In this laboratory session, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
+with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
+and deploying the application to AWS Elastic Container Service (AWS ECS).
+
+### CI/CD build using GitHub Actions
+
+A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
+which each action in the pipeline is defined. These are:
+
+- **name**: This is the workflow's name as will appear on your repository's ‘Actions’ section.
+- **on**: This section specifies the workflow trigger. Here, you can have successful merges to the repository and pushes
+  to the main or other branches among other actions.
+- **jobs**: Here, all the jobs that are run in the workflow will be defined.
+
+```yaml
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+```
+
+To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`
+
+The proposed workflow will build and push a new container image to AWS ECR,
+and then will deploy a new task definition to AWS ECS, when there is a push to the "main" branch.
+
+To use this workflow, you will need to complete the following set-up steps:
+
+1. Create an ECR repository to store your images.
+   For example: `aws ecr create-repository --repository-name my-ecr-repo`.
+   Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
+   Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+
+2. Create an ECS task definition, an ECS cluster, and an ECS service.
+   For example, follow the Getting Started guide on the ECS console:
+   https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun
+   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the
+   AWS ECS service.
+   Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the
+   cluster.
+
+3. Store your ECS task definition as a JSON file in your repository.
+   The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
+   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON
+   file.
+   Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
+   in the `containerDefinitions` section of the task definition.
+
+4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+   See the documentation for each action used below for the recommended IAM policies for this IAM user,
+   and best practices on handling the access key credentials.
+
+Starter workflow outline
+
+trigger and branches
+
+permissions
+
+jobs and runner
+
+steps
+
+name and uses
+
+### AWS CloudFront CDN
+
+A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy
+servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low
+latency, and high performance.
+
+<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
+
+The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
+part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
+balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
+possible to improve the "user experience".
+
+Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
+downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
+social networks and so much more.
+
+Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
+Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
+
+**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
+speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
+**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
+custom code close to final viewers.
+
+### AWS ECS: Elastic Container Service
+
+AWS Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
+managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
+solution for running workloads in the cloud or on-premises with AWS ECS Anywhere.
+
+Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
+
+- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
+  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
+  different systems and servers, making local development, testing, and deployment more reliable.
+
+- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
+  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
+  compatibility issues.
+
+- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
+  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
+
+- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
+  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
+  integrate and deploy changes.
+
+* [Task 5.5: Create a new option to retrieve the list of leads](#Tasks55)
+* [Task 5.6: Improve the web app transfer of information](#Tasks56)
+* [Task 5.7: Deliver static content using a Content Delivery Network](#Tasks57)
+
+The Python virtual environment will be re-created remotely by Docker through the use of the file *requirements.txt* and
+other configuration that you are going to set up later.
+
+
+
 
 <a name="Tasks58" />
 
