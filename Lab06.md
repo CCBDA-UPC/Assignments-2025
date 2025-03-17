@@ -57,6 +57,47 @@ _$ aws iam get-account-summary
 
 <a name="Task61"/>
 
+## Task 6.1: AWS Relational Database Service
+
+In lab session 5 we used a PostGreSQL database that we installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
+
+**AWS Relational Database Service (AWS RDS)** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
+
+#### Key Features:
+1. **Managed Service**: Automates time-consuming tasks like provisioning, upgrading, patching, backups, and recovery.
+2. **Performance**: Offers high performance with support for read replicas, caching, and optimized configurations.
+3. **Scalability**: Easily scale database instances up or down to adjust to workload demands.
+4. **Security**: Provides built-in security features like encryption at rest, encryption in transit, and integration with AWS Identity and Access Management (IAM).
+5. **Backup and Recovery**: Comes with automated backups and point-in-time restoration capabilities.
+6. **Multi-AZ Deployment**: Supports high availability through Multi-AZ deployments, which provide automatic failover to a secondary instance in case of a failure.
+
+#### Benefits:
+- Reduces administrative overhead by automating routine database tasks.
+- Ensures better reliability and uptime with features like replication and Multi-AZ deployments.
+- Pay-as-you-go pricing makes it cost-effective for a broad range of use cases.
+
+AWS RDS is widely used for hosting production databases, applications, and even analytics workloads while reducing operational complexity.
+
+### Create your AWS RDS PostGreSQL instance
+
+Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database that will replace the database used in the previous lab session.
+
+For the `database creation method` use `Easy create` and `PostGreSQL` for the `Configuration` box. A `DB instance size` of `Free tier` will be enough for the Lab session.
+
+In `DB instance identifier` type `database-lab`, for `Master username` keep `postgres`, for `Credentials management` select `self managed`, for `Master password` type `MyP4ssW0rd!`, and finally click on the `Create database` button. Skip the add-on screen and wait a few minutes until the database is created. Click on the database links, find and copy the database `Endpoint` in the text file.
+
+<img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="50%"/>
+
+Using the PyCharm database wizard you could access the database from your laptop as shown below.
+
+<img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="50%"/>
+
+To achieve that you'll need to make the RDS instance to be assigned a public IP and modify the network security group to allow connections to port 5432 from your IP.
+
+**QS621: (optional) If you have time and want to work on connecting to the DB explain the steps that you have followed. Would you open that access on a production system? Justify your response.**
+
+<a name="Task61"/>
+
 ## Task 6.1: Adding the Docker images to AWS ECR
 
 In this task you will add the Docker images that you created to an AWS Elastic Container Registry (AWS ECR)
@@ -222,6 +263,8 @@ _$ aws ecr describe-images --repository-name django-webapp-code
     ]
 }
 ```
+
+
 <a name="Tasks62" />
 
 ## Task 6.2: Running Containers on AWS Elastic Beanstalk
@@ -243,45 +286,7 @@ Elastic Beanstalk URL:
 
 ```
 
-### AWS Relational Database Service
 
-In lab session 5 we used a PostGreSQL database that we installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
-
-
-**AWS Relational Database Service (AWS RDS)** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
-
-#### Key Features:
-1. **Managed Service**: Automates time-consuming tasks like provisioning, upgrading, patching, backups, and recovery.
-2. **Performance**: Offers high performance with support for read replicas, caching, and optimized configurations.
-3. **Scalability**: Easily scale database instances up or down to adjust to workload demands.
-4. **Security**: Provides built-in security features like encryption at rest, encryption in transit, and integration with AWS Identity and Access Management (IAM).
-5. **Backup and Recovery**: Comes with automated backups and point-in-time restoration capabilities.
-6. **Multi-AZ Deployment**: Supports high availability through Multi-AZ deployments, which provide automatic failover to a secondary instance in case of a failure.
-
-#### Benefits:
-- Reduces administrative overhead by automating routine database tasks.
-- Ensures better reliability and uptime with features like replication and Multi-AZ deployments.
-- Pay-as-you-go pricing makes it cost-effective for a broad range of use cases.
-
-AWS RDS is widely used for hosting production databases, applications, and even analytics workloads while reducing operational complexity.
-
-### Create your AWS RDS PostGreSQL instance
-
-Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database that will replace the database used in the previous lab session.
-
-For the `database creation method` use `Easy create` and `PostGreSQL` for the `Configuration` box. A `DB instance size` of `Free tier` will be enough for the Lab session.
-
-In `DB instance identifier` type `database-lab`, for `Master username` keep `postgres`, for `Credentials management` select `self managed`, for `Master password` type `MyP4ssW0rd!`, and finally click on the `Create database` button. Skip the add-on screen and wait a few minutes until the database is created. Click on the database links, find and copy the database `Endpoint` in the text file.
-
-<img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="50%"/>
-
-Using the PyCharm database wizard you could access the database from your laptop as shown below.
-
-<img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="50%"/>
-
-To achieve that you'll need to make the RDS instance to be assigned a public IP and modify the network security group to allow connections to port 5432 from your IP.
-
-**QS621: (optional) If you have time and want to work on connecting to the DB explain the steps that you have followed. Would you open that access on a production system? Justify your response.**
 
 Let's now test the web application running in Docker and connect it to the AWS RDS database. We are now going to copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password.
 
