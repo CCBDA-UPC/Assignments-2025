@@ -404,7 +404,9 @@ shall be able to add a new entry to the database.
 
 **Q551: Explain what you understand of the actions detailed in the `Dockerfile` and compare them with what you manually did in Tasks 5.2 and 5.3.**
 
-**Q552: Has everything gone alright? Share your thoughts on the task developed above.**
+**Q552: What are the differences between the Python environment and the Unix environment?**
+
+**Q552: Has everything gone alright? Share your thoughts on the tasks developed above.**
 
 
 <a name="Tasks56" />
