@@ -697,15 +697,15 @@ compose.yml
 ### Build and run your new Django project
 
 Instead of building the images, one by one, running them, mapping the ports, etcetera,
-we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of 
+we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of
 errors by misstyping.
 
 The command in the box below starts the docker image building and container execution. It begins by pulling the
-PostGreSQL container image from a [Docker repository](https://hub.docker.com/) of pre-built Docker images. 
+PostGreSQL container image from a [Docker repository](https://hub.docker.com/) of pre-built Docker images.
 It then creates a database with the name, user and password
 that we have defined in the environment for the database container.
 
-For the second container, it copies the web application code, creates the Pyton environment and everything else 
+For the second container, it copies the web application code, creates the Pyton environment and everything else
 that is detailed in the given Dockerfile.
 Please note that the docker image created has a frozen copy of the code.
 If the web application code changes it will be necessary to
@@ -819,7 +819,8 @@ postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut
 postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                    
 ```
 
-Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning,
+Finally, Django needs that the database contains some tables. Such task needs to be done only when the web application
+is first using the database,
 or every time that the Django code changes its data models. See that the command below **exec**utes in the
 container named "code" the command line `python manage.py migrate`.
 
@@ -853,10 +854,10 @@ Running migrations:
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
 page, indicating that your app is up and running.
 
-Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
-number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that
-you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or
-the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
+Both containers (for the web application and PostgreSQL) are configured to expose their ports to the host machine, with the same port numbers as defined in the `docker compose` file (`8000:8000` for the web app and `5432:5432` for PostgreSQL).
+This setup allows you to access the web application via port `8000` and the PostgreSQL database via port `5432` on the localhost or the hosting machine running the containers, as we'll be seeing in the next lab session. 
+
+See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
