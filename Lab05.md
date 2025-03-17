@@ -597,6 +597,30 @@ DATABASES = {
 DATABASES['default'] = DATABASES[os.getenv('DATABASE', 'default')]
 ```
 
+Additionally, we need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files
+and folders shall not be copied to the container when creating the Docker image.
+
+```bash
+_$ cat .dockerignore
+.venv
+*.env
+.gitignore
+README.md
+compose.yml
+*.sqlite
+*.sqlite3
+.DS_Store
+.git
+.idea
+.private
+```
+
+### Build and run your new Django project, all at once, using `docker compose`
+
+Instead of building the images, one by one, running them, mapping the ports, etcetera,
+we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of
+errors by misstyping.
+
 ### Configure the Docker Compose file
 
 A `compose.yml` file allows you to manage multi-container applications.
@@ -653,9 +677,8 @@ volumes:
   postgres_data:
 ```
 
-Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to using
-the
-PostGreSQL database.
+Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to 
+using the PostGreSQL database.
 
 ```bash
 _$ cat production.env
@@ -675,30 +698,7 @@ DB_HOST=db
 DB_PORT=5432
 DATABASE=postgresql
 ```
-
-Additionally, we need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files
-and folders shall not be copied to the container when creating the Docker image.
-
-```bash
-_$ cat .dockerignore
-.venv
-*.env
-.gitignore
-README.md
-compose.yml
-*.sqlite
-*.sqlite3
-.DS_Store
-.git
-.idea
-.private
-```
-
-### Build and run your new Django project, all at once, using `docker compose`
-
-Instead of building the images, one by one, running them, mapping the ports, etcetera,
-we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of
-errors by misstyping.
+### Use the Docker Compose file
 
 The command in the box below starts the docker image building and container execution. It begins by pulling the
 PostGreSQL container image from a [Docker repository](https://hub.docker.com/) of pre-built Docker images.
