@@ -111,7 +111,7 @@ _$ ping database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
 PING ec2-54-198-59-77.compute-1.amazonaws.com (54.198.59.77): 56 data bytes
 ```
 
-Now go back to the `database-lab` properties display, where you obtained the `Endpoint` and now click on the **"default" security group** link. You will see that there is a single rule for the inbound traffic allowing any traffic inside of the same security group (see screenshot below).
+Now go back to the `database-lab` properties display, where you obtained the `Endpoint` and now click on the **"default" security group** link. You will see that there is a single rule for the inbound traffic allowing any traffic inside the same security group (see screenshot below).
 
 <img alt="Lab06-default-security-group.png" src="images/Lab06-default-security-group.png"/>
 
@@ -124,8 +124,82 @@ If you have followed the above steps correctly, using the PyCharm database wizar
 
 <img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="80%"/>
 
+**QS611: Would you keep that access open on a production system? Justify your response.**
 
-**QS61: Would you keep that access open on a production system? Justify your response.**
+Let's now test the web application running in Docker in your laptop and connect it to the AWS RDS database. Now, copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password as shown below.
+
+```bash
+_$ cat aws.env
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_LOGLEVEL=info
+CCBDA_SIGNUP_TABLE=ccbda-signup-table
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
+AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
+AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
+DB_NAME=ccbdadb
+DB_USER=ccbdauser
+DB_PASSWORD=ccbdapassword
+DB_PORT=5432
+DB_HOST=database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
+DATABASE=postgresql
+PGPASSWORD=MyP4ssW0rd!
+```
+
+**QS612: Using the above configuration file, what steps will you follow to have the web application running in your local Docker use the AWS RDS database engine?**
+
+The unix command `psql` is installed in the `django-docker` image, and you can use it by typing the command below. The values of `$DB_HOST` and `$DB_PORT` are declared inside the unix environment of the container. If an evironment variable named `PGPASSWORD` exits, psql uses its value to authenticate against the PostGreSQL database engine.
+
+```bash
+_$ env
+....
+HOSTNAME=307613c5c952
+DB_PORT=5432
+PWD=/app
+DB_HOST=database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
+PGPASSWORD=MyP4ssW0rd!
+.....
+_$ cat > init_db.sql
+CREATE DATABASE ccbdadb;
+CREATE USER ccbdauser CREATEDB CREATEROLE;
+ALTER USER ccbdauser WITH PASSWORD 'ccbdapassword';
+GRANT ALL PRIVILEGES ON DATABASE ccbdadb TO ccbdauser;
+^D
+_$ psql --host=$DB_HOST --port=$DB_PORT --username=postgres < init_db.sql
+CREATE DATABASE
+CREATE ROLE
+ALTER ROLE
+GRANT
+_$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+```
+
+**QS613: Explain what does the code in the box above. How can you execute it inside the Docker container?**
+
+**QS614:  What is the result of "select * FROM django_migrations;"**
+
 
 <a name="Task61"/>
 
@@ -179,7 +253,7 @@ In this step, you will tag the image with your unique registryId value to make i
 this image. Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-docker:latest 407495119696.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
+_$ docker tag django-docker:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
 _$ docker image list
 REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
 <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code  latest    79e93509f63d   21 hours ago   433MB
@@ -307,44 +381,6 @@ Elastic Beanstalk URL:
 ```
 
 
-
-Let's now test the web application running in Docker and connect it to the AWS RDS database. We are now going to copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password.
-
-
-```bash
-_$ cat aws.env
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
-DJANGO_LOGLEVEL=info
-CCBDA_SIGNUP_TABLE=ccbda-signup-table
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
-DB_NAME=ccbdadb
-DB_USER=ccbdauser
-DB_PASSWORD=ccbdapassword
-DB_PORT=5432
-DB_HOST=database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
-DATABASE=postgresql
-PGPASSWORD=MyP4ssW0rd!
-```
-
-```bash
-_$ psql \
-   --host=$DB_HOST \
-   --port=$DB_PORT \
-   --username=postgres \
-   --password
-```
-
-```sql
-CREATE DATABASE ccbdadb;
-CREATE USER ccbdauser WITH ENCRYPTED PASSWORD 'ccbdapassword';
-ALTER USER ccbdauser WITH PASSWORD 'ccbdapassword';
-GRANT ALL PRIVILEGES ON DATABASE ccbdadb TO ccbdauser;
-```
 
 
 ### Elastic beanstalk
