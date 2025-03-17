@@ -402,7 +402,9 @@ SNS message sent.
 Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you
 shall be able to add a new entry to the database.
 
-**Q55: Has everything gone alright? Share your thoughts on the task developed above.**
+**Q551: Explain what you understand of the actions detailed in the `Dockerfile` and compare them with what you manually did in Tasks 5.2 and 5.3.**
+
+**Q552: Has everything gone alright? Share your thoughts on the task developed above.**
 
 
 <a name="Tasks56" />
