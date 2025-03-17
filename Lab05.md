@@ -925,8 +925,8 @@ drwxr-xr-x   2 root root 4096 Feb 24 00:00 srv
 
 Following the tasks detailed above you have deployed a web application that uses some AWS services and is able to
 run in a Docker container. By following lab session 6 we will put the web application to run in the cloud. But
-before let's reconsider what we have done and match it with the guidelines of
-the [twelve-factor app](https://12factor.net/) methodology. You'll be reviewing them again at the end of lab 
+before, let's go through what we have done so far and match it with the guidelines of
+the [twelve-factor app](https://12factor.net/) methodology. You'll be reviewing them again at the end of lab
 session 6 to compare the evolution.
 
 The [twelve-factor app](https://12factor.net/) is a methodology for building software-as-a-service apps that:
