@@ -83,6 +83,8 @@ Login Succeeded
 
 Verify that the command responds with a message indicating that the login succeeded.
 
+### Create a Docker repository named `django-webapp-code`
+
 To create the repository, run the following command:
 
 ```bash
