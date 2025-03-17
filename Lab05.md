@@ -697,10 +697,12 @@ compose.yml
 ### Build and run your new Django project
 
 Instead of building the images, one by one, running them, mapping the ports, etcetera,
-we can use the `docker compose` command to automate the process speeding it up and reducing the risk of misstyping.
+we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of 
+errors by misstyping.
 
 The command in the box below starts the docker image building and container execution. It begins by pulling the
-PostGreSQL container image from a Docker repository. It then creates a database with the name, user and password
+PostGreSQL container image from a [Docker repository](https://hub.docker.com/) of pre-built Docker images. 
+It then creates a database with the name, user and password
 that we have defined in the environment for the database container.
 
 For the second container, it copies the web application code, creates the Pyton environment and everything else 
