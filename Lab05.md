@@ -57,7 +57,7 @@ If you need help with the installation, you can find detailed instructions on th
 * [Task 5.3: Test the web app locally](#Task53)
 * [Task 5.4: Use AWS Simple Notification Service in your web app](#Tasks54)
 * [Task 5.5: Configure Docker](#Tasks55)
-* [Task 5.6: Deploy the target web app](#Tasks56)
+* [Task 5.6: Deploy the production version of the web app in Docker](#Tasks56)
 * [Task 5.7: Analisys of the twelve-factor app methodology](#Tasks57)
 
 <a name="Task51"/>
@@ -407,10 +407,9 @@ shall be able to add a new entry to the database.
 
 <a name="Tasks56" />
 
-## Task 5.6: Deploy the target web app
+## Task 5.6: Deploy the production version of the web app in Docker
 
-Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
-ready for production.
+Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it ready for production.
 
 - The CMD `manage.py` is only meant for development purposes and should be changed for
   a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
