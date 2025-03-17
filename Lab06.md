@@ -64,7 +64,7 @@ repository.
 
 Authorize your Docker client to connect to the AWS ECR service.
 
-#### Discover your AWS account ID.
+### Discover your AWS account ID.
 
 In the AWS Management Console, in the upper-right corner, click on top of your username. Your username begins with
 voclab/user.
