@@ -89,10 +89,10 @@ To create the repository, run the following command:
 _$ aws ecr create-repository --repository-name django-webapp-code
 {
     "repository": {
-        "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-code",
-        "registryId": "383312122003",
+        "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-code",
+        "registryId": "<registry-id>",
         "repositoryName": "django-webapp-code",
-        "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+        "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
         "createdAt": "2025-03-15T16:44:17.171000+01:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
@@ -119,7 +119,7 @@ The command does not provide a response. To verify that the tag was applied, run
 ```bash
 _$ docker images
 REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
-383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code   latest    79e93509f63d   21 hours ago   321MB
+<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code   latest    79e93509f63d   21 hours ago   321MB
 django-webapp-code                                                latest    79e93509f63d   21 hours ago   321MB
 postgres                                                          17        81f32a88ec56   2 weeks ago    621MB
 ```
@@ -133,7 +133,7 @@ To push your image to AWS ECR, run the following command. Replace <registry-id> 
 
 ```bash
 _$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
-The push refers to repository [383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code]
+The push refers to repository [<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code]
 4b785e93aa71: Pushed 
 be1449717b1e: Pushed 
 ff1399ac0930: Pushed 
@@ -173,10 +173,10 @@ _$ aws ecr describe-repositories
 {
     "repositories": [
         {
-            "repositoryArn": "arn:aws:ecr:us-east-1:383312122003:repository/django-webapp-code",
-            "registryId": "383312122003",
+            "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-code",
+            "registryId": "<registry-id>",
             "repositoryName": "django-webapp-code",
-            "repositoryUri": "383312122003.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+            "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
             "createdAt": "2025-03-15T16:44:17.171000+01:00",
             "imageTagMutability": "MUTABLE",
             "imageScanningConfiguration": {
@@ -194,21 +194,21 @@ _$ aws ecr describe-images --repository-name django-webapp-code
 {
     "imageDetails": [
         {
-            "registryId": "383312122003",
+            "registryId": "<registry-id>",
             "repositoryName": "django-webapp-code",
             "imageDigest": "sha256:e33b3087f42f9b5b23ee5ce33a8a279fc1c2a2d1070a9eaae3c298cd8d3c803f",
             "imageSizeInBytes": 1348,
             "imagePushedAt": "2025-03-15T16:47:53.153000+01:00"
         },
         {
-            "registryId": "383312122003",
+            "registryId": "<registry-id>",
             "repositoryName": "django-webapp-code",
             "imageDigest": "sha256:8f1ee7414d796b6ed70dcfa9facff56438bba6b2665066362eea9b5dca2c667d",
             "imageSizeInBytes": 75387102,
             "imagePushedAt": "2025-03-15T16:47:53.161000+01:00"
         },
         {
-            "registryId": "383312122003",
+            "registryId": "<registry-id>",
             "repositoryName": "django-webapp-code",
             "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTags": [
