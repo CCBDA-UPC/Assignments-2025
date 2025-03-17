@@ -80,13 +80,22 @@ AWS RDS is widely used for hosting production databases, applications, and even 
 
 ### Create your AWS RDS PostGreSQL instance
 
-Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database that will replace the database used in the previous lab session.
+Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database engine that will replace the database engine used in the previous lab session.
 
 For the `database creation method` use `Easy create` and `PostGreSQL` for the `Configuration` box. A `DB instance size` of `Free tier` will be enough for the Lab session.
 
-In `DB instance identifier` type `database-lab`, for `Master username` keep `postgres`, for `Credentials management` select `self managed`, for `Master password` type `MyP4ssW0rd!`, and finally click on the `Create database` button. Skip the add-on screen and wait a few minutes until the database is created. Click on the database links, find and copy the database `Endpoint` in the text file.
+In `DB instance identifier` type `database-lab`, for `Master username` keep `postgres`, for `Credentials management` select `self managed`, for `Master password` type `MyP4ssW0rd!`, and finally click on the `Create database` button. Skip the add-on screen and wait a few minutes until the database is created. 
+
+Click on the database links, find and copy the database `Endpoint` in the text file. That is the DNS name for the new database engine to be accessed by any application.
 
 <img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="50%"/>
+
+### Temporarily open the database access to your laptop
+
+By default, following the `Easy create` wizard the database engine is only accessible inside of the Virtual Private Cloud. Stay on the same view as the previous screenshot and click on the **"default" security group** link.
+
+<img alt="Lab06-default-security-group.png" src="images/Lab06-default-security-group.png"/>
+
 
 Using the PyCharm database wizard you could access the database from your laptop as shown below.
 
