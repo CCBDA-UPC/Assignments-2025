@@ -125,22 +125,19 @@ If you have followed the above steps correctly, using the PyCharm database wizar
 <img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="80%"/>
 
 
-**QS621: Would you keep that access open on a production system? Justify your response. How would make your database engine more private?**
+**QS61: Would you keep that access open on a production system? Justify your response.**
 
 <a name="Task61"/>
 
 ## Task 6.2: Adding the Docker images to AWS ECR
 
-Before being able to deploy the Docker image that you've created in the previous lab session we need to push it to a Docker images repository hosted in AWS: the AWS Elastic Container Registry (AWS ECR).
+Before being able to deploy in the cloud the Docker image that you've created in the previous lab session we need to push it to a Docker images repository hosted in AWS: the AWS Elastic Container Registry (AWS ECR).
 
 ### Discover your AWS account ID.
 
-In the AWS Management Console, in the upper-right corner, click on top of your username. Your username begins with
-voclab/user.
+In the upper-right corner of the AWS Management Console click on top of your username and unfold the black box shown below. Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
 <img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="300px"/>
-
-Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
 To authorize your Docker client, run the following command. Replacing `<account-id>` with the actual account
 ID that you just found:
