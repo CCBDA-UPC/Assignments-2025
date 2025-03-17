@@ -107,7 +107,7 @@ PING ec2-54-198-59-77.compute-1.amazonaws.com (54.198.59.77): 56 data bytes
 ```
 
 
-<img alt="Lab06-publicIP.png" src="images/Lab06-publicIP.png" width="" height="50%"/>
+<img alt="Lab06-publicIP.png" src="images/Lab06-publicIP.png" width="" height="200px"/>
 
 
 Stay on the same view as the previous screenshot and click on the **"default" security group** link. You will see that there is a single rule for the inbound traffic allowing any traffic inside of the same security group (see screenshot below).
