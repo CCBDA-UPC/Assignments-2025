@@ -402,7 +402,8 @@ SNS message sent.
 Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you
 shall be able to add a new entry to the database.
 
-**Q551: Explain what you understand of the actions detailed in the `Dockerfile` and compare them with what you manually did in Tasks 5.2 and 5.3.**
+**Q551: Explain what you understand of the actions detailed in the `Dockerfile` and compare them with what you manually
+did in Tasks 5.2 and 5.3.**
 
 **Q552: What are the differences between the Python environment and the Unix environment?**
 
@@ -413,7 +414,8 @@ shall be able to add a new entry to the database.
 
 ## Task 5.6: Deploy the production version of the web app in Docker
 
-Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it ready for production.
+Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
+ready for production.
 
 - The CMD `manage.py` is only meant for development purposes and should be changed for
   a [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) server.
@@ -668,14 +670,14 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 DB_NAME=ccbdadb
 DB_USER=ccbdauser
-DB_PASSWORD=ccbdapassword
+DB_PASSWORD=<YOUR-SELECTED-PASSWORD>
 DB_HOST=db
 DB_PORT=5432
 DATABASE=postgresql
 ```
 
-We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders
-shall not be copied to the container when creating the Docker image.
+Additionally, we need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files
+and folders shall not be copied to the container when creating the Docker image.
 
 ```bash
 _$ cat .dockerignore
@@ -694,11 +696,17 @@ compose.yml
 
 ### Build and run your new Django project
 
-By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then
-creates a database with the name, user and password that we have defined in the environment for the container. 
-For the second container it copies the
-code, creates the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the
-docker image created has a frozen copy of the code. If the web application code changes it will be necessary to
+Instead of building the images, one by one, running them, mapping the ports, etcetera,
+we can use the `docker compose` command to automate the process speeding it up and reducing the risk of misstyping.
+
+The command in the box below starts the docker image building and container execution. It begins by pulling the
+PostGreSQL container image from a Docker repository. It then creates a database with the name, user and password
+that we have defined in the environment for the database container.
+
+For the second container, it copies the web application code, creates the Pyton environment and everything else 
+that is detailed in the given Dockerfile.
+Please note that the docker image created has a frozen copy of the code.
+If the web application code changes it will be necessary to
 rebuild the image and deploy it into its container. Check the log after the command to follow the creation process
 for both containers.
 
