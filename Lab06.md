@@ -120,9 +120,9 @@ Therefore, now you need to temporarily add a new rule that allows PostGreSQL tra
 <img alt="Lab06-add-security-group-rule.png" src="images/Lab06-add-security-group-rule.png"/>
 
 
-Using the PyCharm database wizard you could access the database from your laptop as shown below.
+If you have followed the above steps correctly, using the PyCharm database wizard you could access the database engine from your laptop as shown below.
 
-<img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="50%"/>
+<img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="80%"/>
 
 To achieve that you'll need to make the RDS instance to be assigned a public IP and modify the network security group to allow connections to port 5432 from your IP.
 
