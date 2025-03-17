@@ -694,7 +694,7 @@ compose.yml
 .private
 ```
 
-### Build and run your new Django project
+### Build and run your new Django project, all at once, using `docker compose`
 
 Instead of building the images, one by one, running them, mapping the ports, etcetera,
 we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of
