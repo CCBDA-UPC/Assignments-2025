@@ -15,7 +15,7 @@ Let's create a configuration file: `aws configure` asks you for the value of the
 obtained from your current Learner Lab session. We are not going to enter any value for the credentials and only select
 the default AWS region and output format.
 
-<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%"/>
+<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%" height="50%"/>
 
 ```bash
 _$ aws configure
