@@ -863,11 +863,10 @@ See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-use.png" src="images/Lab05-postgres-use.png" width="50%"/>
 
-Additionally, you can also create a command line connection with each container by issuing the commands below. See that
-the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt
-`appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID
-that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to
-exit the CLI.
+
+You can also establish a command-line connection to each container using the following commands. For example, the command `docker exec -it 07 bash` initiates an interactive Bash shell (`CLI`) inside the container. Once connected, you'll see a prompt like `appuser@07bd0798d09f:/app$`, indicating that you are now inside the Docker container. 
+
+Note that `07bd0798d09f` is the container ID, but including only the first few distinctive characters is sufficient for the `-it` parameter. To exit the CLI, simply press `Control+D`.
 
 Please check that `.dockertignore` has prevented some files to be copied into the image of the code container.
 
