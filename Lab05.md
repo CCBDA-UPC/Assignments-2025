@@ -977,7 +977,7 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 1. **Admin processes**:
    Run admin/management tasks as one-off processes
 
-**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
+**Q57: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
 change or add to comply with each factor**
 
 # How to submit this assignment:
