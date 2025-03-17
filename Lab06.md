@@ -137,7 +137,7 @@ Before being able to deploy in the cloud the Docker image that you've created in
 
 In the upper-right corner of the AWS Management Console click on top of your username and unfold the black box shown below. Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
-<img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="300px"/>
+<img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="400px"/>
 
 To authorize your Docker client, run the following command. Replacing `<account-id>` with the actual account
 ID that you just found:
@@ -180,19 +180,14 @@ this image. Run the following command. Replace <registry-id> with your actual re
 
 ```
 _$ docker tag django-webapp-code:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp:latest
-```
-
-The command does not provide a response. To verify that the tag was applied, run the following command:
-
-```bash
 _$ docker images
 REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
-<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code   latest    79e93509f63d   21 hours ago   321MB
-django-webapp-code                                                latest    79e93509f63d   21 hours ago   321MB
+<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code  latest    79e93509f63d   21 hours ago   433MB
+django-docker                                                     latest    79e93509f63d   21 hours ago   433MB
 postgres                                                          17        81f32a88ec56   2 weeks ago    621MB
 ```
 
-This time, notice that the latest tag was applied and the image name includes the remote repository name where you
+`docker tag` does not provide a response. To verify that the tag was applied query the images available. This time, notice that the latest tag was applied and the image name includes the remote repository name where you
 intend to store it.
 
 ### Push the Docker image to the AWS ECR repository.
