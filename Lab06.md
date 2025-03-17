@@ -88,33 +88,34 @@ In `DB instance identifier` type `database-lab`, for `Master username` keep `pos
 
 Click on the database links, find and copy the database `Endpoint` in the text file. That is the DNS name for the new database engine to be accessed by any application.
 
-<img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="50%"/>
+<img alt="Lab06-rds.png" src="images/Lab06-rds.png" width="80%"/>
 
 ### Temporarily open the database access to your laptop
 
-By default, following the `Easy create` wizard the database engine is only accessible inside the Virtual Private Cloud, therefore the DNS name is initialized with a class B [private IP address](https://en.wikipedia.org/wiki/Private_network).
+By default, following the `Easy create` wizard, the database engine is only accessible inside the Virtual Private Cloud, therefore the DNS name is initialized with a class B [private IP address](https://en.wikipedia.org/wiki/Private_network).
 
 ```bash
 _$  ping database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
 PING database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com (172.31.79.242): 56 data bytes
 ```
 
-To have a public IP assigned you need to `Modify` the database engine configuration, scroll down to the `Connectivity` box, unfold the `Additional configuration` and change from `Not publicly accessible` to `Publicly accessible` as shown below. Click on `Continue` and then `Modify database` buttons. The Status will change to `Modifying` and in a few minutes it will turn green and return to `Available`. A new public IP appear then associated to the DNS name.
+To have a public IP assigned you need to `Modify` the database engine configuration, scroll down to the `Connectivity` box, unfold the `Additional configuration` and change from `Not publicly accessible` to `Publicly accessible` as shown below. Click on `Continue` and then `Modify database` buttons.
+
+
+<img alt="Lab06-publicIP.png" src="images/Lab06-publicIP.png" width="" height="300px"/>
+
+The Status will change to `Modifying` and in a few minutes it will turn green and return to `Available`. A new public IP appear then associated to the DNS name.
 
 ```bash
 _$ ping database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
 PING ec2-54-198-59-77.compute-1.amazonaws.com (54.198.59.77): 56 data bytes
 ```
 
-
-<img alt="Lab06-publicIP.png" src="images/Lab06-publicIP.png" width="" height="200px"/>
-
-
-Stay on the same view as the previous screenshot and click on the **"default" security group** link. You will see that there is a single rule for the inbound traffic allowing any traffic inside of the same security group (see screenshot below).
+Now go back to the `database-lab` properties display, where you obtained the `Endpoint` and now click on the **"default" security group** link. You will see that there is a single rule for the inbound traffic allowing any traffic inside of the same security group (see screenshot below).
 
 <img alt="Lab06-default-security-group.png" src="images/Lab06-default-security-group.png"/>
 
-Therefore you need to temporarily add a new rule that allows PostGreSQL traffic (on port 5432) to come from your laptop (add more than one rule to allow more IPs).
+Therefore, now you need to temporarily add a new rule that allows PostGreSQL traffic (on port 5432) to come from your laptop (add more than one rule to allow more IPs).
 
 <img alt="Lab06-add-security-group-rule.png" src="images/Lab06-add-security-group-rule.png"/>
 
