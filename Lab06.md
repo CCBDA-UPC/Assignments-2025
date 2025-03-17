@@ -179,8 +179,8 @@ In this step, you will tag the image with your unique registryId value to make i
 this image. Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-webapp-code:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp:latest
-_$ docker images
+_$ docker tag django-docker:latest 407495119696.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
+_$ docker image list
 REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
 <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code  latest    79e93509f63d   21 hours ago   433MB
 django-docker                                                     latest    79e93509f63d   21 hours ago   433MB
