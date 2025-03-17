@@ -120,29 +120,25 @@ Therefore, now you need to temporarily add a new rule that allows PostGreSQL tra
 <img alt="Lab06-add-security-group-rule.png" src="images/Lab06-add-security-group-rule.png"/>
 
 
-If you have followed the above steps correctly, using the PyCharm database wizard you could access the database engine from your laptop as shown below.
+If you have followed the above steps correctly, using the PyCharm database wizard you could access the database engine from your laptop as shown below. Once all the parameters are in place click on `Apply` and then `Test Connection`. You shall be getting the response shown below.
 
 <img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="80%"/>
 
-To achieve that you'll need to make the RDS instance to be assigned a public IP and modify the network security group to allow connections to port 5432 from your IP.
 
-**QS621: (optional) If you have time and want to work on connecting to the DB explain the steps that you have followed. Would you open that access on a production system? Justify your response.**
+**QS621: Would you keep that access open on a production system? Justify your response. How would make your database engine more private?**
 
 <a name="Task61"/>
 
-## Task 6.1: Adding the Docker images to AWS ECR
+## Task 6.2: Adding the Docker images to AWS ECR
 
-In this task you will add the Docker images that you created to an AWS Elastic Container Registry (AWS ECR)
-repository.
-
-Authorize your Docker client to connect to the AWS ECR service.
+Before being able to deploy the Docker image that you've created in the previous lab session we need to push it to a Docker images repository hosted in AWS: the AWS Elastic Container Registry (AWS ECR).
 
 ### Discover your AWS account ID.
 
 In the AWS Management Console, in the upper-right corner, click on top of your username. Your username begins with
 voclab/user.
 
-<img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" width="50%"/>
+<img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="300px"/>
 
 Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
