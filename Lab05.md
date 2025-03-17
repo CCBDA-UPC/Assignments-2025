@@ -677,7 +677,7 @@ volumes:
   postgres_data:
 ```
 
-Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to 
+Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to
 using the PostGreSQL database.
 
 ```bash
@@ -698,6 +698,7 @@ DB_HOST=db
 DB_PORT=5432
 DATABASE=postgresql
 ```
+
 ### Use the Docker Compose file
 
 The command in the box below starts the docker image building and container execution. It begins by pulling the
@@ -819,10 +820,11 @@ postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut
 postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                    
 ```
 
-Finally, Django needs that the database contains some tables. Such task needs to be done only when the web application
-is first using the database,
-or every time that the Django code changes its data models. See that the command below **exec**utes in the
-container named "code" the command line `python manage.py migrate`.
+### Database initialization
+
+Finally, Django needs that the database contains some tables. Such task needs to be done only when the web
+application is first using the database, or every time that the Django code changes its data models. See that the
+command below **exec**utes in the container named "code" the command line `python manage.py migrate`.
 
 ```bash
 _$ docker compose --env-file production.env exec code python manage.py migrate
@@ -854,8 +856,11 @@ Running migrations:
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
 page, indicating that your app is up and running.
 
-Both containers (for the web application and PostgreSQL) are configured to expose their ports to the host machine, with the same port numbers as defined in the `docker compose` file (`8000:8000` for the web app and `5432:5432` for PostgreSQL).
-This setup allows you to access the web application via port `8000` and the PostgreSQL database via port `5432` on the localhost or the hosting machine running the containers, as we'll be seeing in the next lab session. 
+Both containers (for the web application and PostgreSQL) are configured to expose their ports to the host machine, with
+the same port numbers as defined in the `docker compose` file (`8000:8000` for the web app and `5432:5432` for
+PostgreSQL).
+This setup allows you to access the web application via port `8000` and the PostgreSQL database via port `5432` on the
+localhost or the hosting machine running the containers, as we'll be seeing in the next lab session.
 
 See below how PyCharm is able to connect to the database hosted in Docker.
 
@@ -864,9 +869,12 @@ See below how PyCharm is able to connect to the database hosted in Docker.
 <img alt="Lab05-postgres-use.png" src="images/Lab05-postgres-use.png" width="50%"/>
 
 
-You can also establish a command-line connection to each container using the following commands. For example, the command `docker exec -it 07 bash` initiates an interactive Bash shell (`CLI`) inside the container. Once connected, you'll see a prompt like `appuser@07bd0798d09f:/app$`, indicating that you are now inside the Docker container. 
+You can also establish a command-line connection to each container using the following commands. For example, the
+command `docker exec -it 07 bash` initiates an interactive Bash shell (`CLI`) inside the container. Once connected,
+you'll see a prompt like `appuser@07bd0798d09f:/app$`, indicating that you are now inside the Docker container.
 
-Note that `07bd0798d09f` is the container ID, but including only the first few distinctive characters is sufficient for the `-it` parameter. To exit the CLI, simply press `Control+D`.
+Note that `07bd0798d09f` is the container ID, but including only the first few distinctive characters is sufficient for
+the `-it` parameter. To exit the CLI, simply press `Control+D`.
 
 Please check that `.dockertignore` has prevented some files to be copied into the image of the code container.
 
