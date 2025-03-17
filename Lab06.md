@@ -83,7 +83,7 @@ Login Succeeded
 
 Verify that the command responds with a message indicating that the login succeeded.
 
-### Create a Docker repository named `django-webapp-code`
+### Create an AWS ECR Docker repository named `django-webapp-code`
 
 To create the repository, run the following command:
 
@@ -245,7 +245,27 @@ Elastic Beanstalk URL:
 
 ### AWS Relational Database Service
 
-AWS Relational Database Service (AWS RDS) is a web service that makes it easier to set up, operate, and scale a relational database in the AWS Cloud. It provides cost-efficient, resizable capacity for an industry-standard relational database and manages common database administration tasks.
+In lab session 5 we used a PostGreSQL database that we installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
+
+
+**AWS Relational Database Service (AWS RDS)** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
+
+#### Key Features:
+1. **Managed Service**: Automates time-consuming tasks like provisioning, upgrading, patching, backups, and recovery.
+2. **Performance**: Offers high performance with support for read replicas, caching, and optimized configurations.
+3. **Scalability**: Easily scale database instances up or down to adjust to workload demands.
+4. **Security**: Provides built-in security features like encryption at rest, encryption in transit, and integration with AWS Identity and Access Management (IAM).
+5. **Backup and Recovery**: Comes with automated backups and point-in-time restoration capabilities.
+6. **Multi-AZ Deployment**: Supports high availability through Multi-AZ deployments, which provide automatic failover to a secondary instance in case of a failure.
+
+#### Benefits:
+- Reduces administrative overhead by automating routine database tasks.
+- Ensures better reliability and uptime with features like replication and Multi-AZ deployments.
+- Pay-as-you-go pricing makes it cost-effective for a broad range of use cases.
+
+AWS RDS is widely used for hosting production databases, applications, and even analytics workloads while reducing operational complexity.
+
+### Create your AWS RDS PostGreSQL instance
 
 Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database that will replace the database used in the previous lab session.
 
