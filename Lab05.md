@@ -117,7 +117,7 @@ containing sensitive information. **Make sure to have such functionality present
 
 You need to copy the AWS credentials from your Learning Lab to the file `$HOME/.aws/config`.
 
-<img alt="Lab04-aws-details2.png" height="200px" src="images/Lab04-aws-details2.png"/>
+<img alt="Lab04-aws-details2.png" height="300px" src="images/Lab04-aws-details2.png"/>
 
 If that file does not exist you need to run the `aws configure` command and provide the region name as shown below.
 
