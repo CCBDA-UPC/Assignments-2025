@@ -2,6 +2,52 @@
 
 This lab session continues the work done in the previous session.
 
+### AWS CloudFront CDN
+
+A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low latency, and high performance.
+
+<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
+
+The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
+part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
+balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
+possible to improve the "user experience".
+
+Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
+downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
+social networks and so much more.
+
+Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
+Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
+
+**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
+speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
+**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
+custom code close to final viewers.
+
+### AWS ECS: Elastic Container Service
+
+AWS Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
+managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
+solution for running workloads in the cloud or on-premises with AWS ECS Anywhere.
+
+Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
+
+- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
+  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
+  different systems and servers, making local development, testing, and deployment more reliable.
+
+- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
+  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
+  compatibility issues.
+
+- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
+  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
+
+- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
+  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
+  integrate and deploy changes.
+
 
 
 ## Pre-lab homework
@@ -14,129 +60,7 @@ On macOS you can use
 ``` 
 _$ brew install awsebcli
 ```
-Open a terminal and create a folder named `eb` at the top of your web application. Move to the `eb` folder and write:
 
-```
-_$ eb init -i
-Select a default region
-...
-1) us-east-1 : US East (N. Virginia)
-...
-(default is 3): 1
-
-Select an application to use
-...
-2) [ Create new Application ]
-(default is 2): 2
-
-Enter Application Name
-(default is "django-webapp-eb"):
-Application django-webapp-eb has been created.
-
-Select a platform.
-...
-3) Docker
-...
-(make a selection): 3
-
-Select a platform branch.
-1)  Docker running on 64bit Amazon Linux 2023
-...
-(default is 1): 1
-Do you wish to continue with CodeCommit? (y/N): n
-Do you want to set up SSH for your instances?
-(Y/n): n
-```
-
-Running `eb init` creates a configuration file at `eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
-
-```yaml
-branch-defaults:
-  main:
-    environment: null
-global:
-  application_name: django-webapp-eb
-  branch: null
-  default_ec2_keyname: null
-  default_platform: Docker running on 64bit Amazon Linux 2023
-  default_region: us-east-1
-  include_git_submodules: true
-  instance_profile: null
-  platform_name: null
-  platform_version: null
-  profile: null
-  repository: null
-  sc: git
-  workspace_type: Application
-```
-
-Now, you need to create an Elastic Beanstalk environment and run the application. That needs a quite complex command line that we are going to create using a python script in the file `ebcreate.py` that you'll save inside the `eb` folder.
-
-```python
-from dotenv import dotenv_values
-import sys
-
-ebOptions = {
-    'min-instances': '2',
-    'max-instances': '3',
-    'instance_profile': 'LabInstanceProfile',
-    'service-role': 'LabRole',
-    'elb-type': 'application',
-    'instance-types':'t2.nano'
-}
-
-try:
-    CONFIGURATION_FILE = sys.argv[1]
-    HOSTNAME = sys.argv[2]
-except:
-    print('ERROR: filename missing\npython ebcreate.py filename hostname')
-    exit()
-config = dotenv_values(CONFIGURATION_FILE)
-
-hostname = f'{HOSTNAME}.{config["AWS_REGION"]}.elasticbeanstalk.com'
-
-hosts = config['DJANGO_ALLOWED_HOSTS'].split(':')
-if hostname not in hosts:
-    hosts.append(hostname)
-    config['DJANGO_ALLOWED_HOSTS'] = ':'.join(hosts)
-opt = []
-for k, v in config.items():
-    opt.append(f'{k}={v}')
-ebOptions['envvars'] = '"%s"' % ','.join(opt)
-
-opt = []
-for k, v in ebOptions.items():
-    opt.append(f'--{k} {v}')
-
-print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
-```
-
-You can execute it as shown below. That will create the command to type in order to create an Elastic Beanstalk that has
-
-- two EC2 instances min and three EC2 instances max (see `ebOptions` in the Python code above).
-- the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
-- the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
-- a very small EC2 instance type `t2.nano` (see `ebOptions` in the Python code above).
-- the name of your team as the name of the environment that you'll be using (see command below).
-
-The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` and, obviously, every team needs to have a different host name. I suggest you to use team and two digits of your team number for this lab session.
-
-```bash
-_$ python ebcreate.py ../production.env team99
-eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
-```
-
-In unix you can use the back quotes to execute the text produced by the script above.
-
-```bash
-_$ `python ebcreate.py ../production.env team99`
-```
-
-
-```bash
-_$ eb printenv
-
-```
 
 <a name="Task61"/>
 
@@ -451,346 +375,137 @@ _$ aws ecr describe-images --repository-name django-webapp-code
 ### Launch your new Elastic Beanstalk environment
 
 
-
-
-Open your preferred text editor, and copy and paste the following text into a new file.
-
-
-```text
-Database endpoint:
-Database master User: postgres
-Database master Password: MyP4ssW0rd!
-IDE VPC ID:
-IDE Availability Zone:
-IDE subnet ID:
-extraSubnetForRds subnet ID:
-IDE security group ID:
-Repository URI:
-Elastic Beanstalk URL:
+Open a terminal and create a folder named `eb` at the top of your web application. Move to the `eb` folder and write:
 
 ```
+_$ eb init -i
+Select a default region
+...
+1) us-east-1 : US East (N. Virginia)
+...
+(default is 3): 1
 
+Select an application to use
+...
+2) [ Create new Application ]
+(default is 2): 2
 
+Enter Application Name
+(default is "django-webapp-eb"):
+Application django-webapp-eb has been created.
 
+Select a platform.
+...
+3) Docker
+...
+(make a selection): 3
 
-### Elastic beanstalk
-
-- Navigate to the Amazon VPC console.
-    - Return to the AWS Management Console browser tab.
-    - From the Services menu, choose VPC. 
-    - In the left navigation pane, choose Your VPCs. 
-    - Select the checkbox for IDE VPC, and then copy the VPC ID into your text editor.
-
-<img alt="Lab06-vpc.png" src="images/Lab06-vpc.png" width="50%"/>
-
-- Review the Availability Zone for the IDE Subnet.
-    - In the left navigation pane, choose Subnets.
-    - Select the checkbox for IDE Public Subnet One. 
-    - In the bottom pane, locate the Availability Zone and copy the value into your text editor. 
-    - The Availability Zone looks similar to the following: us-east-1a 
-    - Copy the Subnet ID value into your text editor as the IDE Subnet ID. 
-
-
-
-
-
-
-<a name="Tasks56" />
-
-## Task 5.6: Create a new option to retrieve the list of leads
-
-Edit the file *form/urls.py* to add the new URL and associate it to the new view *search*.
-
-```python
-urlpatterns = [
-    # ex: /
-    path('', views.home, name='home'),
-    # ex: /signup
-    path('signup', views.signup, name='signup'),
-    # ex: /search
-    path('search', views.search, name='search'),
-]
+Select a platform branch.
+1)  Docker running on 64bit Amazon Linux 2023
+...
+(default is 1): 1
+Do you wish to continue with CodeCommit? (y/N): n
+Do you want to set up SSH for your instances?
+(Y/n): n
 ```
 
-To create the controller for the new view edit *form/views.py* and include the following code:
-
-```python
-from collections import Counter
-
-
-def search(request):
-    domain = request.GET.get('domain')
-    preview = request.GET.get('preview')
-    leads = Leads()
-    items = leads.get_leads(domain, preview)
-    if domain or preview:
-        return render(request, 'search.html', {'items': items})
-    else:
-        domain_count = Counter()
-        domain_count.update([item['email'].split('@')[1] for item in items])
-        return render(request, 'search.html', {'domains': sorted(domain_count.items())})
-```
-
-The search view gets two parameters:
-
-- preview: (*values are Yes/No*) lists the leads that are interested, or not, in a preview.
-- domain: (*value is the part right after the @ of an e-mail address*) will list only the leads from that domain.
-
-Reading the code, we understand that the search view retrieves the value of the parameters, gets the complete list of
-leads and then:
-
-- if any parameter is set, the program just lists all the records matching the search.
-- if both parameters are empty the program extracts the domain from each e-mail address and counts how many addresses
-  belong to each domain.
-
-To access the records stored at the NoSQL table *ccbda-signup-table* you need to add a method *get_leads* to the model
-*Leads()* file *form/models.py*.
-The [Scan](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html) operation allows us to filter
-values from the table.
-
-```python
-def get_leads(self, domain, preview):
-    try:
-        dynamodb = boto3.resource('dynamodb',
-                                  region_name=AWS_REGION,
-                                  aws_access_key_id=AWS_ACCESS_KEY_ID,
-                                  aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                  aws_session_token=AWS_SESSION_TOKEN)
-        table = dynamodb.Table('ccbda-signup-table')
-    except Exception as e:
-        logger.error(
-            'Error connecting to database table: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
-        return None
-    expression_attribute_values = {}
-    FilterExpression = []
-    if preview:
-        expression_attribute_values[':p'] = preview
-        FilterExpression.append('preview = :p')
-    if domain:
-        expression_attribute_values[':d'] = '@' + domain
-        FilterExpression.append('contains(email, :d)')
-    if expression_attribute_values and FilterExpression:
-        response = table.scan(
-            FilterExpression=' and '.join(FilterExpression),
-            ExpressionAttributeValues=expression_attribute_values,
-        )
-    else:
-        response = table.scan(
-            ReturnConsumedCapacity='TOTAL',
-        )
-    if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-        return response['Items']
-    logger.error('Unknown error retrieving items from database.')
-    return None
-```
-
-A final step is to move the file *extra-file/search.html* to *form/templates/search.html*. That file receives the data
-from the view controller and creates the HTML to show the results.
-
-Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8000/search*
-in your browser.
-
-<img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/>
-
-To add the new option to the menu bar, simply edit the file *form/templates/generic.html*, go to line 28 and add the
-second navbar as shown below. Save the file and, with no further delay, check that you have it added in the version that
-runs in your computer.
-
-```html
-
-<div class="collapse navbar-collapse" id="navbarResponsive">
-	<ul class="navbar-nav">
-		<li class="nav-item active">
-			<a class="nav-link active" href="{% url 'form:home' %}">Home</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">About</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Blog</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#">Press</a>
-		</li>
-	</ul>
-	<ul class="nav navbar-nav ml-auto">
-		<li class="nav-item">
-			<a class="nav-link" href="{% url 'form:search' %}">Admin search</a>
-		</li>
-	</ul>
-</div>
-```
-
-<img src="./images/Lab05-7.png " alt="Search" title="Search"/>
-
-If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change
-whatever is necessary to make it work.
-
-**Q53: Has everything gone alright? What have you changed?** Add your answers to the `README.md` file in the responses
-repository.
-
-<a name="Tasks57" />
-
-## Task 5.7: Improve the web app transfer of information (optional)
-
-You can work on this section locally in order to save expenses; you can terminate your environment from the EB console.
-
-If you analyze the new function added, probably a wise thing to do will be to optimize the data transfer from the
-DynamoDB table: imagine that instead of a few records in your NoSQL table you have millions of records. Transferring
-millions of records to your web app just to count how many e-mail addresses match a domain doesn't seem to be a great
-idea.
-
-DynamoDB is a NoSQL database and does not allow aggregation SQL queries. You are encouraged to improve the above code to
-obtain a more efficient way of counting the e-mail addresses for each domain. Try to optimize the transfer of
-information as well as the web app processing. Maybe you need to change the way that the records are stored.
-
-Test the changes locally, commit them to your GitHub repository.
-
-**Q54: Describe the strategy used to fulfill the requirements of this section. What have you changed in the code and the
-configuration of the different resources used by the web app? What are the tradeoffs of your solution?** Add your
-responses to `README.md`.
-
-GitHub Actions is a powerful CI/CD platform that enables developers to build, test, and deploy pipelines efficiently.
-These pipelines are essential for maintaining consistency in deployments, identifying errors quickly, improving
-efficiency, and streamlining the development process.
-
-**Continuous Integration (CI)** and **Continuous Delivery (CD)** are critical practices for delivering high-quality
-software. They ensure a great user experience by preventing bugs from being pushed to production. GitHub Actions allows
-you to create custom workflows that are triggered based on specific events, such as pull requests, code commits, or
-pushes to a repository.
-
-In this laboratory session, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
-with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
-and deploying the application to AWS Elastic Container Service (AWS ECS).
-
-### CI/CD build using GitHub Actions
-
-A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
-which each action in the pipeline is defined. These are:
-
-- **name**: This is the workflow's name as will appear on your repository's ‘Actions’ section.
-- **on**: This section specifies the workflow trigger. Here, you can have successful merges to the repository and pushes
-  to the main or other branches among other actions.
-- **jobs**: Here, all the jobs that are run in the workflow will be defined.
+Running `eb init` creates a configuration file at `eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
 
 ```yaml
-name: Deploy to AWS ECS
-
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
+branch-defaults:
+  main:
+    environment: null
+global:
+  application_name: django-webapp-eb
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Docker running on 64bit Amazon Linux 2023
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
 ```
 
-To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`
+Now, you need to create an Elastic Beanstalk environment and run the application. That needs a quite complex command line that we are going to create using a python script in the file `ebcreate.py` that you'll save inside the `eb` folder.
 
-The proposed workflow will build and push a new container image to AWS ECR,
-and then will deploy a new task definition to AWS ECS, when there is a push to the "main" branch.
+```python
+from dotenv import dotenv_values
+import sys
 
-To use this workflow, you will need to complete the following set-up steps:
+ebOptions = {
+    'min-instances': '2',
+    'max-instances': '3',
+    'instance_profile': 'LabInstanceProfile',
+    'service-role': 'LabRole',
+    'elb-type': 'application',
+    'instance-types':'t2.nano'
+}
 
-1. Create an ECR repository to store your images.
-   For example: `aws ecr create-repository --repository-name my-ecr-repo`.
-   Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
-   Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+try:
+    CONFIGURATION_FILE = sys.argv[1]
+    HOSTNAME = sys.argv[2]
+except:
+    print('ERROR: filename missing\npython ebcreate.py filename hostname')
+    exit()
+config = dotenv_values(CONFIGURATION_FILE)
 
-2. Create an ECS task definition, an ECS cluster, and an ECS service.
-   For example, follow the Getting Started guide on the ECS console:
-   https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun
-   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the
-   AWS ECS service.
-   Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the
-   cluster.
+hostname = f'{HOSTNAME}.{config["AWS_REGION"]}.elasticbeanstalk.com'
 
-3. Store your ECS task definition as a JSON file in your repository.
-   The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
-   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON
-   file.
-   Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
-   in the `containerDefinitions` section of the task definition.
+hosts = config['DJANGO_ALLOWED_HOSTS'].split(':')
+if hostname not in hosts:
+    hosts.append(hostname)
+    config['DJANGO_ALLOWED_HOSTS'] = ':'.join(hosts)
+opt = []
+for k, v in config.items():
+    opt.append(f'{k}={v}')
+ebOptions['envvars'] = '"%s"' % ','.join(opt)
 
-4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-   See the documentation for each action used below for the recommended IAM policies for this IAM user,
-   and best practices on handling the access key credentials.
+opt = []
+for k, v in ebOptions.items():
+    opt.append(f'--{k} {v}')
 
-Starter workflow outline
+print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
+```
 
-trigger and branches
+You can execute it as shown below. That will create the command to type in order to create an Elastic Beanstalk that has
 
-permissions
+- two EC2 instances min and three EC2 instances max (see `ebOptions` in the Python code above).
+- the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
+- the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
+- a very small EC2 instance type `t2.nano` (see `ebOptions` in the Python code above).
+- the name of your team as the name of the environment that you'll be using (see command below).
 
-jobs and runner
+The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` and, obviously, every team needs to have a different host name. I suggest you to use team and two digits of your team number for this lab session.
 
-steps
+```bash
+_$ python ebcreate.py ../production.env team99
+eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
+```
 
-name and uses
+In unix you can use the back quotes to execute the text produced by the script above.
 
-### AWS CloudFront CDN
-
-A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy
-servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low
-latency, and high performance.
-
-<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
-
-The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
-part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
-balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
-possible to improve the "user experience".
-
-Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
-downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
-social networks and so much more.
-
-Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
-Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
-
-**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
-speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
-**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
-custom code close to final viewers.
-
-### AWS ECS: Elastic Container Service
-
-AWS Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
-managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
-solution for running workloads in the cloud or on-premises with AWS ECS Anywhere.
-
-Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
-
-- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
-  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
-  different systems and servers, making local development, testing, and deployment more reliable.
-
-- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
-  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
-  compatibility issues.
-
-- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
-  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
-
-- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
-  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
-  integrate and deploy changes.
-
-* [Task 5.5: Create a new option to retrieve the list of leads](#Tasks55)
-* [Task 5.6: Improve the web app transfer of information](#Tasks56)
-* [Task 5.7: Deliver static content using a Content Delivery Network](#Tasks57)
-
-The Python virtual environment will be re-created remotely by Docker through the use of the file *requirements.txt* and
-other configuration that you are going to set up later.
+```bash
+_$ `python ebcreate.py ../production.env team99`
+```
 
 
+```bash
+_$ eb printenv
+```
 
 
-<a name="Tasks58" />
+```bash
+_$ eb open
+```
 
-## Task 5.8: Deliver static content using a Content Delivery Network
+<a name="Tasks64" />
+
+## Task 6.4: Deliver static content using a Content Delivery Network
 
 ### The static content in our web app
 
@@ -944,3 +659,164 @@ to False.
 
 Django can also assume the synchronization of the static files to the CDN by means of the maintenace
 command `python manage.py collectstatic`.
+
+
+
+<a name="Tasks65" />
+
+## Task 6.5: Create a new option to retrieve the list of leads
+
+Edit the file *form/urls.py* to add the new URL and associate it to the new view *search*.
+
+```python
+urlpatterns = [
+    # ex: /
+    path('', views.home, name='home'),
+    # ex: /signup
+    path('signup', views.signup, name='signup'),
+    # ex: /search
+    path('search', views.search, name='search'),
+]
+```
+
+To create the controller for the new view edit *form/views.py* and include the following code:
+
+```python
+from collections import Counter
+
+
+def search(request):
+    domain = request.GET.get('domain')
+    preview = request.GET.get('preview')
+    leads = Leads()
+    items = leads.get_leads(domain, preview)
+    if domain or preview:
+        return render(request, 'search.html', {'items': items})
+    else:
+        domain_count = Counter()
+        domain_count.update([item['email'].split('@')[1] for item in items])
+        return render(request, 'search.html', {'domains': sorted(domain_count.items())})
+```
+
+The search view gets two parameters:
+
+- preview: (*values are Yes/No*) lists the leads that are interested, or not, in a preview.
+- domain: (*value is the part right after the @ of an e-mail address*) will list only the leads from that domain.
+
+Reading the code, we understand that the search view retrieves the value of the parameters, gets the complete list of
+leads and then:
+
+- if any parameter is set, the program just lists all the records matching the search.
+- if both parameters are empty the program extracts the domain from each e-mail address and counts how many addresses
+  belong to each domain.
+
+To access the records stored at the NoSQL table *ccbda-signup-table* you need to add a method *get_leads* to the model
+*Leads()* file *form/models.py*.
+The [Scan](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html) operation allows us to filter
+values from the table.
+
+```python
+def get_leads(self, domain, preview):
+    try:
+        dynamodb = boto3.resource('dynamodb',
+                                  region_name=AWS_REGION,
+                                  aws_access_key_id=AWS_ACCESS_KEY_ID,
+                                  aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                  aws_session_token=AWS_SESSION_TOKEN)
+        table = dynamodb.Table('ccbda-signup-table')
+    except Exception as e:
+        logger.error(
+            'Error connecting to database table: ' + (e.fmt if hasattr(e, 'fmt') else '') + ','.join(e.args))
+        return None
+    expression_attribute_values = {}
+    FilterExpression = []
+    if preview:
+        expression_attribute_values[':p'] = preview
+        FilterExpression.append('preview = :p')
+    if domain:
+        expression_attribute_values[':d'] = '@' + domain
+        FilterExpression.append('contains(email, :d)')
+    if expression_attribute_values and FilterExpression:
+        response = table.scan(
+            FilterExpression=' and '.join(FilterExpression),
+            ExpressionAttributeValues=expression_attribute_values,
+        )
+    else:
+        response = table.scan(
+            ReturnConsumedCapacity='TOTAL',
+        )
+    if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+        return response['Items']
+    logger.error('Unknown error retrieving items from database.')
+    return None
+```
+
+A final step is to move the file *extra-file/search.html* to *form/templates/search.html*. That file receives the data
+from the view controller and creates the HTML to show the results.
+
+Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8000/search*
+in your browser.
+
+<img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/>
+
+To add the new option to the menu bar, simply edit the file *form/templates/generic.html*, go to line 28 and add the
+second navbar as shown below. Save the file and, with no further delay, check that you have it added in the version that
+runs in your computer.
+
+```html
+
+<div class="collapse navbar-collapse" id="navbarResponsive">
+	<ul class="navbar-nav">
+		<li class="nav-item active">
+			<a class="nav-link active" href="{% url 'form:home' %}">Home</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">About</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">Blog</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#">Press</a>
+		</li>
+	</ul>
+	<ul class="nav navbar-nav ml-auto">
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'form:search' %}">Admin search</a>
+		</li>
+	</ul>
+</div>
+```
+
+<img src="./images/Lab05-7.png " alt="Search" title="Search"/>
+
+If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change
+whatever is necessary to make it work.
+
+**Q53: Has everything gone alright? What have you changed?** Add your answers to the `README.md` file in the responses
+repository.
+
+<a name="Tasks66" />
+
+## Task 6.6: Improve the web app transfer of information (optional)
+
+You can work on this section locally in order to save expenses; you can terminate your environment from the EB console.
+
+If you analyze the new function added, probably a wise thing to do will be to optimize the data transfer from the
+DynamoDB table: imagine that instead of a few records in your NoSQL table you have millions of records. Transferring
+millions of records to your web app just to count how many e-mail addresses match a domain doesn't seem to be a great
+idea.
+
+DynamoDB is a NoSQL database and does not allow aggregation SQL queries. You are encouraged to improve the above code to
+obtain a more efficient way of counting the e-mail addresses for each domain. Try to optimize the transfer of
+information as well as the web app processing. Maybe you need to change the way that the records are stored.
+
+Test the changes locally, commit them to your GitHub repository.
+
+**Q54: Describe the strategy used to fulfill the requirements of this section. What have you changed in the code and the
+configuration of the different resources used by the web app? What are the tradeoffs of your solution?** Add your
+responses to `README.md`.
+
+
+
+
