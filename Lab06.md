@@ -252,8 +252,9 @@ _$ aws ecr create-repository --repository-name django-webapp-docker-repo
 }
 ```
 
-The response data is in JSON format and includes a repositoryArn value. This is the URI that you would use to reference
-your image for future deployments. The response also includes a registryId, which you will use in a moment.
+The response data is in JSON format and includes a repository Arn value. This is the URI that you  
+would use to reference your image for future deployments. The response also includes a registryId,
+which you will use in a moment.
 
 ### Tag the Docker image.
 
