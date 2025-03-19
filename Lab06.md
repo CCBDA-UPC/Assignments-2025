@@ -132,7 +132,7 @@ Let's now test the web application running in Docker in your laptop and connect 
 ```bash
 _$ cat aws.env
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
+DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL=info
 CCBDA_SIGNUP_TABLE=ccbda-signup-table
@@ -487,7 +487,7 @@ The output of the command is extremely long, scroll inside the box to the right 
 
 ```bash
 _$ python ebcreate.py ../production.env team99
-eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
+eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
 ```
 
 There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `eb` folder. Make sure you change `<registry-id>` by the actual ID.
@@ -548,7 +548,7 @@ _$ eb printenv
      DB_PASSWORD = ccbdapassword
      DB_PORT = 5432
      DB_USER = ccbdauser
-     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com
+     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com
      DJANGO_DEBUG = True
      DJANGO_LOGLEVEL = info
      DJANGO_SECRET_KEY = -lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
