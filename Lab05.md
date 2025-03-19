@@ -210,9 +210,10 @@ _$ python update.py .env
 
 ### Configuration of the web application
 
-Inside of the django-webapp folder, create a `.env` file with the configuration for the project:
+Inside of the django-webapp folder, create a `.env` file with the configuration for the project. If you have used `python update.py .env`, as explained above, you shall have the AWS credentials updated to the latest version.
 
-```text
+```bash
+_$ cat .env
 DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
