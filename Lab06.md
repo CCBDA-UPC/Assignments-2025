@@ -202,7 +202,7 @@ Running migrations:
 **QS614:  What is the result of "select * FROM django_migrations;"**
 
 
-<a name="Task61"/>
+<a name="Task62"/>
 
 ## Task 6.2: Adding the Docker images to AWS ECR
 
