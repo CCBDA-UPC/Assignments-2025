@@ -1,61 +1,12 @@
-## Pre-requisites
+# Lab session 6: Run a custom web app in the cloud
 
-Have **AWS Command Line Interface ([AWS CLI](https://aws.amazon.com/cli/))** installed and configured with the current
-value of your AWS credentials.
+This lab session continues the work done in the previous session.
 
-Check the instructions
-for [installing or updating to the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) depending on the operating system of your laptop.
 
-You can save your frequently used configuration settings and credentials in files that are maintained by the AWS CLI.
 
-The files are divided into profiles. By default, the AWS CLI uses the settings found in the profile named **default**.
-To use alternate settings, you can create and reference additional profiles.
+## Pre-lab homework
 
-Let's create a configuration file: `aws configure` asks you for the value of the different parameters that you've
-obtained from your current Learner Lab session. We are not going to enter any value for the credentials and only select
-the default AWS region and output format.
-
-<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%" height="50%"/>
-
-```bash
-_$ aws configure
-AWS Access Key ID [None]: 
-AWS Secret Access Key [None]: 
-Default region name [None]: us-east-1
-Default output format [None]: json
-_$ cat $HOME/.aws/config
-[default]
-region = us-east-1
-output = json
-```
-
-We will edit the `$HOME/.aws/config` file and paste the values directly. Then we can check that the AWS CLI is correctly configured by showing its version, listing the AWS S3 buckets or the current account summary.
-
-```bash
-_$ cat $HOME/.aws/config
-[default]
-output = json
-region = us-east-1
-aws_access_key_id = <YOUR-ACCESS-KEY-ID>
-aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
-aws_session_token = <YOUR-AWS-SESSION-TOKEN>
-_$  aws --version
-aws-cli/2.0.16 Python/3.7.4 Darwin/24.3.0 botocore/2.0.0dev20
-_$  aws s3 ls
-2025-01-11 18:47:30 lab04-main.ccbda.upc.edu
-_$ aws iam get-account-summary
-{
-    "SummaryMap": {
-        "GroupPolicySizeQuota": 5120,
-        "InstanceProfilesQuota": 1000,
-        "Policies": 6,
-      ....
-        "GroupsQuota": 300
-    }
-} 
-```
-
-Additionally you'll need to install the Elastic Beanstalk CLI. You can find more information on  **[eb
+You need to install the Elastic Beanstalk CLI. You can find more information on  **[eb
 command line interface](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-getting-started.html)**.
 
 On macOS you can use
@@ -63,8 +14,7 @@ On macOS you can use
 ``` 
 _$ brew install awsebcli
 ```
-
-Go to your local machine window and write:
+Open a terminal and create a folder named `eb` at the top of your web application. Move to the `eb` folder and write:
 
 ```
 _$ eb init -i
@@ -98,9 +48,7 @@ Do you want to set up SSH for your instances?
 (Y/n): n
 ```
 
-That has initialized the container and now you will be creating an environment for the application:
-
-Running `eb init` creates a configuration file at `.elasticbeanstalk/config.yml`. You can edit it if necessary.
+Running `eb init` creates a configuration file at `eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
 
 ```yaml
 branch-defaults:
@@ -122,42 +70,67 @@ global:
   workspace_type: Application
 ```
 
-```bash
-_$ eb create -ip LabInstanceProfile --service-role LabRole --envvars "DEBUG=True"
-Enter Environment Name
-(default is django-webapp-eb-dev): 
-Enter DNS CNAME prefix
-(default is django-webapp-eb-dev): 
+Now, you need to create an Elastic Beanstalk environment and run the application. That needs a quite complex command line that we are going to create using a python script in the file `ebcreate.py` that you'll save inside the `eb` folder.
 
-Select a load balancer type
-1) classic
-2) application
-3) network
-(default is 2): 1
+```python
+from dotenv import dotenv_values
+import sys
 
+ebOptions = {
+    'min-instances': '2',
+    'max-instances': '3',
+    'instance_profile': 'LabInstanceProfile',
+    'service-role': 'LabRole',
+    'elb-type': 'application',
+    'instance-types':'t2.nano'
+}
 
-Would you like to enable Spot Fleet requests for this environment? (y/N): n
-Creating application version archive "app-cae7-250318_173150369484".
-Uploading django-webapp-eb/app-cae7-250318_173150369484.zip to S3. This may take a while.
-Upload Complete.
-Environment details for: django-webapp-eb-dev
-  Application name: django-webapp-eb
-  Region: us-east-1
-  Deployed Version: app-cae7-250318_173150369484
-  Environment ID: e-iispstmpgr
-  Platform: arn:aws:elasticbeanstalk:us-east-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4
-  Tier: WebServer-Standard-1.0
-  CNAME: django-webapp-eb-dev.us-east-1.elasticbeanstalk.com
-  Updated: 2025-03-18 16:31:56.345000+00:00
-Printing Status:
-2025-03-18 16:31:54    INFO    createEnvironment is starting.
-2025-03-18 16:31:56    INFO    Using elasticbeanstalk-us-east-1-407495119696 as Amazon S3 storage bucket for environment data.
-2025-03-18 16:32:17    INFO    Created security group named: sg-00184da9ec79e113d
-2025-03-18 16:32:17    INFO    Created load balancer named: awseb-e-i-AWSEBLoa-MBQCW00K3RGD
- -- Events -- (safe to Ctrl+C)
+try:
+    CONFIGURATION_FILE = sys.argv[1]
+    HOSTNAME = sys.argv[2]
+except:
+    print('ERROR: filename missing\npython ebcreate.py filename hostname')
+    exit()
+config = dotenv_values(CONFIGURATION_FILE)
+
+hostname = f'{HOSTNAME}.{config["AWS_REGION"]}.elasticbeanstalk.com'
+
+hosts = config['DJANGO_ALLOWED_HOSTS'].split(':')
+if hostname not in hosts:
+    hosts.append(hostname)
+    config['DJANGO_ALLOWED_HOSTS'] = ':'.join(hosts)
+opt = []
+for k, v in config.items():
+    opt.append(f'{k}={v}')
+ebOptions['envvars'] = '"%s"' % ','.join(opt)
+
+opt = []
+for k, v in ebOptions.items():
+    opt.append(f'--{k} {v}')
+
+print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
 ```
 
+You can execute it as shown below. That will create the command to type in order to create an Elastic Beanstalk that has
 
+- two EC2 instances min and three EC2 instances max (see `ebOptions` in the Python code above).
+- the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
+- the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
+- a very small EC2 instance type `t2.nano` (see `ebOptions` in the Python code above).
+- the name of your team as the name of the environment that you'll be using (see command below).
+
+The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` and, obviously, every team needs to have a different host name. I suggest you to use team and two digits of your team number for this lab session.
+
+```bash
+_$ python ebcreate.py ../production.env team99
+eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
+```
+
+In unix you can use the back quotes to execute the text produced by the script above.
+
+```bash
+_$ `python ebcreate.py ../production.env team99`
+```
 
 
 ```bash
