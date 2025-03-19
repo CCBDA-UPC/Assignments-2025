@@ -214,7 +214,7 @@ You can find it issuing the following AWS CLI command.
 
 ```bash
 _$ aws sts get-caller-identity | grep Account
-    "Account": "407...9696",
+    "Account": "383312122003",
 ```
 
 You can also go to the upper-right corner of the AWS Management Console, click on top of your username and unfold the black box shown below. Copy the Account ID value from the menu. Next, return to the Bash terminal.
@@ -231,18 +231,18 @@ Login Succeeded
 
 Verify that the command responds with a message indicating that the login succeeded.
 
-### Create an AWS ECR Docker repository named `django-webapp-code`
+### Create an AWS ECR Docker repository named `django-webapp-docker-repo`
 
 To create the repository, run the following command:
 
 ```bash
-_$ aws ecr create-repository --repository-name django-webapp-code
+_$ aws ecr create-repository --repository-name django-webapp-docker-repo
 {
     "repository": {
-        "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-code",
+        "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-docker-repo",
         "registryId": "<registry-id>",
-        "repositoryName": "django-webapp-code",
-        "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+        "repositoryName": "django-webapp-docker-repo",
+        "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
         "createdAt": "2025-03-15T16:44:17.171000+01:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
@@ -261,10 +261,10 @@ In this step, you will tag the image with your unique registryId value to make i
 this image. Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-docker:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
+_$ docker tag django-docker:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:latest
 _$ docker image list
 REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
-<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code  latest    79e93509f63d   21 hours ago   433MB
+<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo  latest    79e93509f63d   21 hours ago   433MB
 django-docker                                                     latest    79e93509f63d   21 hours ago   433MB
 postgres                                                          17        81f32a88ec56   2 weeks ago    621MB
 ```
@@ -277,8 +277,8 @@ intend to store it.
 To push your image to AWS ECR, run the following command. Replace <registry-id> with your actual registry ID number:
 
 ```bash
-_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code:latest
-The push refers to repository [<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code]
+_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:latest
+The push refers to repository [<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo]
 4b785e93aa71: Pushed 
 be1449717b1e: Pushed 
 ff1399ac0930: Pushed 
@@ -291,10 +291,10 @@ e1599d0f5c4d: Pushed
 latest: digest: sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125 size: 856
 ```
 
-To confirm that the django-webapp-code image is now stored in AWS ECR, run the following aws ecr list-images command:
+To confirm that the django-webapp-docker-repo image is now stored in AWS ECR, run the following aws ecr list-images command:
 
 ```bash
-_$ aws ecr list-images --repository-name django-webapp-code
+_$ aws ecr list-images --repository-name django-webapp-docker-repo
 {
     "imageIds": [
         {
@@ -318,10 +318,10 @@ _$ aws ecr describe-repositories
 {
     "repositories": [
         {
-            "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-code",
+            "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-docker-repo",
             "registryId": "<registry-id>",
-            "repositoryName": "django-webapp-code",
-            "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-code",
+            "repositoryName": "django-webapp-docker-repo",
+            "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
             "createdAt": "2025-03-15T16:44:17.171000+01:00",
             "imageTagMutability": "MUTABLE",
             "imageScanningConfiguration": {
@@ -335,26 +335,26 @@ _$ aws ecr describe-repositories
 And information about the images of the repository.
 
 ```bash
-_$ aws ecr describe-images --repository-name django-webapp-code
+_$ aws ecr describe-images --repository-name django-webapp-docker-repo
 {
     "imageDetails": [
         {
             "registryId": "<registry-id>",
-            "repositoryName": "django-webapp-code",
+            "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:e33b3087f42f9b5b23ee5ce33a8a279fc1c2a2d1070a9eaae3c298cd8d3c803f",
             "imageSizeInBytes": 1348,
             "imagePushedAt": "2025-03-15T16:47:53.153000+01:00"
         },
         {
             "registryId": "<registry-id>",
-            "repositoryName": "django-webapp-code",
+            "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:8f1ee7414d796b6ed70dcfa9facff56438bba6b2665066362eea9b5dca2c667d",
             "imageSizeInBytes": 75387102,
             "imagePushedAt": "2025-03-15T16:47:53.161000+01:00"
         },
         {
             "registryId": "<registry-id>",
-            "repositoryName": "django-webapp-code",
+            "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTags": [
                 "latest"
