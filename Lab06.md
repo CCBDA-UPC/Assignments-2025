@@ -25,6 +25,24 @@ speeds. CloudFront CDN works seamlessly with other AWS services including **AWS 
 **AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
 custom code close to final viewers.
 
+### AWS RDS: AWS Relational Database Service
+**AWS RDS** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
+
+#### Key Features:
+1. **Managed Service**: Automates time-consuming tasks like provisioning, upgrading, patching, backups, and recovery.
+2. **Performance**: Offers high performance with support for read replicas, caching, and optimized configurations.
+3. **Scalability**: Easily scale database instances up or down to adjust to workload demands.
+4. **Security**: Provides built-in security features like encryption at rest, encryption in transit, and integration with AWS Identity and Access Management (IAM).
+5. **Backup and Recovery**: Comes with automated backups and point-in-time restoration capabilities.
+6. **Multi-AZ Deployment**: Supports high availability through Multi-AZ deployments, which provide automatic failover to a secondary instance in case of a failure.
+
+#### Benefits:
+- Reduces administrative overhead by automating routine database tasks.
+- Ensures better reliability and uptime with features like replication and Multi-AZ deployments.
+- Pay-as-you-go pricing makes it cost-effective for a broad range of use cases.
+
+AWS RDS is widely used for hosting production databases, applications, and even analytics workloads while reducing operational complexity.
+
 ### AWS ECR: Elastic Container Registry
 
 AWS Elastic Container Registry (AWS ECR) is an AWS managed container image registry service that is secure, scalable, and reliable. AWS ECR supports private repositories with resource-based permissions using AWS IAM. This is so that specified users or AWS EC2 instances can access your container repositories and images. You can use your preferred CLI to push, pull, and manage Docker images.
@@ -61,23 +79,6 @@ _$ brew install awsebcli
 ## Task 6.1: AWS Relational Database Service
 
 In lab session 5 we used a PostGreSQL database that we installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
-
-**AWS Relational Database Service (AWS RDS)** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
-
-#### Key Features:
-1. **Managed Service**: Automates time-consuming tasks like provisioning, upgrading, patching, backups, and recovery.
-2. **Performance**: Offers high performance with support for read replicas, caching, and optimized configurations.
-3. **Scalability**: Easily scale database instances up or down to adjust to workload demands.
-4. **Security**: Provides built-in security features like encryption at rest, encryption in transit, and integration with AWS Identity and Access Management (IAM).
-5. **Backup and Recovery**: Comes with automated backups and point-in-time restoration capabilities.
-6. **Multi-AZ Deployment**: Supports high availability through Multi-AZ deployments, which provide automatic failover to a secondary instance in case of a failure.
-
-#### Benefits:
-- Reduces administrative overhead by automating routine database tasks.
-- Ensures better reliability and uptime with features like replication and Multi-AZ deployments.
-- Pay-as-you-go pricing makes it cost-effective for a broad range of use cases.
-
-AWS RDS is widely used for hosting production databases, applications, and even analytics workloads while reducing operational complexity.
 
 ### Create your AWS RDS PostGreSQL instance
 
