@@ -113,6 +113,65 @@ AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
 containing sensitive information. **Make sure to have such functionality present in your future projects**.
 
+### Updating the AWS Credentials
+
+In the code of the application you can find a file named `updateAWS.py` that gets the values of the `$HOME/.aws/config` and changes them in the configuration file that you send as parameter. This is specially useful because every time that you begin a new Learning Lab session the AWS Credentials change and you need to propagate the changes to the different configuration files.
+
+```python
+from dotenv import dotenv_values
+import boto3
+import sys
+
+trans = {
+    'access_key': 'AWS_ACCESS_KEY_ID',
+    'secret_key': 'AWS_SECRET_ACCESS_KEY',
+    'token': 'AWS_SESSION_TOKEN'
+}
+
+try:
+    CONFIGURATION_FILE = sys.argv[1]
+except:
+    print('ERROR: filename missing\npython updateAWS.py filename')
+    exit()
+
+config = dotenv_values(CONFIGURATION_FILE)
+
+session = boto3.Session()
+credentials = session.get_credentials().__dict__
+
+changed = False
+for k, v in trans.items():
+    if config[v] != credentials[k]:
+        config[v] = credentials[k]
+        changed = True
+
+if changed:
+    print ('AWS credentials have changed')
+    newfile = ''
+    for k, v in config.items():
+        newfile += f'{k}={v}\n'
+    with open(CONFIGURATION_FILE, 'w') as fw:
+        fw.write(newfile)
+```
+
+Every time that you begin a new Learnig Lab session get the AWS credentials and put them inside of your laptop's AWS configuration or the AWS CLI commands will not work.
+
+```bash
+cat $HOME/.aws/config 
+[default]
+output = json
+region = us-east-1
+aws_access_key_id=ASIA......V4ORM
+aws_secret_access_key=SwJugAoWS...........sm7s9XpmR
+aws_session_token=IQoJb3JpZ2luX2VjEAwa......ZeBarmo2zJnz/s5xak1SSAuddsriLNBSBb23740ebvY
+```
+
+Then, update the `.env` file and any other web application configuration file that needs to be updated.
+
+```bash
+_$ python update.py .env
+```
+
 ### Web application Virtual environment
 
 Next, create a **new Python 3.13 virtual environment** specially for this web app and install the packages required to
