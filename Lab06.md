@@ -68,7 +68,7 @@ _$ brew install awsebcli
 
 * [Task 6.1: AWS Relational Database Service](#Task61)
 * [Task 6.2: Adding the Docker images to AWS ECR](#Task62)
-* [Task 6.3: Running Containers on AWS Elastic Beanstalk](#Task63)
+* [Task 6.3: Running Container images on AWS Elastic Beanstalk](#Task63)
 * [Task 6.4: Deliver static content using a Content Delivery Network](#Task64)
 * [Task 6.5: Create a new option to retrieve the list of leads](#Task65)
 * [Task 6.6: Improve the web app transfer of information (optional)](#Task66)
@@ -371,10 +371,9 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 
 <a name="Task63" />
 
-## Task 6.3: Running Containers on AWS Elastic Beanstalk
+## Task 6.3: Running Container images on AWS Elastic Beanstalk
 
 ### Launch your new Elastic Beanstalk environment
-
 
 Open a terminal and create a folder named `eb` at the top of your web application. Move to the `eb` folder and write:
 
