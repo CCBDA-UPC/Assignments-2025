@@ -438,7 +438,7 @@ from dotenv import dotenv_values
 import sys
 
 ebOptions = {
-    'min-instances': '2',
+    'min-instances': '1',
     'max-instances': '3',
     'instance_profile': 'LabInstanceProfile',
     'service-role': 'LabRole',
@@ -464,6 +464,7 @@ opt = []
 for k, v in config.items():
     opt.append(f'{k}={v}')
 ebOptions['envvars'] = '"%s"' % ','.join(opt)
+ebOptions['cname'] = HOSTNAME
 
 opt = []
 for k, v in ebOptions.items():
@@ -474,7 +475,7 @@ print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
 
 You can execute it as shown below. That will create the command to type in order to create an Elastic Beanstalk that has
 
-- two EC2 instances min and three EC2 instances max (see `ebOptions` in the Python code above).
+- one EC2 instance min and three EC2 instances max (see `ebOptions` in the Python code above).
 - the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
 - the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
 - a very small EC2 instance type `t2.nano` (see `ebOptions` in the Python code above).
@@ -482,26 +483,85 @@ You can execute it as shown below. That will create the command to type in order
 
 The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` and, obviously, every team needs to have a different host name. I suggest you to use team and two digits of your team number for this lab session.
 
+The output of the command is extremely long, scroll inside the box to the right or see it in your own terminal.
+
 ```bash
 _$ python ebcreate.py ../production.env team99
 eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
 ```
 
-In unix you can use the back quotes to execute the text produced by the script above.
+There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `eb` folder. Make sure you change `<registry-id>` by the actual ID.
+
+```json
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 8000
+    }
+  ]
+}
+```
+
+In unix you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script.
 
 ```bash
 _$ `python ebcreate.py ../production.env team99`
+Creating application version archive "app-250319_155025031208".
+Uploading django-webapp-eb/app-250319_155025031208.zip to S3. This may take a while.
+Upload Complete.
+Environment details for: team99
+  Application name: django-webapp-eb
+  Region: us-east-1
+  Deployed Version: app-250319_155025031208
+  Environment ID: e-jip3st2sem
+  Platform: arn:aws:elasticbeanstalk:us-east-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4
+  Tier: WebServer-Standard-1.0
+  CNAME: UNKNOWN
+  Updated: 2025-03-19 14:50:28.780000+00:00
+Printing Status:
+2025-03-19 14:50:27    INFO    createEnvironment is starting.
+2025-03-19 14:50:28    INFO    Using elasticbeanstalk-us-east-1-<registry-id> as Amazon S3 storage bucket for environment data.
+2025-03-19 14:50:49    INFO    Created security group named: sg-0b7beef319967146f
+2025-03-19 14:51:05    INFO    Created target group named: arn:aws:elasticloadbalancing:us-east-1:<registry-id>:targetgroup/awseb-AWSEB-BZUZMCTWTRWQ/9862edfd7688018f
+......
+2025-03-19 14:54:30    INFO    Application available at team99.us-east-1.elasticbeanstalk.com.
+2025-03-19 14:54:31    INFO    Successfully launched environment: team99
 ```
 
+If you have followed all the steps above you shall have now a web application deployed and accesible.
 
 ```bash
+_$ eb use team99
 _$ eb printenv
+ Environment Variables:
+     AWS_ACCESS_KEY_ID = *****
+     AWS_REGION = us-east-1
+     AWS_SECRET_ACCESS_KEY = SwJugAoWSiQJRymo1g5HjuK3JEApzTgsm7s9XpmR
+     AWS_SESSION_TOKEN = IQoJb3JpZ......SSAuddsriLNBSBb23740ebvY
+     CCBDA_SIGNUP_TABLE = ccbda-signup-table
+     DATABASE = postgresql
+     DB_NAME = ccbdadb
+     DB_PASSWORD = ccbdapassword
+     DB_PORT = 5432
+     DB_USER = ccbdauser
+     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com
+     DJANGO_DEBUG = True
+     DJANGO_LOGLEVEL = info
+     DJANGO_SECRET_KEY = -lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
 ```
 
+To visit the web application type:
 
 ```bash
 _$ eb open
 ```
+
+**Q631. Open the AWS EC2 console and check how many instances are running and the AWS ELB. Share your thoughts.**
+
 
 ### Github actions
 
@@ -682,13 +742,13 @@ setup, we will use a URL from our domain, something like *static.mydomain.com* t
 <link href="//RANDOM-ID-FROM-CLOUDFRONT.cloudfront.net/custom.css" rel="stylesheet">
 ```
 
-**Q55: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
+**Q641: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
 Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
 Google Chrome and check the origin of the files that you are loading (attach a screen shot similar to the one below)**:
 
  <img src="./images/Lab05-11.png " alt="Files loaded" title="Files loaded"/>
 
-**Q56: How long have you been working on this session (including the optional part)? What have been the main
+**Q642: How long have you been working on this session (including the optional part)? What have been the main
 difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
 
 Add all these files to your repository and comment what you think is relevant in your session's *README.md*.
