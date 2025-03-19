@@ -55,6 +55,116 @@ _$ aws iam get-account-summary
 } 
 ```
 
+Additionally you'll need to install the Elastic Beanstalk CLI. You can find more information on  **[eb
+command line interface](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-getting-started.html)**.
+
+On macOS you can use
+
+``` 
+_$ brew install awsebcli
+```
+
+Go to your local machine window and write:
+
+```
+_$ eb init -i
+Select a default region
+...
+1) us-east-1 : US East (N. Virginia)
+...
+(default is 3): 1
+
+Select an application to use
+...
+2) [ Create new Application ]
+(default is 2): 2
+
+Enter Application Name
+(default is "django-webapp-eb"):
+Application django-webapp-eb has been created.
+
+Select a platform.
+...
+3) Docker
+...
+(make a selection): 3
+
+Select a platform branch.
+1)  Docker running on 64bit Amazon Linux 2023
+...
+(default is 1): 1
+Do you wish to continue with CodeCommit? (y/N): n
+Do you want to set up SSH for your instances?
+(Y/n): n
+```
+
+That has initialized the container and now you will be creating an environment for the application:
+
+Running `eb init` creates a configuration file at `.elasticbeanstalk/config.yml`. You can edit it if necessary.
+
+```yaml
+branch-defaults:
+  main:
+    environment: null
+global:
+  application_name: django-webapp-eb
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Docker running on 64bit Amazon Linux 2023
+  default_region: us-east-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
+```
+
+```bash
+_$ eb create -ip LabInstanceProfile --service-role LabRole --envvars "DEBUG=True"
+Enter Environment Name
+(default is django-webapp-eb-dev): 
+Enter DNS CNAME prefix
+(default is django-webapp-eb-dev): 
+
+Select a load balancer type
+1) classic
+2) application
+3) network
+(default is 2): 1
+
+
+Would you like to enable Spot Fleet requests for this environment? (y/N): n
+Creating application version archive "app-cae7-250318_173150369484".
+Uploading django-webapp-eb/app-cae7-250318_173150369484.zip to S3. This may take a while.
+Upload Complete.
+Environment details for: django-webapp-eb-dev
+  Application name: django-webapp-eb
+  Region: us-east-1
+  Deployed Version: app-cae7-250318_173150369484
+  Environment ID: e-iispstmpgr
+  Platform: arn:aws:elasticbeanstalk:us-east-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4
+  Tier: WebServer-Standard-1.0
+  CNAME: django-webapp-eb-dev.us-east-1.elasticbeanstalk.com
+  Updated: 2025-03-18 16:31:56.345000+00:00
+Printing Status:
+2025-03-18 16:31:54    INFO    createEnvironment is starting.
+2025-03-18 16:31:56    INFO    Using elasticbeanstalk-us-east-1-407495119696 as Amazon S3 storage bucket for environment data.
+2025-03-18 16:32:17    INFO    Created security group named: sg-00184da9ec79e113d
+2025-03-18 16:32:17    INFO    Created load balancer named: awseb-e-i-AWSEBLoa-MBQCW00K3RGD
+ -- Events -- (safe to Ctrl+C)
+```
+
+
+
+
+```bash
+_$ eb printenv
+
+```
+
 <a name="Task61"/>
 
 ## Task 6.1: AWS Relational Database Service
@@ -359,9 +469,16 @@ _$ aws ecr describe-images --repository-name django-webapp-code
 ```
 
 
+
+
 <a name="Tasks62" />
 
 ## Task 6.2: Running Containers on AWS Elastic Beanstalk
+
+### Launch your new Elastic Beanstalk environment
+
+
+
 
 Open your preferred text editor, and copy and paste the following text into a new file.
 
