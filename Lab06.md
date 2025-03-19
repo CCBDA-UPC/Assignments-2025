@@ -208,7 +208,9 @@ Running migrations:
 
 Before being able to deploy in the cloud the Docker image that you've created in the previous lab session we need to push it to a Docker images repository hosted in AWS: the AWS Elastic Container Registry (AWS ECR).
 
-### Discover your AWS account ID.
+### Discover your AWS account ID
+
+You can find it issuing the following AWS CLI command.
 
 ```bash
 _$ aws sts get-caller-identity | grep Account
