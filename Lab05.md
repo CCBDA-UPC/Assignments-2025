@@ -57,7 +57,7 @@ If you need help with the installation, you can find detailed instructions on th
 * [Task 5.3: Test the web app locally](#Task53)
 * [Task 5.4: Use AWS Simple Notification Service in your web app](#Tasks54)
 * [Task 5.5: Configure Docker](#Tasks55)
-* [Task 5.6: Deploy the production version of the web app in Docker](#Tasks56)
+* [Task 5.6: Deploy the target web app](#Tasks56)
 * [Task 5.7: Analisys of the twelve-factor app methodology](#Tasks57)
 
 <a name="Task51"/>
@@ -100,7 +100,7 @@ Inside of the django-webapp folder, create a `.env` file with the configuration 
 
 ```text
 DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL=info
 CCBDA_SIGNUP_TABLE=ccbda-signup-table
@@ -112,6 +112,65 @@ AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 
 Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
 containing sensitive information. **Make sure to have such functionality present in your future projects**.
+
+### Updating the AWS Credentials
+
+In the code of the application you can find a file named `updateAWS.py` that gets the values of the `$HOME/.aws/config` and changes them in the configuration file that you send as parameter. This is specially useful because every time that you begin a new Learning Lab session the AWS Credentials change and you need to propagate the changes to the different configuration files.
+
+```python
+from dotenv import dotenv_values
+import boto3
+import sys
+
+trans = {
+    'access_key': 'AWS_ACCESS_KEY_ID',
+    'secret_key': 'AWS_SECRET_ACCESS_KEY',
+    'token': 'AWS_SESSION_TOKEN'
+}
+
+try:
+    CONFIGURATION_FILE = sys.argv[1]
+except:
+    print('ERROR: filename missing\npython updateAWS.py filename')
+    exit()
+
+config = dotenv_values(CONFIGURATION_FILE)
+
+session = boto3.Session()
+credentials = session.get_credentials().__dict__
+
+changed = False
+for k, v in trans.items():
+    if config[v] != credentials[k]:
+        config[v] = credentials[k]
+        changed = True
+
+if changed:
+    print ('AWS credentials have changed')
+    newfile = ''
+    for k, v in config.items():
+        newfile += f'{k}={v}\n'
+    with open(CONFIGURATION_FILE, 'w') as fw:
+        fw.write(newfile)
+```
+
+Every time that you begin a new Learnig Lab session get the AWS credentials and put them inside of your laptop's AWS configuration or the AWS CLI commands will not work.
+
+```bash
+cat $HOME/.aws/config 
+[default]
+output = json
+region = us-east-1
+aws_access_key_id=ASIA......V4ORM
+aws_secret_access_key=SwJugAoWS...........sm7s9XpmR
+aws_session_token=IQoJb3JpZ2luX2VjEAwa......ZeBarmo2zJnz/s5xak1SSAuddsriLNBSBb23740ebvY
+```
+
+Then, update the `.env` file and any other web application configuration file that needs to be updated.
+
+```bash
+_$ python update.py .env
+```
 
 ### Web application Virtual environment
 
@@ -402,17 +461,12 @@ SNS message sent.
 Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you
 shall be able to add a new entry to the database.
 
-**Q551: Explain what you understand of the actions detailed in the `Dockerfile` and compare them with what you manually
-did in Tasks 5.2 and 5.3.**
-
-**Q552: What are the differences between the Python environment and the Unix environment?**
-
-**Q552: Has everything gone alright? Share your thoughts on the tasks developed above.**
+**Q55: Has everything gone alright? Share your thoughts on the task developed above.**
 
 
 <a name="Tasks56" />
 
-## Task 5.6: Deploy the production version of the web app in Docker
+## Task 5.6: Deploy the target web app
 
 Although this is a great start in containerizing the application, you’ll need to make a number of improvements to get it
 ready for production.
@@ -491,10 +545,6 @@ RUN useradd -m -r appuser && \
    mkdir /app && \
    chown -R appuser /app
  
-RUN apt-get update && \
-   DEBIAN_FRONTEND=noninteractive && \
-   apt-get install --no-install-recommends --assume-yes postgresql-client \
-    
 # Copy the Python dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
@@ -522,39 +572,37 @@ CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "my_docker_django_a
 Build the Docker container image again.
 
 ```bash
-_$  docker build -t django-docker .
-[+] Building 29.1s (18/18) FINISHED                                                                                                          docker:desktop-linux
- => [internal] load build definition from Dockerfile                                                                                                         0.1s
- => => transferring dockerfile: 1.44kB                                                                                                                       0.0s
- => [internal] load metadata for docker.io/library/python:3.13.2-slim                                                                                        0.9s
- => [auth] library/python:pull token for registry-1.docker.io                                                                                                0.0s
- => [internal] load .dockerignore                                                                                                                            0.0s
- => => transferring context: 170B                                                                                                                            0.0s
- => [internal] load build context                                                                                                                            0.1s
- => => transferring context: 426.64kB                                                                                                                        0.1s
- => [builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652                          0.0s
- => => resolve docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e28cf8652                                  0.0s
- => CACHED [builder 2/6] RUN mkdir /app                                                                                                                      0.0s
- => CACHED [builder 3/6] WORKDIR /app                                                                                                                        0.0s
- => CACHED [builder 4/6] RUN pip install --upgrade pip                                                                                                       0.0s
- => [builder 5/6] COPY requirements.txt /app/                                                                                                                0.1s
- => [builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                                                                        13.6s
- => CACHED [stage-1 2/7] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                                                              0.0s
- => CACHED [stage-1 3/7] RUN apt-get update &&    DEBIAN_FRONTEND=noninteractive &&    apt-get install --no-install-recommends --assume-yes postgresql-clie  0.0s
- => [stage-1 4/7] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/                                      2.3s
- => [stage-1 5/7] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                                                                        0.2s
- => [stage-1 6/7] WORKDIR /app                                                                                                                               0.0s
- => [stage-1 7/7] COPY --chown=appuser:appuser . .                                                                                                           0.1s
- => exporting to image                                                                                                                                      10.1s
- => => exporting layers                                                                                                                                      5.0s
- => => exporting manifest sha256:25c54e575e78c51a302769ade6a15a79d0cccea8e5a363e4b8b8bef68760712a                                                            0.0s
- => => exporting config sha256:d7e9dc4b13b62eb2ae9a738fe510c784a45187559cf414670ebaa1892a0f8670                                                              0.0s
- => => exporting attestation manifest sha256:063ca1fe56997fced695edce2e0009b3c1352b473cc23734cc3c05d1a069d459                                                0.0s
- => => exporting manifest list sha256:d76d036c22f82a37d010dbf48d675e85ad8296fb907924505b688387f7cf3c73                                                       0.2s
- => => naming to docker.io/library/django-docker:latest                                                                                                      0.0s
- => => unpacking to docker.io/library/django-docker:latest                                                                                                   4.8s
+_$ docker build -t django-docker .
+[+] Building 0.9s (16/16) FINISHED                                                                    docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                  0.0s
+ => => transferring dockerfile: 1.31kB                                                                                0.0s
+ => [internal] load metadata for docker.io/library/python:3.13.2-slim                                                 0.4s
+ => [internal] load .dockerignore                                                                                     0.0s
+ => => transferring context: 108B                                                                                     0.0s
+ => [builder 1/6] FROM docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655d  0.0s
+ => => resolve docker.io/library/python:3.13.2-slim@sha256:f3614d98f38b0525d670f287b0474385952e28eb43016655dd003d0e2  0.0s
+ => [internal] load build context                                                                                     0.0s
+ => => transferring context: 17.80kB                                                                                  0.0s
+ => CACHED [stage-1 2/6] RUN useradd -m -r appuser &&    mkdir /app &&    chown -R appuser /app                       0.0s
+ => CACHED [builder 2/6] RUN mkdir /app                                                                               0.0s
+ => CACHED [builder 3/6] WORKDIR /app                                                                                 0.0s
+ => CACHED [builder 4/6] RUN pip install --upgrade pip                                                                0.0s
+ => CACHED [builder 5/6] COPY requirements.txt /app/                                                                  0.0s
+ => CACHED [builder 6/6] RUN pip install --no-cache-dir -r requirements.txt                                           0.0s
+ => CACHED [stage-1 3/6] COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site  0.0s
+ => CACHED [stage-1 4/6] COPY --from=builder /usr/local/bin/ /usr/local/bin/                                          0.0s
+ => CACHED [stage-1 5/6] WORKDIR /app                                                                                 0.0s
+ => [stage-1 6/6] COPY --chown=appuser:appuser . .                                                                    0.0s
+ => exporting to image                                                                                                0.2s
+ => => exporting layers                                                                                               0.1s
+ => => exporting manifest sha256:56db48fb15a56394b268acbe3c80d51b25d08f736d293ee89f62158b3ab619b8                     0.0s
+ => => exporting config sha256:573556a701dae35a76b79413265d839d49ab2f7e402cb57aca462e1e9cca0432                       0.0s
+ => => exporting attestation manifest sha256:f6b7d79f2dfdfdfef29bc20bae2f6b82dfbd21ab9d685482d92aaf704d8757ce         0.0s
+ => => exporting manifest list sha256:bef8941dad38cae70d4b6cca04f98c5312074ce6b955c1af3d02ecbb1b86783f                0.0s
+ => => naming to docker.io/library/django-docker:latest                                                               0.0s
+ => => unpacking to docker.io/library/django-docker:latest                                                            0.0s
 
-View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/pgn85nhr54gp8gufzuca5b5mt
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/eozjf8cg6oqlycu26ukdja5sb
 ```
 
 After making these changes, we can run a docker image list again:
@@ -562,12 +610,12 @@ After making these changes, we can run a docker image list again:
 ```text
 _$  docker image list  
 REPOSITORY          TAG       IMAGE ID       CREATED              SIZE
-django-docker       latest    bef8941dad38   About a minute ago   433MB
+django-docker       latest    bef8941dad38   About a minute ago   323MB
 ```
 
 You can see a significant improvement in the size of the container.
 
-The size was reduced from 1.62GB to 433MB, which leads to faster a deployment process when images are downloaded and
+The size was reduced from 1.62GB to 323MB, which leads to faster a deployment process when images are downloaded and
 cheaper storage costs when storing images.
 
 ### Production-ready database
@@ -596,30 +644,6 @@ DATABASES = {
 
 DATABASES['default'] = DATABASES[os.getenv('DATABASE', 'default')]
 ```
-
-Additionally, we need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files
-and folders shall not be copied to the container when creating the Docker image.
-
-```bash
-_$ cat .dockerignore
-.venv
-*.env
-.gitignore
-README.md
-compose.yml
-*.sqlite
-*.sqlite3
-.DS_Store
-.git
-.idea
-.private
-```
-
-### Build and run your new Django project, all at once, using `docker compose`
-
-Instead of building the images, one by one, running them, mapping the ports, etcetera,
-we can use the `docker compose` command to automate the process, speeding it up, and reducing the risk of
-errors by misstyping.
 
 ### Configure the Docker Compose file
 
@@ -677,8 +701,9 @@ volumes:
   postgres_data:
 ```
 
-Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to
-using the PostGreSQL database.
+Let's now create a new file named `production.env` to define the same `.env` variables adding the ones related to using
+the
+PostGreSQL database.
 
 ```bash
 _$ cat production.env
@@ -693,25 +718,37 @@ AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
 AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
 DB_NAME=ccbdadb
 DB_USER=ccbdauser
-DB_PASSWORD=<YOUR-SELECTED-PASSWORD>
-DB_HOST=db
+DB_PASSWORD=ccbdapassword
 DB_PORT=5432
+DB_HOST=db
 DATABASE=postgresql
 ```
 
-### Use the Docker Compose file
+We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders
+shall not be copied to the container when creating the Docker image.
 
-The command in the box below starts the docker image building and container execution. It begins by pulling the
-PostGreSQL container image from a [Docker repository](https://hub.docker.com/) of pre-built Docker images.
-It then creates a database with the name, user and password
-that we have defined in the environment for the database container.
+```bash
+_$ cat .dockerignore
+.venv
+*.env
+.gitignore
+README.md
+compose.yml
+*.sqlite
+*.sqlite3
+.DS_Store
+.git
+.idea
+.private
+```
 
-For the second container, it copies the web application code, creates the Pyton environment and everything else
-that is detailed in the given Dockerfile.
-Please note that the docker image created has a frozen copy of the code.
-If the web application code changes it will be necessary to
-rebuild the image and deploy it into its container. Check the log after the command to follow the creation process
-for both containers.
+### Build and run your new Django project
+
+By running the following command, Docker pulls the PostGreSQL container image from a Docker repository. It then creates
+a database with the name, user and password that we have defined. For the second container it copies the code, creates
+the Pyton environment and everything that is detailed in the given Dockerfile. Please note that the docker image created
+has a frozen copy of the code. If the web application code changes it will be necessary to rebuild the image and deploy
+it into its container. Check the log after the command to follow the creation process for both containers.
 
 ```bash
 _$ docker compose --env-file production.env up
@@ -817,14 +854,12 @@ postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv4 address
 postgress-db   | 2025-03-14 14:27:55.798 UTC [1] LOG:  listening on IPv6 address "::", port 5432
 postgress-db   | 2025-03-14 14:27:55.802 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
 postgress-db   | 2025-03-14 14:27:55.808 UTC [70] LOG:  database system was shut down at 2025-03-14 14:27:55 UTC
-postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                    
+postgress-db   | 2025-03-14 14:27:55.815 UTC [1] LOG:  database system is ready to accept connections                     
 ```
 
-### Database initialization
-
-Finally, Django needs that the database contains some tables. Such task needs to be done only when the web
-application is first using the database, or every time that the Django code changes its data models. See that the
-command below **exec**utes in the container named "code" the command line `python manage.py migrate`.
+Finally, Django needs that the database contains some tables. That task needs to be done only at the beginning, or every
+time that the Django code changes its data models. See that the command below **exec**utes in the container named "code"
+the command line `python manage.py migrate`.
 
 ```bash
 _$ docker compose --env-file production.env exec code python manage.py migrate
@@ -856,25 +891,18 @@ Running migrations:
 Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
 page, indicating that your app is up and running.
 
-Both containers (for the web application and PostgreSQL) are configured to expose their ports to the host machine, with
-the same port numbers as defined in the `docker compose` file (`8000:8000` for the web app and `5432:5432` for
-PostgreSQL).
-This setup allows you to access the web application via port `8000` and the PostgreSQL database via port `5432` on the
-localhost or the hosting machine running the containers, as we'll be seeing in the next lab session.
-
-See below how PyCharm is able to connect to the database hosted in Docker.
+Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
+number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
 <img alt="Lab05-postgres-use.png" src="images/Lab05-postgres-use.png" width="50%"/>
 
-
-You can also establish a command-line connection to each container using the following commands. For example, the
-command `docker exec -it 07 bash` initiates an interactive Bash shell (`CLI`) inside the container. Once connected,
-you'll see a prompt like `appuser@07bd0798d09f:/app$`, indicating that you are now inside the Docker container.
-
-Note that `07bd0798d09f` is the container ID, but including only the first few distinctive characters is sufficient for
-the `-it` parameter. To exit the CLI, simply press `Control+D`.
+Additionally, you can also create a command line connection with each container by issuing the commands below. See that
+the command `docker exec -it 07 bash` executes a `bash` interactive command line interpreter (CLI) that shows the prompt
+`appuser@07bd0798d09f:/app$` meaning that you are inside of the docker container. `07bd0798d09f` is the container ID
+that shall be used in the `-it` parameter, but only a few initial distinctive characters are needed. Use CONTROL-D to
+exit the CLI.
 
 Please check that `.dockertignore` has prevented some files to be copied into the image of the code container.
 
@@ -917,17 +945,12 @@ drwxr-xr-x   2 root root 4096 Feb 24 00:00 srv
 ^D
 ```
 
-**Q56: This has been a long task. Share your thoughts on the steps developed above.**
+**Q55: Share your thoughts on the task developed above.**
+
 
 <a name="Tasks57"/>
 
 ## Task 5.7: Analisys of the twelve-factor app methodology
-
-Following the tasks detailed above you have deployed a web application that uses some AWS services and is able to
-run in a Docker container. By following lab session 6 we will put the web application to run in the cloud. But
-before, let's go through what we have done so far and match it with the guidelines of
-the [twelve-factor app](https://12factor.net/) methodology. You'll be reviewing them again at the end of lab
-session 6 to compare the evolution.
 
 The [twelve-factor app](https://12factor.net/) is a methodology for building software-as-a-service apps that:
 
@@ -977,7 +1000,7 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 1. **Admin processes**:
    Run admin/management tasks as one-off processes
 
-**Q57: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
+**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
 change or add to comply with each factor**
 
 # How to submit this assignment:
