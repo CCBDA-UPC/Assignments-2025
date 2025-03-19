@@ -117,10 +117,9 @@ Now go back to the `database-lab` properties display, where you obtained the `En
 
 <img alt="Lab06-default-security-group.png" src="images/Lab06-default-security-group.png"/>
 
-Therefore, now you need to temporarily add a new rule that allows PostGreSQL traffic (on port 5432) to come from your laptop (add more than one rule to allow more IPs).
+Now, you need to temporarily add a new rule to allow PostgreSQL traffic (port 5432) from your laptop. If necessary, you can add multiple rules to allow access from additional IP addresses.
 
 <img alt="Lab06-add-security-group-rule.png" src="images/Lab06-add-security-group-rule.png"/>
-
 
 If you have followed the above steps correctly, using the PyCharm database wizard you could access the database engine from your laptop as shown below. Once all the parameters are in place click on `Apply` and then `Test Connection`. You shall be getting the response shown below.
 
