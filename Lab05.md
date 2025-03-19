@@ -507,16 +507,15 @@ REPOSITORY          TAG       IMAGE ID       CREATED          SIZE
 django-docker       latest    a1545142ab1d   51 seconds ago   1.62GB
 ```
 
-You can now create a **container** based on the image by typing the command below. The command also associates the
-container internal port 8000 to the local computer port 8000 and sends the latest value of the configuration variables
-using the [unix environment](https://en.wikipedia.org/wiki/Environment_variable).
+You can now create a **container** from the image using the command below. This command maps the container's internal port `8000` to the local computer's port `8080` and supplies the latest values for the configuration variables via [environment variables](https://en.wikipedia.org/wiki/Environment_variable). Port `8080` is explicitly used to highlight Docker's port binding functionality.
+
 
 The command will not return and will be updating the output with the requests that it is receiving. You need to type
 CONTROL-C to stop the container. Open a new terminal if you need to issue additional commands such as "docker stop" to
 alternativelly stop the container.
 
 ```bash
-_$ docker run -p 8000:8000 --env-file .env django-docker
+_$ docker run -p 8000:8080 --env-file .env django-docker
 Watching for file changes with StatReloader
 Performing system checks...
 
@@ -536,7 +535,7 @@ SNS message sent.
 "POST /signup HTTP/1.1" 200 0
 ```
 
-Open the URL http://0.0.0.0:8000/ in your browser and test the web application. If you did all the steps correctly you
+Open the URL http://0.0.0.0:8080/ in your browser and test the web application. If you did all the steps correctly you
 shall be able to add a new entry to the database.
 
 **Q55: Has everything gone alright? Share your thoughts on the task developed above.**
@@ -763,7 +762,7 @@ services:
     build: .
     container_name: code
     ports:
-      - "8000:8000"
+      - "8000:8080"
     depends_on:
       - db
     environment:
@@ -973,11 +972,11 @@ Running migrations:
 
 ### Test and access your application and its containers
 
-Once the webapp is running, you can test it by navigating to http://localhost:8000. You should see Django’s welcome
+Once the webapp is running, you can test it by navigating to http://localhost:8080. You should see Django’s welcome
 page, indicating that your app is up and running.
 
 Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
-number of the docker host (check the composer file and find ports:- "8000:8000", ports:- "5432:5432"). That means that you can access the web application through port 8000 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
+number of the docker host (check the composer file and find ports:- "8000:8080", ports:- "5432:5432"). That means that you can access the web application through port 8080 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
@@ -994,7 +993,7 @@ Please check that `.dockertignore` has prevented some files to be copied into th
 ```bash
 _$ docker ps
 CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS                    PORTS                    NAMES
-07bd0798d09f   django-webapp-code   "gunicorn --bind 0.0…"   26 minutes ago   Up 26 minutes             0.0.0.0:8000->8000/tcp   django-docker
+07bd0798d09f   django-webapp-code   "gunicorn --bind 0.0…"   26 minutes ago   Up 26 minutes             0.0.0.0:8000->8080/tcp   django-docker
 de27f59e7644   postgres:17         "docker-entrypoint.s…"   26 minutes ago   Up 26 minutes (healthy)   0.0.0.0:5432->5432/tcp   postgress-db
 _$ docker exec -it 07 bash
 appuser@07bd0798d09f:/app$  ls -l
