@@ -264,10 +264,9 @@ this image. Run the following command. Replace <registry-id> with your actual re
 ```
 _$ docker tag django-docker:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:latest
 _$ docker image list
-REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
-<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo  latest    79e93509f63d   21 hours ago   433MB
-django-docker                                                     latest    79e93509f63d   21 hours ago   433MB
-postgres                                                          17        81f32a88ec56   2 weeks ago    621MB
+<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo   latest    1cb356277c4a   42 hours ago   433MB
+django-docker                                                             latest    1cb356277c4a   42 hours ago   433MB
+postgres                                                                  17        81f32a88ec56   2 weeks ago    621MB
 ```
 
 `docker tag` does not provide a response. To verify that the tag was applied query the images available. This time, notice that the latest tag was applied and the image name includes the remote repository name where you
