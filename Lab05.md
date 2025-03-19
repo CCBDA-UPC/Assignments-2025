@@ -94,42 +94,61 @@ Unzip the file inside your responses repository for the current Lab session, and
 
 ## Task 5.3: Test the web app locally
 
-### Configuration of the web application
-
-Inside of the django-webapp folder, create a `.env` file with the configuration for the project:
-
-```text
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
-DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
-DJANGO_LOGLEVEL=info
-CCBDA_SIGNUP_TABLE=ccbda-signup-table
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
-```
-
-Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
-containing sensitive information. **Make sure to have such functionality present in your future projects**.
-
 ### Updating the AWS Credentials
 
-You need to copy the AWS credentials from your Learning Lab to the file `$HOME/.aws/config`.
+Have **AWS Command Line Interface ([AWS CLI](https://aws.amazon.com/cli/))** installed and configured with the current
+value of your AWS credentials.
 
-<img alt="Lab04-aws-details2.png" height="300px" src="images/Lab04-aws-details2.png"/>
+Check the instructions
+for [installing or updating to the latest version of the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) depending on the operating system of your laptop.
 
-If that file does not exist you need to run the `aws configure` command and provide the region name as shown below.
+You can save your frequently used configuration settings and credentials in files that are maintained by the AWS CLI.
+
+The files are divided into profiles. By default, the AWS CLI uses the settings found in the profile named **default**.
+To use alternate settings, you can create and reference additional profiles.
+
+Let's create a configuration file: `aws configure` asks you for the value of the different parameters that you've
+obtained from your current Learner Lab session. We are not going to enter any value for the credentials and only select
+the default AWS region and output format.
+
+<img alt="Lab04-aws-details2.png" src="images/Lab04-aws-details2.png" width="50%" height="50%"/>
 
 ```bash
 _$ aws configure
 AWS Access Key ID [None]: 
 AWS Secret Access Key [None]: 
 Default region name [None]: us-east-1
-Default output format [None]:
+Default output format [None]: json
 _$ cat $HOME/.aws/config
 [default]
 region = us-east-1
+output = json
+```
+
+We will edit the `$HOME/.aws/config` file and paste the values directly. Then we can check that the AWS CLI is correctly configured by showing its version, listing the AWS S3 buckets or the current account summary.
+
+```bash
+_$ cat $HOME/.aws/config
+[default]
+output = json
+region = us-east-1
+aws_access_key_id = <YOUR-ACCESS-KEY-ID>
+aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
+aws_session_token = <YOUR-AWS-SESSION-TOKEN>
+_$  aws --version
+aws-cli/2.0.16 Python/3.7.4 Darwin/24.3.0 botocore/2.0.0dev20
+_$  aws s3 ls
+2025-01-11 18:47:30 lab04-main.ccbda.upc.edu
+_$ aws iam get-account-summary
+{
+    "SummaryMap": {
+        "GroupPolicySizeQuota": 5120,
+        "InstanceProfilesQuota": 1000,
+        "Policies": 6,
+      ....
+        "GroupsQuota": 300
+    }
+} 
 ```
 
 In the code of the application you can find a file named `updateAWS.py` that gets the values of the `$HOME/.aws/config` and changes them in the configuration file that you send as parameter. This is specially useful because every time that you begin a new Learning Lab session the AWS Credentials change and you need to propagate the changes to the different configuration files.
@@ -188,6 +207,25 @@ Then, update the `.env` file and any other web application configuration file th
 ```bash
 _$ python update.py .env
 ```
+
+### Configuration of the web application
+
+Inside of the django-webapp folder, create a `.env` file with the configuration for the project:
+
+```text
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
+DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_LOGLEVEL=info
+CCBDA_SIGNUP_TABLE=ccbda-signup-table
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
+AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
+AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
+```
+
+Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
+containing sensitive information. **Make sure to have such functionality present in your future projects**.
 
 ### Web application Virtual environment
 
