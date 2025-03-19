@@ -369,7 +369,7 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 
 
 
-<a name="Tasks63" />
+<a name="Task63" />
 
 ## Task 6.3: Running Containers on AWS Elastic Beanstalk
 
@@ -586,7 +586,7 @@ steps
 
 name and uses
 
-<a name="Tasks64" />
+<a name="Task64" />
 
 ## Task 6.4: Deliver static content using a Content Delivery Network
 
@@ -745,7 +745,7 @@ command `python manage.py collectstatic`.
 
 
 
-<a name="Tasks65" />
+<a name="Task65" />
 
 ## Task 6.5: Create a new option to retrieve the list of leads
 
@@ -879,7 +879,7 @@ whatever is necessary to make it work.
 **Q53: Has everything gone alright? What have you changed?** Add your answers to the `README.md` file in the responses
 repository.
 
-<a name="Tasks66" />
+<a name="Task66" />
 
 ## Task 6.6: Improve the web app transfer of information (optional)
 
