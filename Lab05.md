@@ -215,7 +215,7 @@ Inside of the django-webapp folder, create a `.env` file with the configuration 
 ```bash
 _$ cat .env
 DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
+DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL=info
 CCBDA_SIGNUP_TABLE=ccbda-signup-table
@@ -792,7 +792,7 @@ PostGreSQL database.
 ```bash
 _$ cat production.env
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0
+DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL=info
 CCBDA_SIGNUP_TABLE=ccbda-signup-table
