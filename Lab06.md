@@ -487,10 +487,10 @@ The output of the command is extremely long, scroll inside the box to the right 
 
 ```bash
 _$ python ebcreate.py ../production.env team99
-eb create team99 --min-instances 2 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY" 
+eb create team99 --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"  --cname team99
 ```
 
-There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `eb` folder. Make sure you change `<registry-id>` by the actual ID.
+There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `eb` folder. Make sure you change `<registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
 
 ```json
 {
@@ -560,8 +560,22 @@ To visit the web application type:
 _$ eb open
 ```
 
-**Q631. Open the AWS EC2 console and check how many instances are running and the AWS ELB. Share your thoughts.**
+Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
+**Q631. What have you found on the zip file? Try to find an explanation.**
+
+**Q632. Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.**
+
+**Q633. Terminate one of the AWS EC2 instances. Is the web app responding now?  Why?**
+
+**Q634. Wait a five minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
+
+Finish the execution of AWS Elastic Beanstalk.
+
+```bash
+_$ eb terminate
+The environment "team99" and all associated instances will be terminated.
+```
 
 ### Github actions
 
