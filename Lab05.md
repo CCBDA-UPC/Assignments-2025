@@ -115,6 +115,19 @@ containing sensitive information. **Make sure to have such functionality present
 
 ### Updating the AWS Credentials
 
+You need to copy the AWS credentials from your Learning Lab to the file `$HOME/.aws/config`. If that file does not exist you need to run the `aws configure` command and provide the region name as shown below.
+
+```bash
+_$ aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: us-east-1
+Default output format [None]:
+_$ cat $HOME/.aws/config
+[default]
+region = us-east-1
+```
+
 In the code of the application you can find a file named `updateAWS.py` that gets the values of the `$HOME/.aws/config` and changes them in the configuration file that you send as parameter. This is specially useful because every time that you begin a new Learning Lab session the AWS Credentials change and you need to propagate the changes to the different configuration files.
 
 ```python
