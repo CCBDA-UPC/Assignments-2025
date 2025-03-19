@@ -25,28 +25,13 @@ speeds. CloudFront CDN works seamlessly with other AWS services including **AWS 
 **AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
 custom code close to final viewers.
 
-### AWS ECS: Elastic Container Service
+### AWS ECR: Elastic Container Registry
 
-AWS Elastic Container Service (ECS) is a fully managed container orchestration service that simplifies deploying,
-managing, and scaling containerized applications. It seamlessly integrates with AWS, offering a secure and flexible
-solution for running workloads in the cloud or on-premises with AWS ECS Anywhere.
+AWS Elastic Container Registry (AWS ECR) is an AWS managed container image registry service that is secure, scalable, and reliable. AWS ECR supports private repositories with resource-based permissions using AWS IAM. This is so that specified users or AWS EC2 instances can access your container repositories and images. You can use your preferred CLI to push, pull, and manage Docker images.
 
-Containerizing a Django app with Docker enhances productivity and consistency. Here’s why:
+### AWS Elastic Beanstalk 
+With AWS Elastic Beanstalk, you can quickly deploy and manage applications in the AWS Cloud without worrying about the infrastructure that runs those applications. AWS Elastic Beanstalk reduces management complexity without restricting choice or control. You simply upload your application, and AWS Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring.
 
-- **Stable and Consistent Environment**: Docker eliminates the “*it works on my machine*” problem by ensuring a
-  consistent environment with all dependencies pre-installed. This allows you to reproduce the app seamlessly across
-  different systems and servers, making local development, testing, and deployment more reliable.
-
-- **Reproducibility and Portability**: A Dockerized app packages all its dependencies, environment variables, and
-  configurations, guaranteeing it runs the same way across various environments. This simplifies deployment and reduces
-  compatibility issues.
-
-- **Improved Team Collaboration**: With Docker, every developer works in an identical environment, preventing conflicts
-  caused by different system setups. Shared Docker images streamline onboarding and reduce setup time.
-
-- **Faster Deployment**: Docker accelerates project setup by automating environment configuration, so developers can
-  start coding right away. It ensures uniformity across development, staging, and production, making it easier to
-  integrate and deploy changes.
 
 
 
@@ -60,6 +45,15 @@ On macOS you can use
 ``` 
 _$ brew install awsebcli
 ```
+
+# Tasks for Lab session #6
+
+* [Task 6.1: AWS Relational Database Service](#Task61)
+* [Task 6.2: Adding the Docker images to AWS ECR](#Task62)
+* [Task 6.3: Running Containers on AWS Elastic Beanstalk](#Task63)
+* [Task 6.4: Deliver static content using a Content Delivery Network](#Task64)
+* [Task 6.5: Create a new option to retrieve the list of leads](#Task65)
+* [Task 6.6: Improve the web app transfer of information (optional)](#Task66)
 
 
 <a name="Task61"/>
@@ -87,7 +81,7 @@ AWS RDS is widely used for hosting production databases, applications, and even 
 
 ### Create your AWS RDS PostGreSQL instance
 
-Navigate to the Amazon `Aurora and RDS` console to create a new PostGreSQL database engine that will replace the database engine used in the previous lab session.
+Navigate to the AWS `Aurora and RDS` console to create a new PostGreSQL database engine that will replace the database engine used in the previous lab session.
 
 For the `database creation method` use `Easy create` and `PostGreSQL` for the `Configuration` box. A `DB instance size` of `Free tier` will be enough for the Lab session.
 
@@ -368,9 +362,9 @@ _$ aws ecr describe-images --repository-name django-webapp-code
 
 
 
-<a name="Tasks62" />
+<a name="Tasks63" />
 
-## Task 6.2: Running Containers on AWS Elastic Beanstalk
+## Task 6.3: Running Containers on AWS Elastic Beanstalk
 
 ### Launch your new Elastic Beanstalk environment
 
