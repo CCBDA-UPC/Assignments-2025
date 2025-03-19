@@ -413,7 +413,7 @@ Running `eb init` creates a configuration file at `eb/.elasticbeanstalk/config.y
 
 ```yaml
 branch-defaults:
-  main:
+  default:
     environment: null
 global:
   application_name: django-webapp-eb
@@ -427,7 +427,7 @@ global:
   platform_version: null
   profile: null
   repository: null
-  sc: git
+  sc: null
   workspace_type: Application
 ```
 
