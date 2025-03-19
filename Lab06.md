@@ -210,12 +210,17 @@ Before being able to deploy in the cloud the Docker image that you've created in
 
 ### Discover your AWS account ID.
 
-In the upper-right corner of the AWS Management Console click on top of your username and unfold the black box shown below. Copy the Account ID value from the menu. Next, return to the Bash terminal.
+```bash
+_$ aws sts get-caller-identity | grep Account
+    "Account": "407...9696",
+```
+
+You can also go to the upper-right corner of the AWS Management Console, click on top of your username and unfold the black box shown below. Copy the Account ID value from the menu. Next, return to the Bash terminal.
 
 <img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="400px"/>
 
-To authorize your Docker client, run the following command. Replacing `<account-id>` with the actual account
-ID that you just found:
+To authorize your Docker client, run the following command. Replacing `<account-id>` with the 
+actual account ID that you just found:
 
 ```bash
 _$ aws ecr get-login-password | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
