@@ -911,7 +911,7 @@ integration of a CDN to distribute it. Try configuring this feature if you are c
 First of all, you need to add the following package to your environment:
 
 ```bash
-(eb-virt)_$ pip install django-storages
+(venv)_$ pip install django-storages
 ```
 
 Then modify `ccbda-webapp\ccbda-webapp\settings.py` by adding 'storages' as an installed
@@ -936,19 +936,16 @@ if CLOUD_FRONT:
     AWS_S3_CUSTOM_DOMAIN = 'RANDOM-ID-FROM-CLOUDFRONT.cloudfront.net'
 ```
 
-Having done that you should be able to keep all static files declared the way Django expects to and, at the same time,
-access them using a CDN.
+Having done that you should be able to keep all static files declared the way Django expects to and, at the same time, access them using a CDN.
 
 ```html
 
 <link href="{% static 'custom.css' %}" rel="stylesheet"></head>
 ```
 
-This should be the last step on the deployment of the web app and you can activate it only if the variable DEBUG is set
-to False.
+This should be the last step on the deployment of the web app and you can activate it only if the variable DEBUG is set to False.
 
-Django can also assume the synchronization of the static files to the CDN by means of the maintenace
-command `python manage.py collectstatic`.
+Django can also assume the synchronization of the static files to the CDN by means of the maintenace command `python manage.py collectstatic`.
 
 <a name="Task65" />
 
