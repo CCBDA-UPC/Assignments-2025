@@ -1101,12 +1101,21 @@ whatever is necessary to make it work.
 
 **Q51: Has everything gone alright? What have you changed?** 
 
-**Q52: Assess the current version of the web application against each of the twelve factor application.**
+**Q52: Draw a diagram of the current deployment of the web app using a tool such as [Draw.io](https://www.drawio.com/blog/aws-diagrams)**
 
-**Q53: How long have you been working on this session? What have been the main
+**Q53: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q54: How long have you been working on this session? What have been the main
 difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
 
-Add all these files to your repository and comment what you think is relevant in your session's *README.md*.
+## How to submit this assignment:
+
+Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
+
+Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-6-xx repository.
+
+
+Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
 
 
 
