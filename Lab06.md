@@ -81,7 +81,6 @@ _$ brew install awsebcli
 * [Task 6.4: Centralize the logs of your application instances](#Task64)
 * [Task 6.5: Deliver static content using a Content Delivery Network](#Task65)
 * [Task 6.6: Create a new option to retrieve the list of leads](#Task66)
-* [Task 6.7: ](#Task67)
 
 
 <a name="Task61"/>
@@ -1102,7 +1101,9 @@ whatever is necessary to make it work.
 
 **Q51: Has everything gone alright? What have you changed?** 
 
-**Q52: How long have you been working on this session (including the optional part)? What have been the main
+**Q52: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q53: How long have you been working on this session? What have been the main
 difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
 
 Add all these files to your repository and comment what you think is relevant in your session's *README.md*.
