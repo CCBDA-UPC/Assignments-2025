@@ -844,7 +844,7 @@ following line just before closing the **head** HTML tag:
 
 If you check the contents of the file *static/custom.css* you will see that it includes some images, also available in
 the same folder. If you save the modifications to *form/templates/generic.html* and review your web
-app locally, http://127.0.0.1:8000, you will see that it appears slightly different.
+app locally, http://127.0.0.1:8080, you will see that it appears slightly different.
 
 ### Upload your static content to AWS S3 and grant object permissions
 
@@ -1039,7 +1039,7 @@ def get_leads(self, domain, preview):
 A final step is to move the file *extra-file/search.html* to *form/templates/search.html*. That file receives the data
 from the view controller and creates the HTML to show the results.
 
-Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8000/search*
+Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8080/search*
 in your browser.
 
 <img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/>
