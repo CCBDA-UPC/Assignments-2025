@@ -860,17 +860,6 @@ Create a new bucket in 'us-east-1' region to deposit the web app static content.
 *ccbda-webapp-YOUR-ID** (YOUR-ID can be your AWS account number or any other distinctive string because you
 will not be allowed to create two buckets with the same name, regardless the owner).
 
-AWS has recently set some restrictions when creating an S3 bucket with public access. Make sure that you uncheck all the
-following options before uploading files. You can later check them back.
-
- <img src="./images/Lab06-S3-public-access.png" alt="S3 public access" title="S3 public access"/>
-
- <img src="./images/Lab05-8.png " alt="S3 bucket" title="S3 bucket"/>
-
-This time add the files manually and grant them public read permission.
-
-  <img src="./images/Lab05-9.png " alt="S3 bucket" title="S3 bucket"/>
-
 You can also use AWS CLI to sync the contents of your static folder with that
 bucket. [Synchronize with your S3 bucket](https://docs.aws.amazon.com/cli/latest/reference/s3/sync.html) using the
 following command:
@@ -881,14 +870,6 @@ upload: ./static/custom.css to s3://ccbda-webapp-YOUR-ID/custom.css
 upload: ./static/CCBDA-Square.png to s3://ccbda-webapp-YOUR-ID/CCBDA-Square.png
 upload: ./static/startup-bg.png to s3://ccbda-webapp-YOUR-ID/startup-bg.png
 ```
-
-Verify that you can access the contents of that URL, making the file public if it was not already.
-
-```
-https://s3-us-east-1.amazonaws.com/ccbda-webapp-YOUR-ID/CCBDA-Square.png
-```
-
-<img src="./images/Lab05-12.png " alt="S3 address" title="S3 address"/>
 
 ### Create a CloudFront CDN Web Distribution
 
