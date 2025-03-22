@@ -895,10 +895,11 @@ setup, we will use a URL from our domain, something like *static.mydomain.com* t
 ```
 
 **Q641: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
-Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
-Google Chrome and check the origin of the files that you are loading (attach a screenshot similar to the one below)**:
 
- <img src="./images/Lab05-11.png " alt="Files loaded" title="Files loaded"/>
+Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
+Google Chrome and check the origin of the files that you are loading**:
+
+ <img src="./images/Lab05-11.jpg " alt="Files loaded" title="Files loaded"/>
 
 
 ### Django support for CDN
