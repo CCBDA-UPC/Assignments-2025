@@ -1,31 +1,15 @@
 # Lab session 6: Run a custom web app in the cloud
 
-This lab session continues the work done in the previous session.
+This lab session builds upon the work from the previous session, where we isolated the web application within a Docker container running locally.
 
-### AWS CloudFront CDN
+In this session, we will use a more robust SQL database engine and scale the application by running multiple instances. A load balancer will be used to distribute incoming requests across these instances, ensuring optimal performance.
 
-A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low latency, and high performance.
+As the number of instances fluctuates with creation and termination, it’s essential to track the web application’s activity by securely storing log files for monitoring and future analysis.
 
-<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
-
-The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
-part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
-balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
-possible to improve the "user experience".
-
-Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
-downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
-social networks and so much more.
-
-Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
-Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
-
-**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
-speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
-**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
-custom code close to final viewers.
+Finally, we’ll reduce the load on the web application server by distributing static assets (such as images, CSS, and JavaScript) to edge locations closer to the visitors, improving response times and overall performance.
 
 ### AWS RDS: AWS Relational Database Service
+
 **AWS RDS** is a managed database service that simplifies the setup, operation, and scaling of relational databases in the cloud. It allows you to run databases such as MySQL, PostgreSQL, MariaDB, Oracle Database, and Microsoft SQL Server without the need to manage the underlying infrastructure manually.
 
 #### Key Features:
@@ -50,7 +34,32 @@ AWS Elastic Container Registry (AWS ECR) is an AWS managed container image regis
 ### AWS Elastic Beanstalk 
 With AWS Elastic Beanstalk, you can quickly deploy and manage applications in the AWS Cloud without worrying about the infrastructure that runs those applications. AWS Elastic Beanstalk reduces management complexity without restricting choice or control. You simply upload your application, and AWS Elastic Beanstalk automatically handles the details of capacity provisioning, load balancing, scaling, and application health monitoring.
 
+### AWS S3
 
+AWS Simple Storage Service (AWS S3) is an object storage service renowned for its industry-leading scalability, data availability, security, and performance. Millions of customers across various industries rely on S3 to store, manage, analyze, and protect vast amounts of data for a wide range of use cases, including data lakes, cloud-native applications, and mobile apps. With its cost-effective storage classes and intuitive management features, S3 enables customers to optimize costs, efficiently organize and analyze data, and configure precise access controls to meet specific business and compliance needs.
+
+### AWS CloudFront CDN
+
+A content delivery network or content distribution network (CDN) is a geographically distributed network of proxy servers that disseminate a service spatially, as close to end-users as possible, to provide high availability, low latency, and high performance.
+
+<img alt="Lab05-CDN.png" src="images/Lab05-CDN.png" width="50%"/>
+
+The information that flows every day on the Internet can be classified as "static" and "dynamic" content. The "dynamic"
+part is the one that changes depending on the user's input. It is distributed by, for instance, PaaS servers with load
+balancers. The "static" part does not change based on the user's input, and it can be moved as close to the end user as
+possible to improve the "user experience".
+
+Nowadays, CDNs serve a substantial portion of the "static" content of the Internet: text, graphics, scripts,
+downloadable media files (documents, software products, videos, etc.), live streaming media, on-demand streaming media,
+social networks and so much more.
+
+Content owners pay CDN operators to deliver the content that they produce to their end users. In turn, a CDN pays ISPs (
+Internet Service Providers), carriers, and network operators for hosting its servers in their data centers.
+
+**AWS CloudFront CDN** is a global CDN service that securely delivers static content with low latency and high transfer
+speeds. CloudFront CDN works seamlessly with other AWS services including **AWS Shield** for DDoS mitigation,
+**AWS S3**, **Elastic Load Balancing** or **AWS EC2** as origins for your applications, and **AWS Lambda** to run
+custom code close to final viewers.
 
 
 ## Pre-lab homework
@@ -58,7 +67,7 @@ With AWS Elastic Beanstalk, you can quickly deploy and manage applications in th
 You need to install the Elastic Beanstalk CLI. You can find more information on  **[eb
 command line interface](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-getting-started.html)**.
 
-On macOS you can use
+On macOS you can use:
 
 ``` 
 _$ brew install awsebcli
@@ -68,17 +77,18 @@ _$ brew install awsebcli
 
 * [Task 6.1: AWS Relational Database Service](#Task61)
 * [Task 6.2: Adding the Docker images to AWS ECR](#Task62)
-* [Task 6.3: Running Container images on AWS Elastic Beanstalk](#Task63)
-* [Task 6.4: Deliver static content using a Content Delivery Network](#Task64)
-* [Task 6.5: Create a new option to retrieve the list of leads](#Task65)
-* [Task 6.6: Improve the web app transfer of information (optional)](#Task66)
+* [Task 6.3: Running Docker Container images on AWS Elastic Beanstalk](#Task63)
+* [Task 6.4: Centralize the logs of your application instances](#Task64)
+* [Task 6.5: Deliver static content using a Content Delivery Network](#Task65)
+* [Task 6.6: Create a new option to retrieve the list of leads](#Task66)
+* [Task 6.7: ](#Task67)
 
 
 <a name="Task61"/>
 
 ## Task 6.1: AWS Relational Database Service
 
-In lab session 5 we used a PostGreSQL database that we installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
+In lab session 5 we used a PostGreSQL database installed in a container. In this session we are going to be using a more robust database provided by the AWS RDS service.
 
 ### Create your AWS RDS PostGreSQL instance
 
@@ -204,9 +214,9 @@ Running migrations:
 
 <a name="Task62"/>
 
-## Task 6.2: Adding the Docker images to AWS ECR
+## Task 6.2: Adding the Docker image to AWS ECR
 
-Before being able to deploy in the cloud the Docker image that you've created in the previous lab session we need to push it to a Docker images repository hosted in AWS: the AWS Elastic Container Registry (AWS ECR).
+Before being able to deploy in the cloud the Docker image for the web application, that you've created in the previous lab session, we need to push it to a Docker images repository hosted in AWS: the **AWS Elastic Container Registry (AWS ECR)**.
 
 ### Discover your AWS account ID
 
@@ -221,7 +231,7 @@ You can also go to the upper-right corner of the AWS Management Console, click o
 
 <img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="400px"/>
 
-To authorize your Docker client, run the following command. Replacing `<account-id>` with the 
+To authorize your Docker command line client, run the following command replacing `<account-id>` with the 
 actual account ID that you just found:
 
 ```bash
@@ -252,9 +262,7 @@ _$ aws ecr create-repository --repository-name django-webapp-docker-repo
 }
 ```
 
-The response data is in JSON format and includes a repository Arn value. This is the URI that you  
-would use to reference your image for future deployments. The response also includes a registryId,
-which you will use in a moment.
+The response data is in JSON format and includes a repository Arn value. This is the URI that you would use to reference your image for future deployments. The response also includes a registryId, which you will use in a moment.
 
 ### Tag the Docker image.
 
@@ -269,8 +277,7 @@ django-docker                                                             latest
 postgres                                                                  17        81f32a88ec56   2 weeks ago    621MB
 ```
 
-`docker tag` does not provide a response. To verify that the tag was applied query the images available. This time, notice that the latest tag was applied and the image name includes the remote repository name where you
-intend to store it.
+The command `docker tag` does not provide a response. To verify that the tag was applied we query the images available. This time, notice that the latest tag was applied and the image name includes the remote repository name where you intend to store it.
 
 ### Push the Docker image to the AWS ECR repository.
 
@@ -291,7 +298,7 @@ e1599d0f5c4d: Pushed
 latest: digest: sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125 size: 856
 ```
 
-To confirm that the django-webapp-docker-repo image is now stored in AWS ECR, run the following aws ecr list-images command:
+To confirm that the django-webapp-docker-repo image is now stored in AWS ECR, run the following aws `aws ecr list-images` command:
 
 ```bash
 _$ aws ecr list-images --repository-name django-webapp-docker-repo
@@ -366,16 +373,13 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 }
 ```
 
-
-
-
 <a name="Task63" />
 
-## Task 6.3: Running Container images on AWS Elastic Beanstalk
+## Task 6.3: Running Docker Container images on AWS Elastic Beanstalk
 
 ### Launch your new Elastic Beanstalk environment
 
-Open a terminal and create a folder named `eb` at the top of your web application. Move to the `eb` folder and write:
+Open a terminal and create a folder named `eb` at the top of your web application. Have the `eb` folder as your working directory initialize the creation of an Elastic Beanstalk application:
 
 ```
 _$ eb init -i
@@ -409,7 +413,7 @@ Do you want to set up SSH for your instances?
 (Y/n): n
 ```
 
-Running `eb init` creates a configuration file at `eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
+The command `eb init` creates a configuration file at `./eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
 
 ```yaml
 branch-defaults:
@@ -473,17 +477,17 @@ for k, v in ebOptions.items():
 print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
 ```
 
-You can execute it as shown below. That will create the command to type in order to create an Elastic Beanstalk that has
+ Execute it as shown below. The script creates the command to type in order to create an Elastic Beanstalk that has:
 
-- one EC2 instance min and three EC2 instances max (see `ebOptions` in the Python code above).
+- one EC2 instance minimum and three EC2 instances maximum (see `ebOptions` in the Python code above).
 - the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
 - the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
-- a very small EC2 instance type `t2.nano` (see `ebOptions` in the Python code above).
-- the name of your team as the name of the environment that you'll be using (see command below).
+- a very small EC2 instance type `t2.nano` will be used (see `ebOptions` in the Python code above).
+- the name of your team will be used as the name of the environment (see command below).
 
-The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` and, obviously, every team needs to have a different host name. I suggest you to use team and two digits of your team number for this lab session.
+The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` that host name needs to be unique. I suggest you to use team and two digits of your team number for this lab session.
 
-The output of the command is extremely long, scroll inside the box to the right or see it in your own terminal.
+The output of the command is extremely long, scroll to the right inside the box below or see the output in your terminal.
 
 ```bash
 _$ python ebcreate.py ../production.env team99
@@ -506,7 +510,7 @@ There is just one final thing to do before we issue the command above. Create a 
 }
 ```
 
-In unix you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script.
+In Unix you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script. In Windows you'll need to copy and paste the output text of the script.
 
 ```bash
 _$ `python ebcreate.py ../production.env team99`
@@ -531,8 +535,9 @@ Printing Status:
 2025-03-19 14:54:30    INFO    Application available at team99.us-east-1.elasticbeanstalk.com.
 2025-03-19 14:54:31    INFO    Successfully launched environment: team99
 ```
+If you have followed all the steps above you shall have now a web application deployed and accesible. It will take a few minutes until you are able to read `Successfully launched environment`.
 
-If you have followed all the steps above you shall have now a web application deployed and accesible.
+You can use the `eb` command to query and interact with the Elastic Beanstalk environment.
 
 ```bash
 _$ eb use team99
@@ -554,7 +559,7 @@ _$ eb printenv
      DJANGO_SECRET_KEY = -lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
 ```
 
-To visit the web application type:
+To visit the web application using your browser type:
 
 ```bash
 _$ eb open
@@ -562,13 +567,13 @@ _$ eb open
 
 Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
-**Q631. What have you found on the zip file? Try to find an explanation.**
+**Q631. What have you found on the zip file? Why do you think it is like that?.**
 
 **Q632. Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.**
 
-**Q633. Terminate one of the AWS EC2 instances. Is the web app responding now?  Why?**
+**Q633. Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?**
 
-**Q634. Wait a five minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
+**Q634. Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
 
 Finish the execution of AWS Elastic Beanstalk.
 
@@ -577,96 +582,252 @@ _$ eb terminate
 The environment "team99" and all associated instances will be terminated.
 ```
 
-### Github actions
-
-GitHub Actions is a powerful CI/CD platform that enables developers to build, test, and deploy pipelines efficiently.
-These pipelines are essential for maintaining consistency in deployments, identifying errors quickly, improving
-efficiency, and streamlining the development process.
-
-**Continuous Integration (CI)** and **Continuous Delivery (CD)** are critical practices for delivering high-quality
-software. They ensure a great user experience by preventing bugs from being pushed to production. GitHub Actions allows
-you to create custom workflows that are triggered based on specific events, such as pull requests, code commits, or
-pushes to a repository.
-
-In this laboratory session, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
-with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
-and deploying the application to AWS Elastic Container Service (AWS ECS).
-
-### CI/CD build using GitHub Actions
-
-A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
-which each action in the pipeline is defined. These are:
-
-- **name**: This is the workflow's name as will appear on your repository's ‘Actions’ section.
-- **on**: This section specifies the workflow trigger. Here, you can have successful merges to the repository and pushes
-  to the main or other branches among other actions.
-- **jobs**: Here, all the jobs that are run in the workflow will be defined.
-
-```yaml
-name: Deploy to AWS ECS
-
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-```
-
-To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`
-
-The proposed workflow will build and push a new container image to AWS ECR,
-and then will deploy a new task definition to AWS ECS, when there is a push to the "main" branch.
-
-To use this workflow, you will need to complete the following set-up steps:
-
-1. Create an ECR repository to store your images.
-   For example: `aws ecr create-repository --repository-name my-ecr-repo`.
-   Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
-   Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
-
-2. Create an ECS task definition, an ECS cluster, and an ECS service.
-   For example, follow the Getting Started guide on the ECS console:
-   https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun
-   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the
-   AWS ECS service.
-   Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the
-   cluster.
-
-3. Store your ECS task definition as a JSON file in your repository.
-   The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
-   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON
-   file.
-   Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
-   in the `containerDefinitions` section of the task definition.
-
-4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-   See the documentation for each action used below for the recommended IAM policies for this IAM user,
-   and best practices on handling the access key credentials.
-
-Starter workflow outline
-
-trigger and branches
-
-permissions
-
-jobs and runner
-
-steps
-
-name and uses
-
 <a name="Task64" />
 
-## Task 6.4: Deliver static content using a Content Delivery Network
+## Task 6.4: Centralize the logs of your application instances
+
+Centralized logging plays a critical role in ensuring the reliability, performance, security, and scalability of web applications. It makes monitoring, debugging, and analysis much easier, while also providing key insights into the behavior of your application and users.
+
+To centralize the logs of your application instances, you can use a cloud-based service like AWS S3, which offers durable and scalable object storage. Here’s how you can implement this:
+
+1. **Choose a Logging Solution**: Use a logging framework (like Logback, Log4j, or Winston) in your application to output logs in a structured format (e.g., JSON, plain text, or XML). Ensure your logs are stored in a centralized location, so all application instances can send logs to a common destination.
+
+2. **Configure Cloud Storage (e.g., Amazon S3)**: Set up an S3 bucket to store the logs. You can create a dedicated S3 bucket for logs.
+
+3. **Use Cloud Storage SDK or API**: Use the AWS SDK (boto3) or AWS CLI to upload logs from your application instances to the S3 bucket. Set up a script or logic in your application to upload logs periodically or after each log event.
+
+4. **Implement Log Rotation and Retention Policies**: S3 supports lifecycle policies to automatically archive, delete, or transition older log files to cheaper storage classes (like S3 Glacier). Configure the retention policy to manage the logs effectively, especially when handling large volumes of logs.
+
+5. **Monitor and Analyze Logs**: Once logs are stored in S3, you can integrate with services like AWS CloudWatch Logs or use third-party log analysis tools (e.g., ELK Stack, Splunk, or Datadog) for searching and analyzing logs in real-time.
+
+### Log management in Django 
+
+The [Django framework utilizes and extends Python's built-in logging module](https://docs.djangoproject.com/en/5.1/topics/logging/) to handle system logging. The code below needs to be included into the `settings.py` file.
+
+It defines two formats for the log lines named verbose and simple, as shown below. In the verbose log format we include the instance name and the module, file and line that outputs the message.
+
+```text
+2025-03-21 19:42:31,740 ERROR [localhost] [home:views:9] This is an error log message
+2025-03-21 19:42:31,741 INFO [localhost] [home:views:10] This is an information log message
+2025-03-21 19:42:31,741 WARNING [localhost] [home:views:10] This is a warning log message
+```
+```text
+2025-03-21 19:42:31,740 ERROR This is an error log message
+2025-03-21 19:42:31,741 INFO This is an information log message
+2025-03-21 19:42:31,741 WARNING This is a warning log message
+```
+
+```python
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} ["+AWS_EC2_INSTANCE_ID+"] [{funcName}:{module}:{lineno}] {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{asctime} {levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        'file': {
+            'level': 'INFO',
+            "formatter": "verbose",
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "file.log"),
+            "maxBytes": 5 * 1024 ,  # 5 K
+            "backupCount": 1,
+            "encoding": None,
+            "delay": 0,
+        },
+        "s3": {
+            "level": "INFO",
+            "formatter": "verbose",
+            "class": "ccbda.S3RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "s3.log"),
+            "maxBytes": 5 * 1024 ,  # 5 K
+            "backupCount": 1,
+            "encoding": None,
+            "delay": 0,
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file", "s3"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}
+```
+
+See the different variables that can be used in the log formatting.
+
+```python
+# Fetch specific metadata fields
+#     %(name)s            Name of the logger (logging channel)
+#     %(levelno)s         Numeric logging level for the message (DEBUG, INFO,
+#                         WARNING, ERROR, CRITICAL)
+#     %(levelname)s       Text logging level for the message ("DEBUG", "INFO",
+#                         "WARNING", "ERROR", "CRITICAL")
+#     %(pathname)s        Full pathname of the source file where the logging
+#                         call was issued (if available)
+#     %(filename)s        Filename portion of pathname
+#     %(module)s          Module (name portion of filename)
+#     %(lineno)d          Source line number where the logging call was issued
+#                         (if available)
+#     %(funcName)s        Function name
+#     %(created)f         Time when the LogRecord was created (time.time()
+#                         return value)
+#     %(asctime)s         Textual time when the LogRecord was created
+#     %(msecs)d           Millisecond portion of the creation time
+#     %(relativeCreated)d Time in milliseconds when the LogRecord was created,
+#                         relative to the time the logging module was loaded
+#                         (typically at application startup time)
+#     %(thread)d          Thread ID (if available)
+#     %(threadName)s      Thread name (if available)
+#     %(process)d         Process ID (if available)
+#     %(message)s         The result of record.getMessage(), computed just as
+#                         the record is emitted
+```
+
+In the handlers section we have three outputs for the messages: console, file and s3. We not only define the log file path but also the maximum number or bytes before the [file is rotated](https://en.wikipedia.org/wiki/Log_rotation).
+
+Finally, the configuration states that administrative logs will only be sent to the console while the django application will output its content simultaneously to the console, a local rotated log file and an AWS S3 bucket.
+
+We can include the `ccbda.S3RotatingFileHandler` class (see the logs configuration) in the `ccbda/__init__.py` file. When the class is first instantiated, as the web application starts, it creates a connection to the S3 bucket that will be used in the log rotate operation.
+
+The function `emit` is invoked everytime a function like `logging.info(f'ROLLOVER {record.name}')` is called.
+
+The function `doRollover` receives two full file path names. It renames the source file, which contains the full log, and sends the contents to AWS S3 with a **unique name** that is built using the original source file name and the current timestamp.
+
+```python
+# logs configuration
+import logging.handlers
+import boto3
+import os
+from botocore.exceptions import ClientError
+from django.conf import settings
+import pathlib
+from datetime import datetime, timezone
+
+
+class S3RotatingFileHandler(logging.handlers.RotatingFileHandler):
+    def __init__(self, filename, maxBytes=0, backupCount=0, encoding=None, delay=0):
+        super().__init__(
+            filename=filename, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding, delay=delay
+        )
+        self.s3_client = boto3.client(
+            "s3",
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            aws_session_token=settings.AWS_SESSION_TOKEN,
+            region_name=settings.AWS_REGION,
+        )
+        self.bucket_name = settings.AWS_S3_BUCKET_NAME
+        self.logs_prefix = settings.AWS_S3_LOGS_PREFIX
+        if not self.logs_prefix.endswith("/"):
+            self.logs_prefix += "/"
+
+    def rotate(self, source, dest):
+        if callable(self.rotator):
+            self.rotator(source, dest)
+        else:
+            stem = pathlib.Path(source).stem
+            suffix = pathlib.Path(source).suffix
+            now = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
+            s3_key = f'{self.logs_prefix}{stem}.{now}{suffix}'
+
+            if os.path.exists(source):
+                os.rename(source, dest)
+            with open(dest, "rb") as f:
+                self.s3_client.upload_fileobj(f, self.bucket_name, s3_key)
+            os.remove(dest)
+
+    def emit(self, record):
+        try:
+            log_data = self.format(record)
+            try:
+                if self.shouldRollover(record):
+                    logging.info(f'ROLLOVER {record.name}')
+                    self.doRollover()
+                self.stream.write(log_data + self.terminator)
+            except Exception as err:
+                self.handleError(record)
+        except ClientError as e:
+            logging.error(f"Error sending log to S3: {e}")
+```
+
+You need to add two additional variables to the web application environment which need to be also included inside of settings.py.
+
+```text
+AWS_S3_BUCKET_NAME=team99.ccbda.upc.edu
+AWS_S3_LOGS_PREFIX=logs/
+```
+
+### Identification of the current EC2 instance
+
+You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish who is producing every log line, as well as when.
+
+AWS provides a [mechanism to retrieve information for each EC2 inside the running instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html#instancedata-inside-access). If you go to the AWS EC2 console and open a terminal, type the following code that creates a token for 1h that is used to query about the local instance.
+
+```bash
+_$ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 3600"`
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/
+i-1234567898abcdef0
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-type/
+t2.nano
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone/
+us-east-1f
+```
+
+We can include the following code at the end of the `settings.py` file. Since http://169.254.169.254 is only available inside of an EC2 instance we stablish a connection timeout of 5 seconds.
+
+The function is executed when the web application starts and keeps the value of AWS_EC2_INSTANCE_ID accessible thoughout the code.
+
+```python
+def get_metadata(path=''):
+    try:
+        headers = {"X-aws-ec2-metadata-token-ttl-seconds": "3600"}
+        response = requests.put('http://169.254.169.254/latest/api/token', headers=headers, timeout=5)
+        if response.status_code == 200:
+            response = requests.get(f'http://169.254.169.254/latest/meta-data/{path}',
+                                    headers={'X-aws-ec2-metadata-token': response.text})
+            response.raise_for_status()  # Raises an HTTPError
+            return response.text
+        else:
+            return "unknown"
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error accessing metadata: {e}")
+        return "localhost"
+
+AWS_EC2_INSTANCE_ID = get_metadata('instance-id')
+```
+
+**QS641: What issues have you met when following the above instructions?**
+
+Use `logging.error` or `logging.info` inside of the web application to provide logging feedback of what is happening.
+
+**QS643: Play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
+
+<a name="Task65" />
+
+## Task 6.5: Deliver static content using a Content Delivery Network
 
 ### The static content in our web app
 
 If you check line 11 of the file *templates/generic.html* you will see that, instead of loading in our server
-Bootstrap 4 CSS, we are already using a CDN to retrieve the CSS and send it to the final users. Bootstrap uses
+Bootstrap CSS, we are already using a CDN to retrieve the CSS and send it to the final users. Bootstrap uses
 *maxcdn.bootstrapcdn.com* as their CDN distribution point.
 
 ```html
@@ -684,22 +845,20 @@ following line just before closing the **head** HTML tag:
 
 If you check the contents of the file *static/custom.css* you will see that it includes some images, also available in
 the same folder. If you save the modifications to *form/templates/generic.html* and review your web
-app, http://127.0.0.1:8000, you will see that it appears slightly different.
+app locally, http://127.0.0.1:8000, you will see that it appears slightly different.
 
 ### Upload your static content to AWS S3 and grant object permissions
 
 All the distributed static content overloads our server with requests. Moving it to a CDN will reduce our server's load
-and, at the same time, the users will experience a much lower latency while using our web app. We only have static files
+and, at the same time, the visitors will experience a much lower latency while using our web app. We only have few static files
 in this app, but a typical web app distributes hundreds of pieces of static content.
 
 To configure our CDN, we are going to follow the steps
 at ["Getting Started with CloudFront CDN"](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html).
 Check that document if you need extra details.
 
-Review the QuickStart
-hands-on [Getting Started in the Cloud with AWS](../../../Cloud-Computing-QuickStart/blob/master/Quick-Start-AWS.md) and
-create a new bucket in 'us-east-1' region to deposit the web app static content. Let us name this bucket *
-*eb-django-express-signup-YOUR-ID** (YOUR-ID can be your AWS account number or any other distinctive string because you
+Create a new bucket in 'us-east-1' region to deposit the web app static content. Let us name this bucket *
+*ccbda-webapp-YOUR-ID** (YOUR-ID can be your AWS account number or any other distinctive string because you
 will not be allowed to create two buckets with the same name, regardless the owner).
 
 AWS has recently set some restrictions when creating an S3 bucket with public access. Make sure that you uncheck all the
@@ -718,17 +877,16 @@ bucket. [Synchronize with your S3 bucket](https://docs.aws.amazon.com/cli/latest
 following command:
 
 ```bash
-_$ aws s3 sync --acl public-read ./static s3://eb-django-express-signup-YOUR-ID
-upload: ./static/custom.css to s3://eb-django-express-signup-YOUR-ID/custom.css
-upload: ./static/CCBDA-Square.png to s3://eb-django-express-signup-YOUR-ID/CCBDA-Square.png
-upload: ./static/startup-bg.png to s3://eb-django-express-signup-YOUR-ID/startup-bg.png
+_$ aws s3 sync --acl public-read ./static s3://ccbda-webapp-YOUR-ID
+upload: ./static/custom.css to s3://ccbda-webapp-YOUR-ID/custom.css
+upload: ./static/CCBDA-Square.png to s3://ccbda-webapp-YOUR-ID/CCBDA-Square.png
+upload: ./static/startup-bg.png to s3://ccbda-webapp-YOUR-ID/startup-bg.png
 ```
 
-If you explore in your S3 console you will see that there is a URL available to retrieve the files. Verify that you can
-access the contents of that URL, making the file public if it was not already.
+Verify that you can access the contents of that URL, making the file public if it was not already.
 
 ```
-https://s3-us-east-1.amazonaws.com/eb-django-express-signup-YOUR-ID/CCBDA-Square.png
+https://s3-us-east-1.amazonaws.com/ccbda-webapp-YOUR-ID/CCBDA-Square.png
 ```
 
 <img src="./images/Lab05-12.png " alt="S3 address" title="S3 address"/>
@@ -758,14 +916,10 @@ setup, we will use a URL from our domain, something like *static.mydomain.com* t
 
 **Q641: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
 Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
-Google Chrome and check the origin of the files that you are loading (attach a screen shot similar to the one below)**:
+Google Chrome and check the origin of the files that you are loading (attach a screenshot similar to the one below)**:
 
  <img src="./images/Lab05-11.png " alt="Files loaded" title="Files loaded"/>
 
-**Q642: How long have you been working on this session (including the optional part)? What have been the main
-difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
-
-Add all these files to your repository and comment what you think is relevant in your session's *README.md*.
 
 ### Django support for CDN
 
@@ -779,7 +933,7 @@ First of all, you need to add the following package to your environment:
 (eb-virt)_$ pip install django-storages
 ```
 
-Then modify `eb-django-express-signup\eb-django-express-signup\settings.py` by adding 'storages' as an installed
+Then modify `ccbda-webapp\ccbda-webapp\settings.py` by adding 'storages' as an installed
 application and tell Django to use the new storage schema as well as the name of your bucket and the name of the
 CloudFront domain.
 
@@ -797,9 +951,8 @@ CLOUD_FRONT = bool(os.environ.get("CLOUD_FRONT", default=False))
 if CLOUD_FRONT:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    AWS_STORAGE_BUCKET_NAME = 'eb-django-express-signup-YOUR-ID'
+    AWS_STORAGE_BUCKET_NAME = 'ccbda-webapp-YOUR-ID'
     AWS_S3_CUSTOM_DOMAIN = 'RANDOM-ID-FROM-CLOUDFRONT.cloudfront.net'
-
 ```
 
 Having done that you should be able to keep all static files declared the way Django expects to and, at the same time,
@@ -815,8 +968,6 @@ to False.
 
 Django can also assume the synchronization of the static files to the CDN by means of the maintenace
 command `python manage.py collectstatic`.
-
-
 
 <a name="Task65" />
 
@@ -949,30 +1100,12 @@ runs in your computer.
 If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change
 whatever is necessary to make it work.
 
-**Q53: Has everything gone alright? What have you changed?** Add your answers to the `README.md` file in the responses
-repository.
+**Q51: Has everything gone alright? What have you changed?** 
 
-<a name="Task66" />
+**Q52: How long have you been working on this session (including the optional part)? What have been the main
+difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
 
-## Task 6.6: Improve the web app transfer of information (optional)
-
-You can work on this section locally in order to save expenses; you can terminate your environment from the EB console.
-
-If you analyze the new function added, probably a wise thing to do will be to optimize the data transfer from the
-DynamoDB table: imagine that instead of a few records in your NoSQL table you have millions of records. Transferring
-millions of records to your web app just to count how many e-mail addresses match a domain doesn't seem to be a great
-idea.
-
-DynamoDB is a NoSQL database and does not allow aggregation SQL queries. You are encouraged to improve the above code to
-obtain a more efficient way of counting the e-mail addresses for each domain. Try to optimize the transfer of
-information as well as the web app processing. Maybe you need to change the way that the records are stored.
-
-Test the changes locally, commit them to your GitHub repository.
-
-**Q54: Describe the strategy used to fulfill the requirements of this section. What have you changed in the code and the
-configuration of the different resources used by the web app? What are the tradeoffs of your solution?** Add your
-responses to `README.md`.
-
+Add all these files to your repository and comment what you think is relevant in your session's *README.md*.
 
 
 
