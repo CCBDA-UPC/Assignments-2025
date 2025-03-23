@@ -815,7 +815,7 @@ AWS_EC2_INSTANCE_ID = get_metadata('instance-id')
 
 **QS641: What issues have you met when following the above instructions?**
 
-Use `logging.error` or `logging.info` inside of the web application to provide logging feedback of what is happening.
+Use `logging.error()` or `logging.info()` inside of the web application to provide logging feedback of what is happening.
 
 **QS643: Play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
 
