@@ -515,7 +515,7 @@ CONTROL-C to stop the container. Open a new terminal if you need to issue additi
 alternativelly stop the container.
 
 ```bash
-_$ docker run -p 8000:8080 --env-file .env django-docker
+_$ docker run -p 8080:8000 --env-file .env django-docker
 Watching for file changes with StatReloader
 Performing system checks...
 
@@ -762,7 +762,7 @@ services:
     build: .
     container_name: code
     ports:
-      - "8000:8080"
+      - "8080:8000"
     depends_on:
       - db
     environment:
@@ -976,7 +976,7 @@ Once the webapp is running, you can test it by navigating to http://localhost:80
 page, indicating that your app is up and running.
 
 Take into account that both containers are exporting their ports to the outside world and mapping them to the same port
-number of the docker host (check the composer file and find ports:- "8000:8080", ports:- "5432:5432"). That means that you can access the web application through port 8080 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
+number of the docker host (check the composer file and find ports:- "8080:8000", ports:- "5432:5432"). That means that you can access the web application through port 8080 and the PostGreSQL through port 5432 of the localhost machine, or the hosting machine of the containers. See below how PyCharm is able to connect to the database hosted in Docker.
 
 <img alt="Lab05-postgres-config.png" src="images/Lab05-postgres-config.png" width="50%"/>
 
