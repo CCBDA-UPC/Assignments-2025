@@ -136,13 +136,18 @@ If you have followed the above steps correctly, using the PyCharm database wizar
 
 **QS611: Would you keep that access open on a production system? Justify your response.**
 
-Let's now test the web application running in Docker in your laptop and connect it to the AWS RDS database. Now, copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password as shown below.
+Let's now build a new Docker image, tagging it with a version number. Next test the web application running in Docker in your laptop and connect it to the AWS RDS database. Now, copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password as shown below.
 
 ```bash
+_$ docker build -t django-docker:v1.0.0 .
+_$ docker images
+REPOSITORY                                                               TAG       IMAGE ID       CREATED          SIZE
+django-docker                                                            latest    d8bc6a1aed71   20 minutes ago   476MB
+django-docker                                                            v1.0.0    0a325b16e03d   20 minutes ago   476MB
 _$ cat aws.env
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
-DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost
+DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
 DJANGO_LOGLEVEL=info
 CCBDA_SIGNUP_TABLE=ccbda-signup-table
 AWS_REGION=us-east-1
@@ -173,9 +178,13 @@ PGPASSWORD=MyP4ssW0rd!
 .....
 _$ cat > init_db.sql
 CREATE DATABASE ccbdadb;
-CREATE USER ccbdauser CREATEDB CREATEROLE;
-ALTER USER ccbdauser WITH PASSWORD 'ccbdapassword';
-GRANT ALL PRIVILEGES ON DATABASE ccbdadb TO ccbdauser;
+CREATE USER ccbdauser
+    WITH ENCRYPTED PASSWORD 'ccbdapassword'
+    createdb
+    createrole
+    bypassrls;
+ALTER USER ccbdauser SET TimeZone = utc;
+ALTER DATABASE ccbdadb OWNER TO ccbdauser;
 ^D
 _$ psql --host=$DB_HOST --port=$DB_PORT --username=postgres < init_db.sql
 CREATE DATABASE
@@ -209,6 +218,8 @@ Running migrations:
 **QS613: Explain what does the code in the box above. How can you execute it inside the Docker container?**
 
 **QS614:  What is the result of "select * FROM django_migrations;"**
+
+**VERY IMPORTANT: AWS RDS is a very expensive service, and it continues running even if your Learner Lab session stops. DO NOT FORGET to stop the database when you don't need it.**
 
 
 <a name="Task62"/>
@@ -269,10 +280,10 @@ In this step, you will tag the image with your unique registryId value to make i
 this image. Run the following command. Replace <registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-docker:latest <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:latest
+_$ docker tag django-docker:v1.0.0 <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
 _$ docker image list
-<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo   latest    1cb356277c4a   42 hours ago   433MB
-django-docker                                                             latest    1cb356277c4a   42 hours ago   433MB
+<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo   v1.0.0    1cb356277c4a   42 hours ago   433MB
+django-docker                                                             v1.0.0    1cb356277c4a   42 hours ago   433MB
 postgres                                                                  17        81f32a88ec56   2 weeks ago    621MB
 ```
 
@@ -283,7 +294,7 @@ The command `docker tag` does not provide a response. To verify that the tag was
 To push your image to AWS ECR, run the following command. Replace <registry-id> with your actual registry ID number:
 
 ```bash
-_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:latest
+_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
 The push refers to repository [<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo]
 4b785e93aa71: Pushed 
 be1449717b1e: Pushed 
@@ -294,7 +305,7 @@ e1599d0f5c4d: Pushed
 8b6fcbaf930d: Pushed 
 000e068808cd: Pushed
 
-latest: digest: sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125 size: 856
+v1.0.0: digest: sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125 size: 856
 ```
 
 To confirm that the django-webapp-docker-repo image is now stored in AWS ECR, run the following aws `aws ecr list-images` command:
@@ -311,7 +322,7 @@ _$ aws ecr list-images --repository-name django-webapp-docker-repo
         },
         {
             "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
-            "imageTag": "latest"
+            "imageTag": "v1.0.0"
         }
     ]
 }
@@ -363,7 +374,7 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
             "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTags": [
-                "latest"
+                "v1.0.0"
             ],
             "imageSizeInBytes": 75387102,
             "imagePushedAt": "2025-03-15T16:47:53.707000+01:00"
@@ -376,11 +387,63 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 
 ## Task 6.3: Running Docker Container images on AWS Elastic Beanstalk
 
+### Identification of the current EC2 instance
+
+AWS Elastic Beanstalk automatically provisions a set of AWS EC2 instances to run containerized web applications concurrently, scaling the number of instances based on demand. It also monitors these instances by periodically sending requests to a URL on each EC2 instance and checking for an HTTP status code of 200 (success). If the code differs, it triggers a response to handle potential issues.
+
+On the other hand, Django requires the hostnames and IP addresses of the servers to be included in the ALLOWED_HOSTS variable. This is a security measure designed to prevent HTTP Host header attacks, which can occur even with seemingly secure web server configurations. To maintain a high level of security, it is important to explicitly add the IP addresses of the AWS EC2 instances. Using a wildcard in ALLOWED_HOSTS would reduce security by allowing unintended hosts to access the application.
+
+AWS provides a [mechanism to retrieve information for each EC2 inside the running instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html#instancedata-inside-access). If you go to the AWS EC2 console and open a terminal, type the following code that creates a token for 1h that is used to query about the local instance.
+
+```bash
+_$ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 3600"`
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/
+i-1234567898abcdef0
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-type/
+t2.nano
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone/
+us-east-1f
+_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/
+172.17.25.45
+```
+
+We can define the `get_metadata()` function at the top of the settings.py file. Since http://169.254.169.254 is only accessible from within an EC2 instance, we set a connection timeout of 5 seconds to ensure the function doesn’t hang indefinitely.
+
+This function is executed when the web application starts, and it keeps the value of ALLOWED_HOSTS accessible throughout the code, ensuring it is available for any necessary security checks.
+
+```python
+....
+import requests
+import logging
+
+def get_metadata(path=''):
+    try:
+        headers = {"X-aws-ec2-metadata-token-ttl-seconds": "3600"}
+        response = requests.put('http://169.254.169.254/latest/api/token', headers=headers, timeout=5)
+        if response.status_code == 200:
+            response = requests.get(f'http://169.254.169.254/latest/meta-data/{path}',
+                                    headers={'X-aws-ec2-metadata-token': response.text})
+            response.raise_for_status()  # Raises an HTTPError
+            return response.text
+        else:
+            return "unknown"
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error accessing metadata: {e}")
+        return "localhost"
+
+    
+...
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(':')
+ALLOWED_HOSTS.append(get_metadata('local-ipv4'))
+...
+```
+
 ### Launch your new Elastic Beanstalk environment
 
-Open a terminal and create a folder named `eb` at the top of your web application. Have the `eb` folder as your working directory initialize the creation of an Elastic Beanstalk application:
+Open a terminal and create a folder named `.housekeeping/elasticbeanstalk` at the top of your web application. Have the `elasticbeanstalk` folder as your working directory initialize the creation of an Elastic Beanstalk application:
 
 ```
+_$ cd .housekeeping/elasticbeanstalk
 _$ eb init -i
 Select a default region
 ...
@@ -412,7 +475,7 @@ Do you want to set up SSH for your instances?
 (Y/n): n
 ```
 
-The command `eb init` creates a configuration file at `./eb/.elasticbeanstalk/config.yml`. You can edit it if necessary.
+The command `eb init` creates a configuration file at `.housekeeping/elasticbeanstalk/.elasticbeanstalk/config.yml`. You can edit it if necessary.
 
 ```yaml
 branch-defaults:
@@ -434,7 +497,7 @@ global:
   workspace_type: Application
 ```
 
-Now, you need to create an Elastic Beanstalk environment and run the application. That needs a quite complex command line that we are going to create using a python script in the file `ebcreate.py` that you'll save inside the `eb` folder.
+Now, you need to create an Elastic Beanstalk environment and run the application. That needs a quite complex command line that we are going to create using a python script in the file `ebcreate.py` that you'll save inside the `.housekeeping/scripts` folder.
 
 ```python
 from dotenv import dotenv_values
@@ -446,7 +509,7 @@ ebOptions = {
     'instance_profile': 'LabInstanceProfile',
     'service-role': 'LabRole',
     'elb-type': 'application',
-    'instance-types':'t2.nano'
+    'instance-types':'t2.nano',
 }
 
 try:
@@ -466,8 +529,9 @@ if hostname not in hosts:
 opt = []
 for k, v in config.items():
     opt.append(f'{k}={v}')
-ebOptions['envvars'] = '"%s"' % ','.join(opt)
 ebOptions['cname'] = HOSTNAME
+ebOptions['envvars'] = '"%s"' % ','.join(opt)
+
 
 opt = []
 for k, v in ebOptions.items():
@@ -489,17 +553,18 @@ The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.
 The output of the command is extremely long, scroll to the right inside the box below or see the output in your terminal.
 
 ```bash
-_$ python ebcreate.py ../production.env team99
-eb create team99 --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"  --cname team99
+_$ cd .houskeeping/elasticbeanstalk
+_$ python ../scripts/ebcreate.py ../../aws.env team99
+eb create team99 --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --cname team99 --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
 ```
 
-There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `eb` folder. Make sure you change `<registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
+There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `elasticbeanstalk` folder. Make sure you change `<registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
 
 ```json
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo"
+    "Name": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0"
   },
   "Ports": [
     {
@@ -509,10 +574,10 @@ There is just one final thing to do before we issue the command above. Create a 
 }
 ```
 
-In Unix you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script. In Windows you'll need to copy and paste the output text of the script.
+In Unix, you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script. In Windows, you'll need to copy and paste the output text of the script.
 
 ```bash
-_$ `python ebcreate.py ../production.env team99`
+_$ `python .housekeeping/scripts/ebcreate.py aws.env team99`
 Creating application version archive "app-250319_155025031208".
 Uploading django-webapp-eb/app-250319_155025031208.zip to S3. This may take a while.
 Upload Complete.
@@ -552,7 +617,7 @@ _$ eb printenv
      DB_PASSWORD = ccbdapassword
      DB_PORT = 5432
      DB_USER = ccbdauser
-     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com
+     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com
      DJANGO_DEBUG = True
      DJANGO_LOGLEVEL = info
      DJANGO_SECRET_KEY = -lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
@@ -574,11 +639,21 @@ Go to the AWS S3 console and see that it there is a new bucket named `elasticbea
 
 **Q634. Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
 
-Finish the execution of AWS Elastic Beanstalk.
+Finish the execution of the AWS Elastic Beanstalk environment.
 
 ```bash
+_$ cd .housekeeping/elasticbeanstalk
 _$ eb terminate
 The environment "team99" and all associated instances will be terminated.
+To confirm, type the environment name: team99
+2025-03-24 18:23:23    INFO    terminateEnvironment is starting.
+2025-03-24 18:23:23    INFO    Validating environment's EC2 instances have termination protection disabled before performing termination.
+2025-03-24 18:23:23    INFO    Finished validating environment's EC2 instances for termination protection.
+....
+2025-03-24 18:25:43    INFO    Deleted security group named: awseb-e-gcmgtmhupr-stack-AWSEBSecurityGroup-gjEZoswAShaF
+2025-03-24 18:25:43    INFO    Deleted security group named: sg-0ea7bdd8c119da953
+2025-03-24 18:25:45    INFO    Deleting SNS topic for environment team99.
+2025-03-24 18:25:46    INFO    terminateEnvironment completed successfully.
 ```
 
 <a name="Task64" />
@@ -617,6 +692,8 @@ It defines two formats for the log lines named verbose and simple, as shown belo
 ```
 
 ```python
+AWS_EC2_INSTANCE_ID = get_metadata('instance-id')
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -699,8 +776,11 @@ See the different variables that can be used in the log formatting.
 #     %(message)s         The result of record.getMessage(), computed just as
 #                         the record is emitted
 ```
+You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish who is producing every log line, as well as when. We can use the function `get_metadata()` to obtain the EC2 instance ID.
 
 In the handlers section we have three outputs for the messages: console, file and s3. We not only define the log file path but also the maximum number or bytes before the [file is rotated](https://en.wikipedia.org/wiki/Log_rotation).
+
+### Log rotation in Django 
 
 Finally, the configuration states that administrative logs will only be sent to the console while the django application will output its content simultaneously to the console, a local rotated log file and an AWS S3 bucket.
 
@@ -711,7 +791,7 @@ The function `emit` is invoked everytime a function like `logging.info(f'ROLLOVE
 The function `doRollover` receives two full file path names. It renames the source file, which contains the full log, and sends the contents to AWS S3 with a **unique name** that is built using the original source file name and the current timestamp.
 
 ```python
-# logs configuration
+
 import logging.handlers
 import boto3
 import os
@@ -753,6 +833,7 @@ class S3RotatingFileHandler(logging.handlers.RotatingFileHandler):
                 self.s3_client.upload_fileobj(f, self.bucket_name, s3_key)
             os.remove(dest)
 
+
     def emit(self, record):
         try:
             log_data = self.format(record)
@@ -765,6 +846,7 @@ class S3RotatingFileHandler(logging.handlers.RotatingFileHandler):
                 self.handleError(record)
         except ClientError as e:
             logging.error(f"Error sending log to S3: {e}")
+
 ```
 
 You need to add two additional variables to the web application environment which need to be also included inside of settings.py.
@@ -774,50 +856,11 @@ AWS_S3_BUCKET_NAME=team99.ccbda.upc.edu
 AWS_S3_LOGS_PREFIX=logs/
 ```
 
-### Identification of the current EC2 instance
-
-You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish who is producing every log line, as well as when.
-
-AWS provides a [mechanism to retrieve information for each EC2 inside the running instance](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html#instancedata-inside-access). If you go to the AWS EC2 console and open a terminal, type the following code that creates a token for 1h that is used to query about the local instance.
-
-```bash
-_$ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 3600"`
-_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/
-i-1234567898abcdef0
-_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-type/
-t2.nano
-_$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone/
-us-east-1f
-```
-
-We can include the following code at the end of the `settings.py` file. Since http://169.254.169.254 is only available inside of an EC2 instance we stablish a connection timeout of 5 seconds.
-
-The function is executed when the web application starts and keeps the value of AWS_EC2_INSTANCE_ID accessible thoughout the code.
-
-```python
-def get_metadata(path=''):
-    try:
-        headers = {"X-aws-ec2-metadata-token-ttl-seconds": "3600"}
-        response = requests.put('http://169.254.169.254/latest/api/token', headers=headers, timeout=5)
-        if response.status_code == 200:
-            response = requests.get(f'http://169.254.169.254/latest/meta-data/{path}',
-                                    headers={'X-aws-ec2-metadata-token': response.text})
-            response.raise_for_status()  # Raises an HTTPError
-            return response.text
-        else:
-            return "unknown"
-    except requests.exceptions.RequestException as e:
-        logging.error(f"Error accessing metadata: {e}")
-        return "localhost"
-
-AWS_EC2_INSTANCE_ID = get_metadata('instance-id')
-```
-
 **QS641: What issues have you met when following the above instructions?**
 
 Use `logging.error()` or `logging.info()` inside of the web application to provide logging feedback of what is happening.
 
-**QS643: Play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
+**QS643: Run the web application locally and play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
 
 <a name="Task65" />
 

@@ -1,3 +1,23 @@
+
+### Install github CLI
+
+[Install](https://github.com/cli/cli#installation)
+
+```bash
+_$ brew install gh
+```
+
+```bash
+
+gh secret set AWS_ACCESS_KEY_ID --repo CCBDA-UPC/django-webapp --body "$ENV_VALUE"
+gh secret set AWS_ACCOUNT_ID --repo origin/repo --body "$ENV_VALUE"
+gh secret set AWS_SECRET_ACCESS_KEY --repo origin/repo --body "$ENV_VALUE"
+gh secret set AWS_SESSION_TOKEN --repo origin/repo --body "$ENV_VALUE"
+
+
+```
+
+
 ### Github actions
 
 GitHub Actions is a powerful CI/CD platform that enables developers to build, test, and deploy pipelines efficiently.
