@@ -1,4 +1,4 @@
-**Lab Session 7: Continuous Integration, Continuous Delivery, and Observability**
+# Lab Session 7: Continuous Integration, Continuous Delivery, and Observability
 
 This lab session focuses on three critical areas in modern software development:
 
