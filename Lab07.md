@@ -1,39 +1,73 @@
+**Lab Session 7: Continuous Integration, Continuous Delivery, and Observability**
 
-### Install github CLI
+This lab session focuses on three critical areas in modern software development:
 
-[Install](https://github.com/cli/cli#installation)
+- **Continuous Integration (CI)**
+- **Continuous Delivery (CD)**
+- **Observability**
 
-```bash
-_$ brew install gh
-```
+### Continuous Integration (CI)
 
-```bash
+**Continuous Integration (CI)** is a software development practice where code changes are frequently merged into a
+shared repository. Every change is validated by automated builds and tests to catch errors as early as possible.
 
-gh secret set AWS_ACCESS_KEY_ID --repo CCBDA-UPC/django-webapp --body "$ENV_VALUE"
-gh secret set AWS_ACCOUNT_ID --repo origin/repo --body "$ENV_VALUE"
-gh secret set AWS_SECRET_ACCESS_KEY --repo origin/repo --body "$ENV_VALUE"
-gh secret set AWS_SESSION_TOKEN --repo origin/repo --body "$ENV_VALUE"
+#### Key Concepts of CI:
 
+- **Version Control**: Developers push their code to a version control system (e.g., Git).
+- **Automated Build**: Every time code is pushed, the system triggers an automated build process (e.g., using Jenkins,
+  GitLab CI/CD, or GitHub Actions).
+- **Automated Testing**: Unit tests, integration tests, and other checks run automatically to verify the quality of the
+  code.
 
-```
+### Continuous Delivery (CD)
 
+**Continuous Delivery (CD)** extends CI by automatically deploying the code to various environments after it passes all
+tests. The goal is to make the release process predictable and automated.
 
-### Github actions
+#### Key Concepts of CD:
 
-GitHub Actions is a powerful CI/CD platform that enables developers to build, test, and deploy pipelines efficiently.
-These pipelines are essential for maintaining consistency in deployments, identifying errors quickly, improving
-efficiency, and streamlining the development process.
+- **Automated Deployment**: Code is deployed automatically to different environments (e.g., development, staging, and
+  production).
+- **Automated Tests**: After deployment, automated tests ensure the application works as expected in the new
+  environment.
+- **Feature Toggles**: A technique used in CD where new features are hidden behind feature flags/toggles until they are
+  ready for release.
 
-**Continuous Integration (CI)** and **Continuous Delivery (CD)** are critical practices for delivering high-quality
-software. They ensure a great user experience by preventing bugs from being pushed to production. GitHub Actions allows
-you to create custom workflows that are triggered based on specific events, such as pull requests, code commits, or
-pushes to a repository.
+### Observability
 
-In this laboratory session, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
+**Observability** is the ability to measure the internal state of a system based on the data it produces (logs, metrics,
+and traces). It helps teams monitor and debug production systems effectively.
+
+#### Key Concepts of Observability:
+
+- **Logs**: Detailed records of events that happened during the execution of the application.
+- **Metrics**: Numerical data that represent performance characteristics like CPU usage, request latency, etc.
+- **Tracing**: Tracking the path of a request through various services (e.g., with OpenTelemetry).
+
+#### Observability Tools:
+
+- **Prometheus**: A monitoring tool that collects and stores metrics as time-series data.
+- **Grafana**: A visualization tool used to display data from Prometheus and other data sources.
+- **Elasticsearch, Logstash, and Kibana (ELK)**: A set of tools for searching, analyzing, and visualizing log data.
+- **Datadog**: A SaaS-based monitoring service that provides full observability.
+
+#### Visualizing Logs with ELK:
+
+- **Elasticsearch** stores logs and allows you to query and analyze them.
+- **Kibana** is a web interface to visualize and analyze log data stored in Elasticsearch.
+
+# Tasks for Lab session #7
+
+* [Task 7.1: CI/CD build using GitHub Actions](#Task71)
+* [Task 7.2: CI/CD build using GitHub Actions](#Task72)
+
+<a name="Task71"/>
+
+## Task 7.1: CI/CD build using GitHub Actions
+
+In this section, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
 with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
-and deploying the application to AWS Elastic Container Service (AWS ECS).
-
-### CI/CD build using GitHub Actions
+and deploying the application to AWS Elastic Beanstalk.
 
 A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
 which each action in the pipeline is defined. These are:
@@ -57,45 +91,259 @@ jobs:
     steps:
 ```
 
-To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`
+### Example GitHub Actions workflow 
 
-The proposed workflow will build and push a new container image to AWS ECR,
-and then will deploy a new task definition to AWS ECS, when there is a push to the "main" branch.
+To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`.
 
-To use this workflow, you will need to complete the following set-up steps:
+The proposed workflow builds and pushes a new container image to AWS ECR,
+and then deploys a new environment definition to AWS Elastic Beanstalk, when there is a push to the "main" branch, and
+it is tagged with a version number such as `v1.3.4`.
 
-1. Create an ECR repository to store your images.
-   For example: `aws ecr create-repository --repository-name my-ecr-repo`.
-   Replace the value of the `ECR_REPOSITORY` environment variable in the workflow below with your repository's name.
-   Replace the value of the `AWS_REGION` environment variable in the workflow below with your repository's region.
+```yaml
+name: Build new image and deploy to AWS Elastic Beanstalk
 
-2. Create an ECS task definition, an ECS cluster, and an ECS service.
-   For example, follow the Getting Started guide on the ECS console:
-   https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun
-   Replace the value of the `ECS_SERVICE` environment variable in the workflow below with the name you set for the
-   AWS ECS service.
-   Replace the value of the `ECS_CLUSTER` environment variable in the workflow below with the name you set for the
-   cluster.
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
-3. Store your ECS task definition as a JSON file in your repository.
-   The format should follow the output of `aws ecs register-task-definition --generate-cli-skeleton`.
-   Replace the value of the `ECS_TASK_DEFINITION` environment variable in the workflow below with the path to the JSON
-   file.
-   Replace the value of the `CONTAINER_NAME` environment variable in the workflow below with the name of the container
-   in the `containerDefinitions` section of the task definition.
+permissions:
+  contents: read
 
-4. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-   See the documentation for each action used below for the recommended IAM policies for this IAM user,
-   and best practices on handling the access key credentials.
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
 
-Starter workflow outline
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-trigger and branches
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-permissions
 
-jobs and runner
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-steps
+      - name: Build, tag, and push image to AWS ECR
+        id: build-image
+        env:
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{  github.ref_name }}
+        run: |
+          # Build a docker container and push it to ECR so that it can be deployed to Elastic Beanstalk.
+          echo "image=$IMAGE_ADDR" >> $GITHUB_OUTPUT          
+          docker build -t django-docker:${{  github.ref_name }} .
+          docker tag django-docker:${{  github.ref_name }} $IMAGE_ADDR
+          docker push $IMAGE_ADDR
 
-name and uses
+      - name: Update Dockerrun
+        uses: actions/github-script@v7
+        id: update-dockerrun
+        env:
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{  github.ref_name }}
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json'
+              const fs = require('fs')
+              const jsonString = fs.readFileSync(fpath)
+              var apps = JSON.parse(jsonString)
+              console.log('Parsed JSON data:', apps)
+              apps["Image"]["Name"] = process.env.IMAGE_ADDR
+              console.log('Parsed JSON data:', apps);
+              fs.writeFileSync(fpath,JSON.stringify(apps))
+            } catch(err) {
+              core.error("Error while reading or parsing the JSON")
+              core.setFailed(err)
+            }
+
+      - name: AWS Elastic Beanstalk environment
+        id: eb-env
+        run: |
+          # Update  Dockerrun.aws.json
+          cd .housekeeping/elasticbeanstalk
+          zip -r ../${{github.ref_name}}.zip Dockerrun.aws.json
+          aws s3 cp "../${{github.ref_name}}.zip" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --version-label ${{github.sha}} --description ${{github.ref_name}} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/${{github.ref_name}}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{github.sha}}
+          aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
+```
+
+Let's go through it section by section
+
+#### on: action trigger
+
+The code below states that the action shall be executed when there is a push on the GitHub repo that has a tag matching
+the regular expression.
+
+```yaml
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+```
+
+To achieve that, it is necessary to issue
+
+```bash
+_$ git commit -m "This fixes the bug!"
+[cloud 7dfb8dd] This fixes the bug
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+_$ git tag "v1.0.19"
+_$ git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 445 bytes | 445.00 KiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/CCBDA-UPC/2024-6-xx.git
+```
+
+#### Action execution
+
+The action uses a `ubuntu` operating system environment that GitHub provides.
+
+```yaml
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+```
+
+#### Execution steps
+
+The first step is to pull the git repo into the above-mentioned server. You can find
+each [action description and code](https://github.com/actions/checkout) adding `https://github.com/` in front of
+`actions/checkout`.
+
+```yaml
+      - name: Checkout
+        uses: actions/checkout@v4
+```
+
+Next, it retrieves the credentials to interact with AWS. The 'secrets' are stored in the GitHub settings section of the
+repo https://github.com/CCBDA-UPC/2025-7-xx/settings: section 'Secrets and variables' -> 'Actions'.
+
+```yaml
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+```
+
+<img alt="Lab07-GitHub-secrets.png" src="images/Lab07-GitHub-secrets.png" width="60%"/>
+
+Once the credentials are set up in the environment it uses an AWS specific action to log into the AWS Elastic Container
+Repository.
+
+```yaml
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+```
+
+Since the code has changed and Docker images are immutable it is necessary to build a new one. The variable
+`github.ref_name` contains the value of the git tag: the version. The variable `steps.login-ecr.outputs.registry`
+contains the `<registry-id>.dkr.ecr.us-east-1.amazonaws.com` value and `secrets.ECR_REPOSITORY`, following the previous lab session, is instatiated to `django-webapp-docker-repo`.
+
+The Docker commands that you see are the ones that you manually issued in the previous lab session.
+
+```yaml
+      - name: Build, tag, and push image to AWS ECR
+        id: build-image
+        env:
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.ref_name }}
+        run: |
+          # Build a docker container and push it to ECR so that it can be deployed to Elastic Beanstalk.
+          echo "image=$IMAGE_ADDR" >> $GITHUB_OUTPUT          
+          docker build -t django-docker:${{ github.ref_name }} .
+          docker tag django-docker:${{  github.ref_name }} $IMAGE_ADDR
+          docker push $IMAGE_ADDR
+```
+
+The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file `.housekeeping/elasticbeanstalk/Dockerrun.aws.json`, parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu file system.
+
+```yaml
+      - name: Update Dockerrun
+        uses: actions/github-script@v7
+        id: update-dockerrun
+        env:
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.ref_name }}
+        with:
+          result-encoding: string
+          script: |
+            try {
+              const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json'
+              const fs = require('fs')
+              const jsonString = fs.readFileSync(fpath)
+              var apps = JSON.parse(jsonString)
+              console.log('Parsed JSON data:', apps)
+              apps["Image"]["Name"] = process.env.IMAGE_ADDR
+              console.log('Parsed JSON data:', apps);
+              fs.writeFileSync(fpath,JSON.stringify(apps))
+            } catch(err) {
+              core.error("Error while reading or parsing the JSON")
+              core.setFailed(err)
+            }
+```
+
+As you may remember the `eb create` command pushes to a specific AWS S3 bucket a zip containing the file `Dockerrun.aws.json`. The previous step updated its contents and this one zips the file and pushes it to the corresponding AWS S3 bucket.
+
+Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elasticbeanstalk environment which will host the recently created Docker image that it pulls from AWS ECR.
+
+```yaml
+      - name: AWS Elastic Beanstalk environment
+        id: eb-env
+        run: |
+          # Update  Dockerrun.aws.json
+          cd .housekeeping/elasticbeanstalk
+          zip -r ../${{github.ref_name}}.zip Dockerrun.aws.json
+          aws s3 cp "../${{github.ref_name}}.zip" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --version-label ${{github.sha}} --description ${{github.ref_name}} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/${{github.ref_name}}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{github.sha}}
+          aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
+```
+
+### Install and execute
+
+As soon as you have `.github/workflows/aws.yml` pushed to the repo as indicated above, go to the GitHub repo and click on the `Actions` tab.
+
+<img alt="Lab07-GitHub-action.png" src="images/Lab07-GitHub-action.png" width="60%"/>
+
+Click on the different boxes until you reach the listing of all the steps and the log output of each and every operation.
+
+<img alt="Lab07-GitHub-log.png" src="images/Lab07-GitHub-log.png" width="60%"/>
+
+**Q7.1 Have you been able to execute the action? Share your thoughts.**
+
+## How to submit this assignment:
+
+Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the
+files generated during this session.
+
+Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-7-xx
+repository.
+
+Add all the web application files to your repository and comment what you think is relevant in your session's
+*README.md*.
+
+
+
