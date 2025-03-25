@@ -206,7 +206,7 @@ To https://github.com/CCBDA-UPC/2024-6-xx.git
 
 #### Action execution
 
-The action uses a `ubuntu` operating system environment that GitHub provides.
+The action uses a `ubuntu` operating system environment that GitHub provides. Such environment has a clean file system with some utilities pre-installed.
 
 ```yaml
 permissions:
