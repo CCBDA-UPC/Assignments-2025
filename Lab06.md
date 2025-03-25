@@ -676,15 +676,16 @@ To centralize the logs of your application instances, you can use a cloud-based 
 
 ### Log management in Django 
 
-The [Django framework utilizes and extends Python's built-in logging module](https://docs.djangoproject.com/en/5.1/topics/logging/) to handle system logging. The code below needs to be included into the `settings.py` file.
+The [Django framework utilizes and extends Python's built-in logging module](https://docs.djangoproject.com/en/5.1/topics/logging/) to handle system logging. 
 
-It defines two formats for the log lines named verbose and simple, as shown below. In the verbose log format we include the instance name and the module, file and line that outputs the message.
+The code below needs to be included into the `settings.py` file. It defines two formats for the log lines named verbose and simple, as shown below. In the verbose log format we include the instance name and the module, file and line that outputs the message.
 
 ```text
 2025-03-21 19:42:31,740 ERROR [localhost] [home:views:9] This is an error log message
 2025-03-21 19:42:31,741 INFO [localhost] [home:views:10] This is an information log message
 2025-03-21 19:42:31,741 WARNING [localhost] [home:views:10] This is a warning log message
 ```
+
 ```text
 2025-03-21 19:42:31,740 ERROR This is an error log message
 2025-03-21 19:42:31,741 INFO This is an information log message
@@ -752,29 +753,21 @@ See the different variables that can be used in the log formatting.
 ```python
 # Fetch specific metadata fields
 #     %(name)s            Name of the logger (logging channel)
-#     %(levelno)s         Numeric logging level for the message (DEBUG, INFO,
-#                         WARNING, ERROR, CRITICAL)
-#     %(levelname)s       Text logging level for the message ("DEBUG", "INFO",
-#                         "WARNING", "ERROR", "CRITICAL")
-#     %(pathname)s        Full pathname of the source file where the logging
-#                         call was issued (if available)
+#     %(levelno)s         Numeric logging level for the message (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+#     %(levelname)s       Text logging level for the message ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")
+#     %(pathname)s        Full pathname of the source file where the logging call was issued (if available)
 #     %(filename)s        Filename portion of pathname
 #     %(module)s          Module (name portion of filename)
-#     %(lineno)d          Source line number where the logging call was issued
-#                         (if available)
+#     %(lineno)d          Source line number where the logging call was issued (if available)
 #     %(funcName)s        Function name
-#     %(created)f         Time when the LogRecord was created (time.time()
-#                         return value)
+#     %(created)f         Time when the LogRecord was created (time.time() return value)
 #     %(asctime)s         Textual time when the LogRecord was created
 #     %(msecs)d           Millisecond portion of the creation time
-#     %(relativeCreated)d Time in milliseconds when the LogRecord was created,
-#                         relative to the time the logging module was loaded
-#                         (typically at application startup time)
+#     %(relativeCreated)d Time in milliseconds when the LogRecord was created, relative to the time the logging module was loaded (typically at application startup time)
 #     %(thread)d          Thread ID (if available)
 #     %(threadName)s      Thread name (if available)
 #     %(process)d         Process ID (if available)
-#     %(message)s         The result of record.getMessage(), computed just as
-#                         the record is emitted
+#     %(message)s         The result of record.getMessage(), computed just as the record is emitted
 ```
 You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish who is producing every log line, as well as when. We can use the function `get_metadata()` to obtain the EC2 instance ID.
 
