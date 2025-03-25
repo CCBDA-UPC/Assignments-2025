@@ -769,7 +769,7 @@ See the different variables that can be used in the log formatting.
 #     %(process)d         Process ID (if available)
 #     %(message)s         The result of record.getMessage(), computed just as the record is emitted
 ```
-You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish who is producing every log line, as well as when. We can use the function `get_metadata()` to obtain the EC2 instance ID.
+You have probably noticed the variable named `AWS_EC2_INSTANCE_ID` that is used inside the log formatting. It will contain the AWS EC2 instance number that is used to run the code. To be able to analyze what is happening, it is very important to distinguish what instance is producing every log line, as well as when. We can use the function `get_metadata()` to obtain the EC2 instance ID.
 
 In the handlers section we have three outputs for the messages: console, file and s3. We not only define the log file path but also the maximum number or bytes before the [file is rotated](https://en.wikipedia.org/wiki/Log_rotation).
 
