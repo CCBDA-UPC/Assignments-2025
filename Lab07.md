@@ -287,7 +287,8 @@ The Docker commands that you see are the ones that you manually issued in the pr
           docker push $IMAGE_ADDR
 ```
 
-The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file `.housekeeping/elasticbeanstalk/Dockerrun.aws.json`, parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu file system.
+The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file `.housekeeping/elasticbeanstalk/Dockerrun.aws.json`, 
+parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu file system.
 
 ```yaml
       - name: Update Dockerrun
