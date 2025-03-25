@@ -1,10 +1,6 @@
 # Lab Session 7: Continuous Integration, Continuous Delivery, and Observability
 
-This lab session focuses on three critical areas in modern software development:
-
-- **Continuous Integration (CI)**
-- **Continuous Delivery (CD)**
-- **Observability**
+This lab session focuses on three critical areas in modern software development: **Continuous Integration (CI)**, **Continuous Delivery (CD)**, **Observability**
 
 ### Continuous Integration (CI)
 
