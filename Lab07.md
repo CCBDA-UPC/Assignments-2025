@@ -89,8 +89,6 @@ jobs:
 
 ### Example GitHub Actions workflow 
 
-To create the workflow, add to your responses repo the file `.github/workflows/aws.yml`.
-
 The proposed workflow builds and pushes a new container image to AWS ECR,
 and then deploys a new environment definition to AWS Elastic Beanstalk, when there is a push to the "main" branch, and
 it is tagged with a version number such as `v1.3.4`.
@@ -319,6 +317,8 @@ Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elas
 ```
 
 ### Install and execute
+
+To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow listed above.
 
 As soon as you have `.github/workflows/aws.yml` pushed to the repo as indicated above, go to the GitHub repo and click on the `Actions` tab.
 
