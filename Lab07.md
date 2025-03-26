@@ -151,9 +151,7 @@ jobs:
               const fs = require('fs')
               const jsonString = fs.readFileSync(fpath)
               var apps = JSON.parse(jsonString)
-              console.log('Parsed JSON data:', apps)
               apps["Image"]["Name"] = process.env.IMAGE_ADDR
-              console.log('Parsed JSON data:', apps);
               fs.writeFileSync(fpath,JSON.stringify(apps))
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
@@ -172,7 +170,7 @@ jobs:
           aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
 ```
 
-Let's go through it section by section
+Let's go through it section by section.
 
 #### on: action trigger
 
@@ -304,9 +302,7 @@ parsing the JSON contents, replacing it with a URL that refers to the previously
               const fs = require('fs')
               const jsonString = fs.readFileSync(fpath)
               var apps = JSON.parse(jsonString)
-              console.log('Parsed JSON data:', apps)
               apps["Image"]["Name"] = process.env.IMAGE_ADDR
-              console.log('Parsed JSON data:', apps);
               fs.writeFileSync(fpath,JSON.stringify(apps))
             } catch(err) {
               core.error("Error while reading or parsing the JSON")
@@ -339,7 +335,7 @@ As well as the AWS Elasticbeanstalk application versions. In case of emergency w
 <img alt="Lab07-Elasticbeanstalk-versions.png" src="images/Lab07-Elasticbeanstalk-versions.png" width="50%"/>
 
 
-### Install and execute
+### Install and run
 
 **IMPORTANT**: You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab session. The above explained action assumes that the web application is sucessfully executing.
 
@@ -351,13 +347,18 @@ As soon as you have `.github/workflows/aws.yml` pushed to the repo as indicated 
 
 <img alt="Lab07-GitHub-action.png" src="images/Lab07-GitHub-action.png" width="60%"/>
 
-Click on the different boxes until you reach the listing of all the steps and the log output of each and every operation.
+Click on the different execution boxes until you reach the listing of all the steps and the log output of each and every operation.
 
 <img alt="Lab07-GitHub-log.png" src="images/Lab07-GitHub-log.png" width="60%"/>
 
-In parallel, go to the AWS console and select the AWS Elasticbeanstalk environment to witness what happens.
+In parallel, go to the AWS console and open two tabs to witness what happens:
+- AWS Elasticbeanstalk environment.
+- AWS EC2 instances
 
-**Q7.12 Have you been able to execute the action? Share your thoughts.**
+**Q7.12 Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc. Anything that you consider meaningful and provide your explanation and thoughts.**
+
+
+**Q7.13 Have you been able to execute the action? Share your thoughts about the complete action.**
 
 ### Yet a new administrative script
 
