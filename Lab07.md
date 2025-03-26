@@ -288,7 +288,7 @@ The Docker commands that you see are the ones that you manually issued in the pr
 ```
 
 The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file `.housekeeping/elasticbeanstalk/Dockerrun.aws.json`, 
-parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu file system.
+parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu server's file system.
 
 ```yaml
       - name: Update Dockerrun
@@ -314,7 +314,7 @@ parsing the JSON contents, replacing it with a URL that refers to the previously
             }
 ```
 
-As you may remember the `eb create` command pushes to a specific AWS S3 bucket a zip containing the file `Dockerrun.aws.json`. The previous step updated its contents and this one zips the file and pushes it to the corresponding AWS S3 bucket.
+As you may remember the `eb create` command pushes a zip containing the file `Dockerrun.aws.json` to a specific AWS S3 bucket. The previous step updated the file contents and this one zips it and pushes it to the corresponding AWS S3 bucket.
 
 Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elasticbeanstalk environment which will host the recently created Docker image that it pulls from AWS ECR.
 
@@ -330,6 +330,14 @@ Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elas
           aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{github.sha}}
           aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
 ```
+See that AWS ECR is storing different Docker images labeled with it's version ID.
+
+<img alt="Lab07-ECR-versions.png" src="images/Lab07-ECR-versions.png" width="60%"/>
+
+As well as the AWS Elasticbeanstalk application versions. In case of emergency we could always manually recover a previous version.
+
+<img alt="Lab07-Elasticbeanstalk-versions.png" src="images/Lab07-Elasticbeanstalk-versions.png" width="50%"/>
+
 
 ### Install and execute
 
