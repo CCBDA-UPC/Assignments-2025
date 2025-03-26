@@ -440,6 +440,15 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
 
 **Q7.13 What does the above script do and how can you use it?**
 
+
+
+Q74: Assess the current version of the web application against each of the twelve factor application.
+
+Q75: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
+
+
+
+
 ## How to submit this assignment:
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the
