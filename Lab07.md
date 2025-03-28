@@ -2,6 +2,8 @@
 
 This lab session focuses on three critical areas in modern software development: **Continuous Integration (CI)**, **Continuous Delivery (CD)**, **Observability**
 
+Download a new zip file of the web application code using the branch named `observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability). It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
+
 ### Continuous Integration (CI)
 
 **Continuous Integration (CI)** is a software development practice where code changes are frequently merged into a
