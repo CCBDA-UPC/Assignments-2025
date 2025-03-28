@@ -341,6 +341,17 @@ As well as the AWS Elasticbeanstalk application versions. In case of emergency w
 
 **IMPORTANT**: You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab session. The above explained action assumes that the web application is sucessfully executing.
 
+The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can execute the code in your laptop and type: 
+
+```bash
+_$ cp productin.env .env
+_$ python manage.py makemigrations
+Operations to perform:
+  Apply all migrations: form
+Running migrations:
+  Applying form.0001_initial... OK
+```
+
 **Q7.11: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up and running.**
 
 To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow listed above.
