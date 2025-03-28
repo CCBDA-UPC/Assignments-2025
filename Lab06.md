@@ -1072,8 +1072,7 @@ def get_leads(self, domain, preview):
     return None
 ```
 
-A final step is to move the file *extra-file/search.html* to *form/templates/search.html*. That file receives the data
-from the view controller and creates the HTML to show the results.
+*form/templates/search.html* receives the data from the view controller and creates the HTML to show the results.
 
 Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8080/search*
 in your browser.
