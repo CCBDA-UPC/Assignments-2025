@@ -434,7 +434,8 @@ def get_metadata(path=''):
     
 ...
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(':')
-ALLOWED_HOSTS.append(get_metadata('local-ipv4'))
+ALLOWED_HOSTS.append(get_metadata('local-ipv4','127.0.0.1'))
+ALLOWED_HOSTS = list(set(ALLOWED_HOSTS))
 ...
 ```
 
