@@ -629,6 +629,70 @@ To visit the web application using your browser type:
 _$ eb open
 ```
 
+Probably you'll see that the application is not yet working correctly. You can check the AWS Elasticbeanstalk console and see that the web application environment is not healthy.
+
+<img alt="Lab06-unhealthy.png" src="images/Lab06-unhealthy.png" width="50%"/>
+
+Connect to the running EC2 instance by using `eb ssh`. You shall then be connected to the EC2 instance using the user **ec2-user** as shown in the prompt  `[ec2-user@ip-172-31-9-174 ~]$`. To issue docker commands you need to connect as **root** and that is what `sudo bash` does, and you'll see it reflected in the prompt `[root@ip-172-31-9-174 ec2-user]`. 
+
+The command `docker ps` shows the Docker containers currently working in that AWS EC2 instance. We want to verify that the container can connect to the PostGreSQL database engine and we type `docker exec -t <CONTAINER-NAME> python manage.py dbshell` which shall respond with a database prompt `ccbdadb=>`. For the moment it takes a few minutes, when it shall be almost immediate, and returns an error: *Is the server running on that host and accepting TCP/IP connections?*
+
+```bash
+_$ cd .housekeeping/elasticbeanstalk
+_$ eb ssh
+INFO: Running ssh -i /Users/angeltoribio/.ssh/aws-eb -o IdentitiesOnly yes ec2-user@44.193.0.196
+  _____ _           _   _      ____                       _        _ _
+ | ____| | __   ___| |_(_) ___| __ )  ___  __ _ _ __  ___| |_ __ _| | | __
+ |  _| | |/ _ \/ __| __| |/ __|  _ \ / _ \/ _\ | '_ \/ __| __/ _\ | | |/ /
+ | |___| | (_| \__ \ |_| | (__| |_) |  __/ (_| | | | \__ \ || (_| | |   <
+ |_____|_|\__,_|___/\__|_|\___|____/ \___|\__,_|_| |_|___/\__\__,_|_|_|\_\
+
+ Amazon Linux 2023 AMI
+
+ This EC2 instance is managed by AWS Elastic Beanstalk. Changes made via SSH
+ WILL BE LOST if the instance is replaced by auto-scaling. For more information
+ on customizing your Elastic Beanstalk environment, see our documentation here:
+ http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html
+
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+Last login: Sun Mar 30 10:10:33 2025 from 91.126.28.15
+[ec2-user@ip-172-31-9-174 ~]$ sudo bash
+[root@ip-172-31-9-174 ec2-user]# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS      NAMES
+3a8f275f4f77   2a4a23d3dfbb   "gunicorn --bind 0.0…"   25 minutes ago   Up 25 minutes   8000/tcp   blissful_wu
+[root@ip-172-31-9-174 ec2-user]# docker exec -t blissful_wu python manage.py dbshell
+psql: error: connection to server at "database-lab2.cgvoapyzsbak.us-east-1.rds.amazonaws.com" (172.31.69.44), port 5432 failed: Connection timed out
+        Is the server running on that host and accepting TCP/IP connections?
+CommandError: "psql -U ccbdauser -h database-lab2.cgvoapyzsbak.us-east-1.rds.amazonaws.com -p 5432 ccbdadb" returned non-zero exit status 2.
+```
+
+A connectivity problem seems to be happening. Both AWS RDS and AWS Elasticbeanstalk use class B private IP address inside the only VPC that we have. If you check again the AWS RDS security group, it only allows traffic inside its security group. We have then two options:
+
+- include the Elasticbeanstalk environment into the same AWS RDS instance security group
+- add a new rule, as we did before to grant access to the laptop. This time the rule shall allow traffic from the 172.16.0.0/12 CIDR.
+
+The second option is easier to apply. Once it's applied, the connection between the AWS EC2 instance and the AWS RDS engine will be possible and the web application will work correctly.
+
+```bash
+[root@ip-172-31-9-174 ec2-user]# docker exec -t blissful_wu python manage.py dbshell
+psql (15.12 (Debian 15.12-0+deb12u2), server 17.2)
+WARNING: psql major version 15, server major version 17.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, compression: off)
+Type "help" for help.
+
+ccbdadb=> 
+```
+
 Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
 **Q631. What have you found on the zip file? Why do you think it is like that?.**
