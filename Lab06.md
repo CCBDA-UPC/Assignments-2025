@@ -472,7 +472,12 @@ Select a platform branch.
 (default is 1): 1
 Do you wish to continue with CodeCommit? (y/N): n
 Do you want to set up SSH for your instances?
-(Y/n): n
+(Y/n): y
+
+Select a keypair.
+1) aws-eb
+2) [ Create new KeyPair ]
+(default is 1): 1
 ```
 
 The command `eb init` creates a configuration file at `.housekeeping/elasticbeanstalk/.elasticbeanstalk/config.yml`. You can edit it if necessary.
@@ -484,7 +489,7 @@ branch-defaults:
 global:
   application_name: django-webapp-eb
   branch: null
-  default_ec2_keyname: null
+  default_ec2_keyname: aws-eb
   default_platform: Docker running on 64bit Amazon Linux 2023
   default_region: us-east-1
   include_git_submodules: true
