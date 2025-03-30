@@ -515,15 +515,13 @@ ebOptions = {
     'service-role': 'LabRole',
     'elb-type': 'application',
     'instance-types':'t2.nano',
-    'keyname': 'aws-eb'
 }
 
 try:
     CONFIGURATION_FILE = sys.argv[1]
     HOSTNAME = sys.argv[2]
-    SECURITY_GROUP = sys.argv[3]
 except:
-    print('ERROR: filename missing\npython ebcreate.py filename hostname securitygroup')
+    print('ERROR: filename missing\npython ebcreate.py filename hostname')
     exit()
 config = dotenv_values(CONFIGURATION_FILE)
 
@@ -538,7 +536,7 @@ for k, v in config.items():
     opt.append(f'{k}={v}')
 ebOptions['cname'] = HOSTNAME
 ebOptions['envvars'] = '"%s"' % ','.join(opt)
-ebOptions['vpc.securitygroups'] = SECURITY_GROUP
+
 
 opt = []
 for k, v in ebOptions.items():
@@ -893,10 +891,9 @@ class S3RotatingFileHandler(logging.handlers.RotatingFileHandler):
 
             if os.path.exists(source):
                 os.rename(source, dest)
-            with open(dest, "rb") as f:
-                self.s3_client.upload_fileobj(f, self.bucket_name, s3_key)
+                if os.stat(dest).st_size > 0:
+                    self.s3_client.upload_file(dest, self.bucket_name, s3_key)
             os.remove(dest)
-
 
     def emit(self, record):
         try:
@@ -1201,6 +1198,5 @@ Make sure that you have updated your local GitHub repository (using the git comm
 Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-6-xx repository.
 
 Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
-
 
 
