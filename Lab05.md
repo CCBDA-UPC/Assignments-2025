@@ -214,15 +214,15 @@ Inside of the django-webapp folder, create a `.env` file with the configuration 
 
 ```bash
 _$ cat .env
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
+DJANGO_DEBUG="True"
+DJANGO_ALLOWED_HOSTS="localhost:127.0.0.1:0.0.0.0:172.*.*.*"
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
-DJANGO_LOGLEVEL=info
-CCBDA_SIGNUP_TABLE=ccbda-signup-table
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
+DJANGO_LOGLEVEL="INFO"
+CCBDA_SIGNUP_TABLE="ccbda-signup-table"
+AWS_REGION="us-east-1"
+AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
 ```
 
 Open the .gitignore file and check that it contains rules to avoid pushing to the repository files such as `.env`
@@ -343,7 +343,7 @@ Add the *unique identifier* for the AWS SNS topic to the configuration environme
 be instantiated in the  `settings.py` and `.env` files.
 
 ```bash
-NEW_SIGNUP_TOPIC=arn:aws:sns:us-east-1:<YOUR-ACCOUNT-ID>:ccbda-signup-notifications
+NEW_SIGNUP_TOPIC="arn:aws:sns:us-east-1:<YOUR-ACCOUNT-ID>:ccbda-signup-notifications"
 ```
 
 Open the files *form/models.py* and *form/views.py* read and understand what the code does.
@@ -791,21 +791,21 @@ PostGreSQL database.
 
 ```bash
 _$ cat production.env
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost:127.0.0.1:0.0.0.0:172.*.*.*
+DJANGO_DEBUG="False"
+DJANGO_ALLOWED_HOSTS="localhost:127.0.0.1:0.0.0.0:172.*.*.*"
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
-DJANGO_LOGLEVEL=info
-CCBDA_SIGNUP_TABLE=ccbda-signup-table
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
-DB_NAME=ccbdadb
-DB_USER=ccbdauser
-DB_PASSWORD=ccbdapassword
-DB_PORT=5432
-DB_HOST=db
-DATABASE=postgresql
+DJANGO_LOGLEVEL="INFO"
+CCBDA_SIGNUP_TABLE="ccbda-signup-table"
+AWS_REGION="us-east-1"
+AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
+DB_NAME="ccbdadb"
+DB_USER="ccbdauser"
+DB_PASSWORD="ccbdapassword"
+DB_PORT="5432"
+DB_HOST="db"
+DATABASE="postgresql"
 ```
 
 We need to add a new file named `.dockerignore`, similar to `.gitignore`, where we configure what files and folders

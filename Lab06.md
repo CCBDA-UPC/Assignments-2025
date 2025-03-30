@@ -145,22 +145,22 @@ REPOSITORY                                                               TAG    
 django-docker                                                            latest    d8bc6a1aed71   20 minutes ago   476MB
 django-docker                                                            v1.0.0    0a325b16e03d   20 minutes ago   476MB
 _$ cat aws.env
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost
-DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
-DJANGO_LOGLEVEL=info
-CCBDA_SIGNUP_TABLE=ccbda-signup-table
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-ACCESS-KEY-ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-SECRET-ACCESS-KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS-SESSION-TOKEN>
-DB_NAME=ccbdadb
-DB_USER=ccbdauser
-DB_PASSWORD=ccbdapassword
-DB_PORT=5432
-DB_HOST=database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com
-DATABASE=postgresql
-PGPASSWORD=MyP4ssW0rd!
+DJANGO_DEBUG="False"
+DJANGO_ALLOWED_HOSTS="0.0.0.0:127.0.0.1:localhost"
+DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
+DJANGO_LOGLEVEL="INFO"
+CCBDA_SIGNUP_TABLE="ccbda-signup-table"
+AWS_REGION="us-east-1"
+AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
+DB_NAME="ccbdadb"
+DB_USER="ccbdauser"
+DB_PASSWORD="ccbdapassword"
+DB_PORT="5432"
+DB_HOST="database-lab.cgvoapyzsbak.us-east-1.rds.amazonaws.com"
+DATABASE="postgresql"
+PGPASSWORD="MyP4ssW0rd!"
 ```
 
 **QS612: Using the above configuration file, what steps will you follow to have the web application running in your local Docker use the AWS RDS database engine?**
