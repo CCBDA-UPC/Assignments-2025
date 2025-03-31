@@ -1,8 +1,11 @@
 # Lab Session 7: Continuous Integration, Continuous Delivery, and Observability
 
-This lab session focuses on three critical areas in modern software development: **Continuous Integration (CI)**, **Continuous Delivery (CD)**, **Observability**
+This lab session focuses on three critical areas in modern software development: **Continuous Integration (CI)**, *
+*Continuous Delivery (CD)**, **Observability**
 
-Download a new zip file of the web application code using the branch named `observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability). It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
+Download a new zip file of the web application code using the branch named
+`observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability).
+It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
 
 ### Continuous Integration (CI)
 
@@ -49,10 +52,22 @@ and traces). It helps teams monitor and debug production systems effectively.
 - **Elasticsearch, Logstash, and Kibana (ELK)**: A set of tools for searching, analyzing, and visualizing log data.
 - **Datadog**: A SaaS-based monitoring service that provides full observability.
 
+
 #### Visualizing Logs with ELK:
 
 - **Elasticsearch** stores logs and allows you to query and analyze them.
 - **Kibana** is a web interface to visualize and analyze log data stored in Elasticsearch.
+
+### Web application improvements
+
+In addition to analyzing web application logs to detect errors, the core functionality of the web application can be expanded to engage users more effectively. Once a user enters their name and email address into the form, the website will dynamically generate and display a curated list of articles sourced from various reputable Cloud Computing news websites via [RSS feeds](https://en.wikipedia.org/wiki/RSS). This content will serve as an engaging way to spark further interest in the course and keep the user updated with the latest trends in the field.
+
+Moreover, the web application will be able to track user interactions and behaviors, gathering valuable insights to optimize and improve the website's user experience. These insights could be used to refine content delivery, enhance user engagement, and tailor recommendations to each individual user based on their activity.
+
+
+
+<img alt="Lab07-homepage-feed.png" src="images/Lab07-homepage-feed.png" width="50%"/>
+
 
 # Tasks for Lab session #7
 
@@ -89,7 +104,7 @@ jobs:
     steps:
 ```
 
-### Example GitHub Actions workflow 
+### Example GitHub Actions workflow
 
 The proposed workflow builds and pushes a new container image to AWS ECR,
 and then deploys a new environment definition to AWS Elastic Beanstalk, when there is a push to the "main" branch, and
@@ -206,7 +221,8 @@ To https://github.com/CCBDA-UPC/2024-6-xx.git
 
 #### Action execution
 
-The action uses a `ubuntu` operating system environment that GitHub provides. Such environment has a clean file system with some utilities pre-installed.
+The action uses a `ubuntu` operating system environment that GitHub provides. Such environment has a clean file system
+with some utilities pre-installed.
 
 ```yaml
 permissions:
@@ -248,15 +264,15 @@ repo https://github.com/CCBDA-UPC/2025-7-xx/settings: section 'Secrets and varia
 Fill the GitHub secrets value corresponding to the previous lab session.
 
 ```python
-AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=<YOUR-AWS_ACCESS_KEY_ID>
-AWS_ACCOUNT_ID=<YOUR-AWS_ACCOUNT_ID>
-AWS_SECRET_ACCESS_KEY=<YOUR-AWS_SECRET_ACCESS_KEY>
-AWS_SESSION_TOKEN=<YOUR-AWS_SESSION_TOKEN>
-CONTAINER_NAME=django-webapp
-ECR_REPOSITORY=django-webapp-docker-repo
-ELASTIC_BEANSTALK_APP_NAME=django-webapp-eb
-ELASTIC_BEANSTALK_ENV_NAME=team99
+AWS_REGION = us - east - 1
+AWS_ACCESS_KEY_ID = < YOUR - AWS_ACCESS_KEY_ID >
+AWS_ACCOUNT_ID = < YOUR - AWS_ACCOUNT_ID >
+AWS_SECRET_ACCESS_KEY = < YOUR - AWS_SECRET_ACCESS_KEY >
+AWS_SESSION_TOKEN = < YOUR - AWS_SESSION_TOKEN >
+CONTAINER_NAME = django - webapp
+ECR_REPOSITORY = django - webapp - docker - repo
+ELASTIC_BEANSTALK_APP_NAME = django - webapp - eb
+ELASTIC_BEANSTALK_ENV_NAME = team99
 ```
 
 Once the credentials are set up in the environment it uses an AWS specific action to log into the AWS Elastic Container
@@ -270,7 +286,8 @@ Repository.
 
 Since the code has changed and Docker images are immutable it is necessary to build a new one. The variable
 `github.ref_name` contains the value of the git tag: the version. The variable `steps.login-ecr.outputs.registry`
-contains the `<registry-id>.dkr.ecr.us-east-1.amazonaws.com` value and `secrets.ECR_REPOSITORY`, following the previous lab session, is instatiated to `django-webapp-docker-repo`.
+contains the `<registry-id>.dkr.ecr.us-east-1.amazonaws.com` value and `secrets.ECR_REPOSITORY`, following the previous
+lab session, is instatiated to `django-webapp-docker-repo`.
 
 The Docker commands that you see are the ones that you manually issued in the previous lab session.
 
@@ -287,8 +304,10 @@ The Docker commands that you see are the ones that you manually issued in the pr
           docker push $IMAGE_ADDR
 ```
 
-The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file `.housekeeping/elasticbeanstalk/Dockerrun.aws.json`, 
-parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally writing the new content in the ubuntu server's file system.
+The step below is programmed in [Node.js](https://nodejs.org/en), and reads the file
+`.housekeeping/elasticbeanstalk/Dockerrun.aws.json`,
+parsing the JSON contents, replacing it with a URL that refers to the previously pushed Docker image, and finally
+writing the new content in the ubuntu server's file system.
 
 ```yaml
       - name: Update Dockerrun
@@ -312,9 +331,12 @@ parsing the JSON contents, replacing it with a URL that refers to the previously
             }
 ```
 
-As you may remember the `eb create` command pushes a zip containing the file `Dockerrun.aws.json` to a specific AWS S3 bucket. The previous step updated the file contents and this one zips it and pushes it to the corresponding AWS S3 bucket.
+As you may remember the `eb create` command pushes a zip containing the file `Dockerrun.aws.json` to a specific AWS S3
+bucket. The previous step updated the file contents and this one zips it and pushes it to the corresponding AWS S3
+bucket.
 
-Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elasticbeanstalk environment which will host the recently created Docker image that it pulls from AWS ECR.
+Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elasticbeanstalk environment which will host
+the recently created Docker image that it pulls from AWS ECR.
 
 ```yaml
       - name: AWS Elastic Beanstalk environment
@@ -328,20 +350,23 @@ Everything is ready to create a new AWS Elasticbeanstalk version in the AWS Elas
           aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{github.sha}}
           aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
 ```
+
 See that AWS ECR is storing different Docker images labeled with it's version ID.
 
 <img alt="Lab07-ECR-versions.png" src="images/Lab07-ECR-versions.png" width="60%"/>
 
-As well as the AWS Elasticbeanstalk application versions. In case of emergency we could always manually recover a previous version.
+As well as the AWS Elasticbeanstalk application versions. In case of emergency we could always manually recover a
+previous version.
 
 <img alt="Lab07-Elasticbeanstalk-versions.png" src="images/Lab07-Elasticbeanstalk-versions.png" width="50%"/>
 
-
 ### Install and run
 
-**IMPORTANT**: You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab session. The above explained action assumes that the web application is sucessfully executing.
+**IMPORTANT**: You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab
+session. The above explained action assumes that the web application is sucessfully executing.
 
-The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can execute the code in your laptop and type: 
+The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can
+execute the code in your laptop and type:
 
 ```bash
 _$ cp production.env .env
@@ -352,24 +377,29 @@ Running migrations:
   Applying form.0001_initial... OK
 ```
 
-**Q7.11: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up and running.**
+**Q7.11: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up
+and running.**
 
-To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow listed above.
+To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow
+listed above.
 
-As soon as you have `.github/workflows/aws.yml` pushed to the repo as indicated above, go to the GitHub repo and click on the `Actions` tab.
+As soon as you have `.github/workflows/aws.yml` pushed to the repo as indicated above, go to the GitHub repo and click
+on the `Actions` tab.
 
 <img alt="Lab07-GitHub-action.png" src="images/Lab07-GitHub-action.png" width="60%"/>
 
-Click on the different execution boxes until you reach the listing of all the steps and the log output of each and every operation.
+Click on the different execution boxes until you reach the listing of all the steps and the log output of each and every
+operation.
 
 <img alt="Lab07-GitHub-log.png" src="images/Lab07-GitHub-log.png" width="60%"/>
 
 In parallel, go to the AWS console and open two tabs to witness what happens:
+
 - AWS Elasticbeanstalk environment.
 - AWS EC2 instances
 
-**Q7.12 Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc. Anything that you consider meaningful and provide your explanation and thoughts.**
-
+**Q7.12 Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc.
+Anything that you consider meaningful and provide your explanation and thoughts.**
 
 **Q7.13 Have you been able to execute the action? Share your thoughts about the complete action.**
 
@@ -384,7 +414,6 @@ import sys
 from dotenv import dotenv_values
 import boto3
 from git import Repo
-
 
 trans = {
     'access_key': 'AWS_ACCESS_KEY_ID',
@@ -408,7 +437,7 @@ except:
 
 repo = Repo('.')
 
-github_repo = repo.config_reader().get('remote "origin"','url').replace('.git','').replace('https://github.com/','')
+github_repo = repo.config_reader().get('remote "origin"', 'url').replace('.git', '').replace('https://github.com/', '')
 
 print(f'Updating secrets for repo "{github_repo}"')
 
@@ -466,35 +495,47 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
 
 ### **Observability Using Elasticsearch and Kibana**
 
-Observability is a crucial aspect of modern software systems, allowing developers and operations teams to monitor the system’s performance, troubleshoot issues, and ensure that the application is running as expected. **Elasticsearch** and **Kibana** are popular tools used for observability, specifically for logging and monitoring.
+Observability is a crucial aspect of modern software systems, allowing developers and operations teams to monitor the
+system’s performance, troubleshoot issues, and ensure that the application is running as expected. **Elasticsearch** and
+**Kibana** are popular tools used for observability, specifically for logging and monitoring.
 
-In this section, we'll explore how to set up and use **Elasticsearch** and **Kibana** to gain insights into logs and other telemetry data generated by your application. 
+In this section, we'll explore how to set up and use **Elasticsearch** and **Kibana** to gain insights into logs and
+other telemetry data generated by your application.
 
 ### **Key Concepts:**
 
-1. **Elasticsearch**: A distributed search and analytics engine commonly used for storing, searching, and analyzing log and event data. It allows you to store log data efficiently and query it in real-time.
-2. **Kibana**: A visualization and exploration tool used to interact with data stored in Elasticsearch. It provides an easy-to-use interface for creating dashboards, visualizing metrics, and analyzing logs.
+1. **Elasticsearch**: A distributed search and analytics engine commonly used for storing, searching, and analyzing log
+   and event data. It allows you to store log data efficiently and query it in real-time.
+2. **Kibana**: A visualization and exploration tool used to interact with data stored in Elasticsearch. It provides an
+   easy-to-use interface for creating dashboards, visualizing metrics, and analyzing logs.
 
-Together, **Elasticsearch** and **Kibana** form the **ELK Stack** (Elasticsearch, Logstash, and Kibana), commonly used for log aggregation, analysis, and visualization.
+Together, **Elasticsearch** and **Kibana** form the **ELK Stack** (Elasticsearch, Logstash, and Kibana), commonly used
+for log aggregation, analysis, and visualization.
 
 ### Setting Up Elasticsearch and Kibana**
 
-First, you'll need to have **Elasticsearch** and **Kibana** available. You can either use the official Docker images, install them natively in your laptop or server, use the [AWS OpenSearch](https://aws.amazon.com/opensearch-service/) service, or request a [2 week trial](https://cloud.elastic.co/registration).
+First, you'll need to have **Elasticsearch** and **Kibana** available. You can either use the official Docker images,
+install them natively in your laptop or server, use the [AWS OpenSearch](https://aws.amazon.com/opensearch-service/)
+service, or request a [2 week trial](https://cloud.elastic.co/registration).
 
 ### Sending Logs to Elasticsearch**
 
-Once Elasticsearch and Kibana are running, the next step is to configure your application to send logs to **Elasticsearch**.
+Once Elasticsearch and Kibana are running, the next step is to configure your application to send logs to *
+*Elasticsearch**.
 
 #### Example Python Application Logging to Elasticsearch
 
-You can use **`elasticsearch-py`** to send logs from a Python application to Elasticsearch. Here's a basic example using Python's **logging** module.
+You can use **`elasticsearch-py`** to send logs from a Python application to Elasticsearch. Here's a basic example using
+Python's **logging** module.
 
 ##### Install Required Libraries:
+
 ```bash
 pip install elasticsearch logging
 ```
 
 ##### Python Code to Send Logs to Elasticsearch:
+
 ```python
 import logging
 from elasticsearch import Elasticsearch
@@ -503,6 +544,7 @@ import json
 
 # Create an Elasticsearch client
 es = Elasticsearch(["http://localhost:9200"])
+
 
 class ElasticsearchHandler(handlers.BufferingHandler):
     def __init__(self, es_client, index="logs"):
@@ -514,6 +556,7 @@ class ElasticsearchHandler(handlers.BufferingHandler):
         log_entry = self.format(record)
         # Send the log entry to Elasticsearch
         self.es_client.index(index=self.index, document=json.loads(log_entry))
+
 
 # Set up logging
 logger = logging.getLogger("my_logger")
@@ -533,12 +576,15 @@ logger.error("This is an error message")
 ```
 
 ##### Explanation:
-- The `ElasticsearchHandler` is a custom logging handler that extends `BufferingHandler` to buffer logs before sending them to Elasticsearch.
+
+- The `ElasticsearchHandler` is a custom logging handler that extends `BufferingHandler` to buffer logs before sending
+  them to Elasticsearch.
 - The `emit` method is overridden to format the logs as JSON and send them to Elasticsearch using the `index` method.
 
 ##### Running the Code:
-- When you run this code, it will send logs to your local Elasticsearch instance. You can now search and visualize these logs in Kibana.
 
+- When you run this code, it will send logs to your local Elasticsearch instance. You can now search and visualize these
+  logs in Kibana.
 
 ### Visualizing Logs in Kibana
 
@@ -550,61 +596,68 @@ Once logs are stored in Elasticsearch, you can visualize them in Kibana.
    Open your web browser and go to `http://localhost:5601`.
 
 2. **Create an Index Pattern in Kibana**:
-   - In Kibana, go to the **Management** section.
-   - Under **Kibana Index Patterns**, click **Create Index Pattern**.
-   - Enter the name of your log index (`logs` in our case).
-   - Kibana will ask for a timestamp field. If your logs contain timestamps (like `@timestamp`), you can use it to organize logs over time.
+    - In Kibana, go to the **Management** section.
+    - Under **Kibana Index Patterns**, click **Create Index Pattern**.
+    - Enter the name of your log index (`logs` in our case).
+    - Kibana will ask for a timestamp field. If your logs contain timestamps (like `@timestamp`), you can use it to
+      organize logs over time.
 
 3. **Explore the Logs**:
-   - Once the index pattern is created, go to the **Discover** tab.
-   - You should see the logs indexed by Elasticsearch.
-   - You can now search through logs, filter by different fields, and inspect specific log entries.
+    - Once the index pattern is created, go to the **Discover** tab.
+    - You should see the logs indexed by Elasticsearch.
+    - You can now search through logs, filter by different fields, and inspect specific log entries.
 
 4. **Create Dashboards**:
-   - In Kibana, you can create dashboards with visualizations (graphs, bar charts, pie charts) based on your logs.
-   - Go to the **Dashboard** section and click on **Create Dashboard** to start building a visualization.
-
+    - In Kibana, you can create dashboards with visualizations (graphs, bar charts, pie charts) based on your logs.
+    - Go to the **Dashboard** section and click on **Create Dashboard** to start building a visualization.
 
 ### Using Kibana's Features for Observability**
 
 Kibana offers several powerful features for observability:
 
 1. **Visualizations**:
-   - Create pie charts, histograms, and line charts to visualize trends in logs (e.g., error rates, request counts, etc.).
+    - Create pie charts, histograms, and line charts to visualize trends in logs (e.g., error rates, request counts,
+      etc.).
 
 2. **Timelion**:
-   - Timelion allows you to query Elasticsearch data over time, making it easy to create time-series visualizations (e.g., CPU usage, traffic volume).
+    - Timelion allows you to query Elasticsearch data over time, making it easy to create time-series visualizations (
+      e.g., CPU usage, traffic volume).
 
 3. **Alerting**:
-   - You can set up **alerts** based on thresholds in Kibana to notify you when specific conditions are met, such as when the error rate exceeds a certain limit.
+    - You can set up **alerts** based on thresholds in Kibana to notify you when specific conditions are met, such as
+      when the error rate exceeds a certain limit.
 
 4. **Machine Learning**:
-   - Kibana offers machine learning features to detect anomalies in your logs and metrics.
-
+    - Kibana offers machine learning features to detect anomalies in your logs and metrics.
 
 ### Analyzing and Troubleshooting with Logs**
 
 Once you have logs flowing into Elasticsearch and visualized in Kibana, you can use this data to:
+
 - **Identify performance bottlenecks** (e.g., high response times, database latency).
 - **Trace errors and exceptions** (e.g., frequent exceptions or stack traces).
 - **Monitor traffic spikes** (e.g., number of requests or user activity).
 
 #### Example Analysis:
-- **Search for Errors**: In Kibana, you can search for log entries with `level: error` to see all errors logged by your application.
-- **Track Trends**: Use Kibana visualizations to track the frequency of certain log entries over time (e.g., number of requests per minute).
 
+- **Search for Errors**: In Kibana, you can search for log entries with `level: error` to see all errors logged by your
+  application.
+- **Track Trends**: Use Kibana visualizations to track the frequency of certain log entries over time (e.g., number of
+  requests per minute).
 
 ### Conclusion
 
-By using **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your application. The steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The observability tools like Kibana help to gain insights from your logs, track performance, and troubleshoot issues in real-time. 
+By using **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your application. The
+steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The observability tools like
+Kibana help to gain insights from your logs, track performance, and troubleshoot issues in real-time.
 
-As you continue to evolve your observability pipeline, you can also integrate metrics, traces, and other telemetry data into your stack to build a more complete monitoring solution.
-
+As you continue to evolve your observability pipeline, you can also integrate metrics, traces, and other telemetry data
+into your stack to build a more complete monitoring solution.
 
 **Q74: Assess the current version of the web application against each of the twelve factor application.**
 
-**Q75: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.**
-
+**Q75: How long have you been working on this session? What have been the main difficulties that you have faced and how
+have you solved them? Add your answers to README.md.**
 
 ## How to submit this assignment:
 
