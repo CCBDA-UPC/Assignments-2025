@@ -1,4 +1,4 @@
-# Lab session 5: Deploy a custom web app using additional cloud services
+# Lab session 5: Deployment of a custom web app using additional cloud services
 
 We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
 yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website
@@ -792,7 +792,7 @@ PostGreSQL database.
 ```bash
 _$ cat production.env
 DJANGO_DEBUG="False"
-DJANGO_ALLOWED_HOSTS="localhost:127.0.0.1:0.0.0.0:172.*.*.*"
+DJANGO_ALLOWED_HOSTS="localhost:127.0.0.1:0.0.0.0"
 DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL="INFO"
 CCBDA_SIGNUP_TABLE="ccbda-signup-table"
