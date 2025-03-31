@@ -3,10 +3,6 @@
 This lab session focuses on three critical areas in modern software development: **Continuous Integration (CI)**, *
 *Continuous Delivery (CD)**, **Observability**
 
-Download a new zip file of the web application code using the branch named
-`observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability).
-It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
-
 ### Continuous Integration (CI)
 
 **Continuous Integration (CI)** is a software development practice where code changes are frequently merged into a
@@ -60,14 +56,15 @@ and traces). It helps teams monitor and debug production systems effectively.
 
 ### Web application improvements
 
-In addition to analyzing web application logs to detect errors, the core functionality of the web application can be expanded to engage users more effectively. Once a user enters their name and email address into the form, the website will dynamically generate and display a curated list of articles sourced from various reputable Cloud Computing news websites via [RSS feeds](https://en.wikipedia.org/wiki/RSS). This content will serve as an engaging way to spark further interest in the course and keep the user updated with the latest trends in the field.
+In addition to analyzing web application logs to detect errors, the core functionality of the web application is now expanded to engage users more effectively. Once a user enters their name and email address into the form, the website will dynamically generate and display a curated list of articles sourced from various reputable Cloud Computing news websites via [RSS feeds](https://en.wikipedia.org/wiki/RSS). This content will serve as an engaging way to spark further interest in the course and keep the user updated with the latest trends in the field.
 
 Moreover, the web application will be able to track user interactions and behaviors, gathering valuable insights to optimize and improve the website's user experience. These insights could be used to refine content delivery, enhance user engagement, and tailor recommendations to each individual user based on their activity.
 
-
-
 <img alt="Lab07-homepage-feed.png" src="images/Lab07-homepage-feed.png" width="50%"/>
 
+Download a new zip file of the web application code using the branch named
+`observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability).
+It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
 
 # Tasks for Lab session #7
 
