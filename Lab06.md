@@ -1,4 +1,4 @@
-# Lab session 6: Run a custom web app in the cloud
+# Lab session 6: Running a custom web app in the cloud
 
 This lab session builds upon the work from the previous session, where we isolated the web application within a Docker container running locally.
 
@@ -1199,6 +1199,5 @@ Make sure that you have updated your local GitHub repository (using the git comm
 Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-6-xx repository.
 
 Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
-
 
 
