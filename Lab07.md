@@ -517,13 +517,7 @@ service, or request a [2 week trial](https://cloud.elastic.co/registration).
 
 ### Sending Logs to Elasticsearch**
 
-Once Elasticsearch and Kibana are running, the next step is to configure your application to send logs to *
-*Elasticsearch**.
-
-#### Example Python Application Logging to Elasticsearch
-
-You can use **`elasticsearch-py`** to send logs from a Python application to Elasticsearch. Here's a basic example using
-Python's **logging** module.
+Once Elasticsearch and Kibana are running, the next step is to configure your application to send logs to **Elasticsearch**.
 
 ##### Install Required Libraries:
 
@@ -531,22 +525,75 @@ Python's **logging** module.
 pip install elasticsearch logging
 ```
 
-##### Python Code to Send Logs to Elasticsearch:
+#### Adding a new log handler
+
+The `JsonFormatter` class is a new custom formatter that generates log records in JSON format rather than simple string-based logs. This formatter is used by the "elk" log handler, which integrates with the ELK (Elasticsearch, Logstash, Kibana) stack for log management.  Please open the `settings.py` and add the formatter, hander and replace the "file" and "s3" existing handlers by "elk" as shown below.
 
 ```python
-import logging
-from elasticsearch import Elasticsearch
-from logging import handlers
-import json
+LOGGING = {
+    ...
+    "formatters": {
+    ...
+        "json-record-format": {
+            "()": "ccbda.JsonFormatter",
+            "basic": {
+                "timestamp": "asctime",
+                "loggerName": "name",
+                "level": "levelname",
+                "message": "message",
+                "function": "funcName",
+                "module": "module",
+                "line": "lineno",
+            },
+            "extra": {
+                "instance": AWS_EC2_INSTANCE_ID,
+            }
+        }
+    }
+...
+    "handlers": {
+    ...
+        "elk": {
+            "level": "DEBUG",
+            "formatter": "json-record-format",
+            "class": "ccbda.ElasticsearchHandler",
+            "index": "logs-webapp",    # ELK index name
+        }
+    },
+...
+    "loggers": {
+        "django": {
+            "handlers": ["console", "elk"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}
+```
 
-# Create an Elasticsearch client
-es = Elasticsearch(["http://localhost:9200"])
+It will also be necessary to include a list of RSS feed URLs and the credentials to use ELK.
 
+```python
+RSS_URLS = [
+    'https://www.cloudcomputing-news.net/feed/',
+    'https://feeds.feedburner.com/cioreview/fvHK',
+    'https://www.techrepublic.com/rssfeeds/topic/cloud/',
+    'https://aws.amazon.com/blogs/aws/feed/',
+    'https://cloudtweaks.com/feed/',
+]
 
-class ElasticsearchHandler(handlers.BufferingHandler):
-    def __init__(self, es_client, index="logs"):
-        super().__init__(capacity=100)
-        self.es_client = es_client
+ELK_PASSWORD = os.environ.get('ELK_PASSWORD')
+ELK_CLOUD_ID = os.environ.get('ELK_CLOUD_ID')
+```
+
+Modify the file `ccbda/__init__.py` including the code below. The class `ElasticsearchHandler` rewrites some of the `logging.handlers.BufferingHandler` python library. It opens a session with ELK and uses the ELK index the was configured above. The function `emit` sends each log record immediatelly to ELK, while the function `flush` sends all buffered records. The buffer size is the value of the parameter `capacity` that can be overriden in the configuration. It is possible to avoid rewritting `emit` to wait until the buffer is full and the `flush` function is invoked.
+
+```python
+class ElasticsearchHandler(logging.handlers.BufferingHandler):
+    def __init__(self, index="logs", capacity=100):
+        # capacity: number of logging records buffered
+        super().__init__(capacity=capacity)
+        self.es_client = Elasticsearch(cloud_id=settings.ELK_CLOUD_ID, basic_auth=("elastic", settings.ELK_PASSWORD))
         self.index = index
 
     def emit(self, record):
@@ -554,34 +601,156 @@ class ElasticsearchHandler(handlers.BufferingHandler):
         # Send the log entry to Elasticsearch
         self.es_client.index(index=self.index, document=json.loads(log_entry))
 
-
-# Set up logging
-logger = logging.getLogger("my_logger")
-logger.setLevel(logging.DEBUG)
-
-# Create ElasticsearchHandler and formatter
-es_handler = ElasticsearchHandler(es)
-formatter = logging.Formatter('{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}')
-es_handler.setFormatter(formatter)
-
-# Add the handler to the logger
-logger.addHandler(es_handler)
-
-# Example log messages
-logger.info("This is an info message")
-logger.error("This is an error message")
+    def flush(self):
+        for record in self.buffer:
+            log_entry = self.format(record)
+            # Send the log entry to Elasticsearch
+            self.es_client.index(index=self.index, document=json.loads(log_entry))
+        self.buffer = []
 ```
 
-##### Explanation:
+The formatter obtains the `basic` configuration parameter and uses them to extract some of the logger library default fields such as the timestamp, function, module, ... explained in laboratory session 6. The `extra` configuration parameter includes additional record fields to be added to each log.
 
-- The `ElasticsearchHandler` is a custom logging handler that extends `BufferingHandler` to buffer logs before sending
-  them to Elasticsearch.
-- The `emit` method is overridden to format the logs as JSON and send them to Elasticsearch using the `index` method.
+```python
+class JsonFormatter(logging.Formatter):
+    def __init__(self, *args, **kwargs):
+        self.fmt_dict = kwargs.get('basic', {"message": "message"})
+        self.default_time_format = kwargs.get('time_format', "%Y-%m-%dT%H:%M:%S")
+        self.default_msec_format = kwargs.get('msec_format', "%s.%03dZ")
+        self.datefmt = None
+        self.extra = kwargs.get('extra', {})
 
-##### Running the Code:
+    def usesTime(self) -> bool:
+        # Overwritten to look for the attribute in the format dict values instead of the fmt string.
+        return "asctime" in self.fmt_dict.values()
 
-- When you run this code, it will send logs to your local Elasticsearch instance. You can now search and visualize these
-  logs in Kibana.
+    def formatMessage(self, record) -> dict:
+        # Overwritten to return a dictionary of the relevant LogRecord attributes instead of a string.
+        return {fmt_key: record.__dict__[fmt_val] for fmt_key, fmt_val in self.fmt_dict.items()}
+
+    def format(self, record) -> str:
+        # Mostly the same as the parent's class method, the difference being that a dict is manipulated and dumped as JSON instead of a string.
+
+        record.message = record.getMessage()
+
+        if self.usesTime():
+            record.asctime = self.formatTime(record, self.datefmt)
+
+        message_dict = self.formatMessage(record)
+
+        p = os.path.relpath(record.pathname,settings.BASE_DIR).split('/')
+        p.remove(record.filename)
+        if 'site-packages' in p:
+            add_chunk = False
+            app_name = ''
+            for item in p:
+                if item == 'site-packages':
+                    add_chunk = True
+                    continue
+                if add_chunk:
+                    app_name += f'/{item}'
+            message_dict['app'] = app_name
+        else:
+            message_dict['app'] = p[0]
+
+        if isinstance (record.args, dict):
+            for k, v in record.args.items():
+                message_dict[k] = v
+
+        for k, v in self.extra.items():
+            message_dict[k] = v
+
+        if record.exc_info:
+            # Cache the traceback text to avoid converting it multiple times (it's constant anyway)
+            if not record.exc_text:
+                record.exc_text = self.formatException(record.exc_info)
+
+        if record.exc_text:
+            message_dict["exc_info"] = record.exc_text
+
+        if record.stack_info:
+            message_dict["stack_info"] = self.formatStack(record.stack_info)
+
+        return json.dumps(message_dict, default=str)
+```
+
+The output of the formatter can be a line similar to:
+
+```json
+{
+  "timestamp": "2025-03-31T15:45:10.621Z",
+  "instance": "localhost",
+  "loggerName": "django",
+  "level": "INFO",
+  "app": "form",
+  "module": "views",
+  "function": "hit",
+  "line": 34,
+  "user": "angel.toribio@upc.edu",
+  "message": "",
+  "article": "https://www.cloudcomputing-news.net/news/how-steatite-relieved-the-burden-on-its-it-team-with-a-move-to-the-cloud/",
+}
+```
+
+#### Adding new functionality
+
+The `form/views.py` home page view now displays all the feeds, ordered by the number of hits, from highest to lowest. Additionally, it now includes a new function that counts one more hit before redirecting to the article's URL. See that it also creates a log record including the visitor's e-mail address and the article's URL.
+
+```python
+def home(request):
+    if Feeds.objects.all().count() == 0:
+        Feeds().refresh_data()
+    feeds = Feeds.objects.order_by('-hits').all()
+    return render(request, 'form/index.html', {'feeds': feeds, 'email': request.COOKIES.get('email', '')})
+
+def hit(request, id):
+    article = Feeds.objects.get(pk=id)
+    article.hits += 1
+    article.save()
+    url_article = parse_qs(urlparse(article.link).query).get('url', ['--missing--'])[0]
+    logger.info('', {
+        "user": request.COOKIES.get('email'),
+        "article": url_article,
+    })
+    return HttpResponseRedirect(redirect_to=request.GET.get('url', '#'))
+```
+
+The `Feeds` model is implemented in `form/models.py`. It defines the fields that will be stored in the database and a function `refresh_data` to fill the database table with the RSS feed information. 
+
+```python
+class Feeds(models.Model):
+    title = models.CharField(max_length=200)
+    link = models.URLField()
+    summary = models.TextField()
+    author = models.CharField(max_length=120)
+    hits = models.BigIntegerField(default=0)
+
+    def refresh_data(self):
+        for u in settings.RSS_URLS:
+            response = requests.get(u)
+            try:
+                feed = feedparser.parse(response.content)
+                for entry in feed.entries:
+                    article = Feeds.objects.create(
+                        title=entry.title,
+                        link='',
+                        summary='',
+                        author=entry.author
+                    )
+                    base_link = reverse('form:hit', kwargs={'id': article.id})
+                    article.link = urljoin(base_link,'?'+urlencode({'url':entry.link}))
+                    summary = BeautifulSoup(entry.summary, 'html.parser')
+                    for anchor in summary.find_all('a'):
+                        anchor['href'] = urljoin(base_link,'?'+urlencode({'url':anchor['href']}))
+                        anchor['target'] = '_blank'
+                    article.summary = str(summary)
+                    article.save()
+                    logger.info(f'Create article "{entry.title}"')
+            except Exception as e:
+                logger.error(f'Feed reading error: {e}')
+```
+
+<img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
 
 ### Visualizing Logs in Kibana
 
