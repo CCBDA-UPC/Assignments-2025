@@ -1,4 +1,4 @@
-# Lab session 6: Run a custom web app in the cloud
+# Lab session 6: Running a custom web app in the cloud
 
 This lab session builds upon the work from the previous session, where we isolated the web application within a Docker container running locally.
 

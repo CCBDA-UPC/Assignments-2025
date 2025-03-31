@@ -11,13 +11,12 @@ Students will begin by creating an essential toolbox to get them started in the 
 
 - Lab 1: [Basic "Knowledge Toolbox" to get started in the Cloud][Lab1] 
 - Lab 2: [Doors in the Cloud][Lab2]                                        
-- Lab 3: [Basic use of the cloud (1/2)][Lab3]              
-- Lab 4: [Basic use of the cloud (2/2)][Lab4]          
-- Lab 5: [Deploy a custom web app using additional cloud services][Lab5]   
-- Lab 6: [Programming your cloud infrastructure][Lab6]
-- Lab 7: [Using the Elastic Stack to study scraped data from a web page][Lab7]    
-- Lab 8: [Advanced Analytics as a Service in the Cloud][Lab8]
-- Lab 9: [Interacting with users and services in the Cloud][Lab10]      
+- Lab 3: [Basic use of the cloud][Lab3]              
+- Lab 4: [Use of services programmatically through their API][Lab4]          
+- Lab 5: [Deployment of a custom web app using additional cloud services][Lab5]   
+- Lab 6: [Running a custom web app in the cloud][Lab6]
+- Lab 7: [Continuous Integration, Continuous Delivery, and Observability][Lab7]    
+- Lab 8: [Advanced Analytics as a Service in the Cloud][Lab8] 
 
 [Lab1]: ./Lab01.md
 [Lab2]: ./Lab02.md
@@ -27,12 +26,10 @@ Students will begin by creating an essential toolbox to get them started in the 
 [Lab6]: ./Lab06.md
 [Lab7]: ./Lab07.md
 [Lab8]: ./Lab08.md
-[Lab10]: ./Lab10.md
 
 #### Deadlines
 
 Each lab session must be pushed to the corresponding repository **at most seven days after** it is scheduled to be started.
-
 
 
 #### Acknowledgements

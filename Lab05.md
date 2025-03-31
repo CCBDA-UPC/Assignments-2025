@@ -1,4 +1,4 @@
-# Lab session 5: Deploy a custom web app using additional cloud services
+# Lab session 5: Deployment of a custom web app using additional cloud services
 
 We are going to assume that you are working on a new subject on Cloud Computing that isn't ready for students to enroll
 yet, but in the meantime, you plan to deploy a small placeholder app that collects contact information from the website

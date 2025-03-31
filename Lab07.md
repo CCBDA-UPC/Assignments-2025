@@ -344,7 +344,7 @@ As well as the AWS Elasticbeanstalk application versions. In case of emergency w
 The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can execute the code in your laptop and type: 
 
 ```bash
-_$ cp productin.env .env
+_$ cp production.env .env
 _$ python manage.py makemigrations
 Operations to perform:
   Apply all migrations: form
