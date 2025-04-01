@@ -824,9 +824,6 @@ Once the index is selected drag and drop fields appearing in the grey column to 
 
 <img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
 
-To obtain something similar to the view below.
-
-<img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
 
 ### Conclusion
 
