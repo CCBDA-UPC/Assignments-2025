@@ -546,47 +546,47 @@ Logstash, Kibana) stack for log management. Please open the `settings.py` and ad
 ```python
 LOGGING = {
     ...
-"formatters": {
+    "formatters": {
     ...
-"json-record-format": {
-    "()": "ccbda.JsonFormatter",
-    "basic": {
-        "timestamp": "asctime",
-        "loggerName": "name",
-        "level": "levelname",
-        "message": "message",
-        "function": "funcName",
-        "module": "module",
-        "line": "lineno",
-    },
-    "extra": {
-        "instance": AWS_EC2_INSTANCE_ID,
+        "json-record-format": {
+            "()": "ccbda.JsonFormatter",
+            "basic": {
+                "timestamp": "asctime",
+                "loggerName": "name",
+                "level": "levelname",
+                "message": "message",
+                "function": "funcName",
+                "module": "module",
+                "line": "lineno",
+            },
+            "extra": {
+                "instance": AWS_EC2_INSTANCE_ID,
+            }
+        }
     }
-}
-}
 ...
-"handlers": {
-    ...
-"elk": {
-    "level": "DEBUG",
-    "formatter": "json-record-format",
-    "class": "ccbda.ElasticsearchHandler",
-    "index": "logs-webapp",  # ELK index name
-}
-},
+    "handlers": {
 ...
-"loggers": {
-    "django.server": {
-        "handlers": ["console", "s3"],
-        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-        "propagate": False,
+        "elk": {
+            "level": "DEBUG",
+            "formatter": "json-record-format",
+            "class": "ccbda.ElasticsearchHandler",
+            "index": "logs-webapp",  # ELK index name
+        }
+    },          
+...
+    "loggers": {
+        "django.server": {
+            "handlers": ["console", "s3"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+        "django": {
+            "handlers": ["elk"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
     },
-    "django": {
-        "handlers": ["elk"],
-        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
-        "propagate": False,
-    },
-},
 }
 ```
 
