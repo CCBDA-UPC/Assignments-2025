@@ -808,7 +808,7 @@ Once you have logs flowing into Elasticsearch and visualized in Kibana, you can 
 - **Trace errors and exceptions** (e.g., frequent exceptions or stack traces).
 - **Monitor traffic spikes** (e.g., number of requests or user activity).
 
-Using the above configuration, ELK is only going to receive the logs sent to the `django` logger which in the code is
+Using the configuration deployed in this lab session, ELK is only going to receive the logs sent to the `django` logger which in the code is
 selected using the code: `logger = logging.getLogger('django')`. The rest of the log records produced by `django.server`
 or other web application components are either sent to the console or to the AWS S3 bucket.
 
@@ -816,7 +816,15 @@ Execute the web application that, after filling the form is setting a cookie nam
 
 <img alt="Lab07-cookies.png" src="images/Lab07-cookies.png" width="80%"/>
 
+Once you have a some log records ingested, open **Kibana** and select the **ElasticSearch** index named `logs-webapp` as shown below. **IMPORTANT** select a big-enough time frame, usually it defaults to 15min, to be able to access the index records.
 
+<img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
+
+Once the index is selected drag and drop fields appearing in the grey column to the list of records.
+
+<img alt="Lab07-selectLog.png" src="images/Lab07-selectLog.png" width="80%"/>
+
+To obtain something similar to the view below.
 
 <img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
 
