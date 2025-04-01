@@ -66,6 +66,15 @@ Download a new zip file of the web application code using the branch named
 `observability` [https://github.com/CCBDA-UPC/django-webapp/](https://github.com/CCBDA-UPC/django-webapp/tree/observability).
 It includes some code changes necessary for this lab session. The file `requirements.txt` is also updated.
 
+# Pre-lab homework
+
+Please go to the [Elastic website](https://www.elastic.co/getting-started/) and request your 14-days trial by following the instructions provided in the link. 
+
+Once you'll be logged in at https://cloud.elastic.co/home you'll see a hosted delployment. Click on **Manage** where you'll be able to change the deployment name if you want, but most importantly, you'll be able to obtain the value for the `ELK_CLOUD_ID` and `ELK_PASSWORD` new configuration variables. Copy the value under "Cloud ID" and reset your password under the "Actions" blue button.
+
+<img alt="Lab07-ELK-Management.png" src="images/Lab07-ELK-Management.png" width="60%"/>
+
+
 # Tasks for Lab session #7
 
 * [Task 7.1: CI/CD build using GitHub Actions](#Task71)
@@ -571,7 +580,7 @@ LOGGING = {
 }
 ```
 
-It will also be necessary to include a list of RSS feed URLs and the credentials to use ELK.
+It will also be necessary to include at the bottom of `settings.py` a list of RSS feed URLs and the credentials to use ELK.
 
 ```python
 RSS_URLS = [
@@ -586,7 +595,7 @@ ELK_PASSWORD = os.environ.get('ELK_PASSWORD')
 ELK_CLOUD_ID = os.environ.get('ELK_CLOUD_ID')
 ```
 
-Modify the file `ccbda/__init__.py` including the code below. The class `ElasticsearchHandler` rewrites some of the `logging.handlers.BufferingHandler` python library. It opens a session with ELK and uses the ELK index the was configured above. The function `emit` sends each log record immediatelly to ELK, while the function `flush` sends all buffered records. The buffer size is the value of the parameter `capacity` that can be overriden in the configuration. It is possible to avoid rewritting `emit` to wait until the buffer is full and the `flush` function is invoked.
+Modify the file `ccbda/__init__.py` file including the code below. The class `ElasticsearchHandler` rewrites some of the `logging.handlers.BufferingHandler` python library. It opens a session with ELK and uses the ELK index the was configured above. The function `emit` sends each log record immediatelly to ELK, while the function `flush` sends all buffered records. The buffer size is the value of the parameter `capacity` that can be overriden in the configuration. It is possible to avoid rewritting `emit` to wait until the buffer is full and the `flush` function is invoked.
 
 ```python
 class ElasticsearchHandler(logging.handlers.BufferingHandler):
@@ -674,7 +683,7 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(message_dict, default=str)
 ```
 
-The output of the formatter can be a line similar to:
+The output of the formatter can be a record similar to:
 
 ```json
 {
@@ -692,7 +701,7 @@ The output of the formatter can be a line similar to:
 }
 ```
 
-#### Adding new functionality
+#### New functionality added
 
 The `form/views.py` home page view now displays all the feeds, ordered by the number of hits, from highest to lowest. Additionally, it now includes a new function that counts one more hit before redirecting to the article's URL. See that it also creates a log record including the visitor's e-mail address and the article's URL.
 
@@ -750,32 +759,13 @@ class Feeds(models.Model):
                 logger.error(f'Feed reading error: {e}')
 ```
 
+Once you'll execute the web application the log records will be injested by ELK and you'll have plenty of information to use for your insights.
+
 <img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
 
-### Visualizing Logs in Kibana
 
-Once logs are stored in Elasticsearch, you can visualize them in Kibana.
 
-#### **Steps**:
 
-1. **Access Kibana**:
-   Open your web browser and go to `http://localhost:5601`.
-
-2. **Create an Index Pattern in Kibana**:
-    - In Kibana, go to the **Management** section.
-    - Under **Kibana Index Patterns**, click **Create Index Pattern**.
-    - Enter the name of your log index (`logs` in our case).
-    - Kibana will ask for a timestamp field. If your logs contain timestamps (like `@timestamp`), you can use it to
-      organize logs over time.
-
-3. **Explore the Logs**:
-    - Once the index pattern is created, go to the **Discover** tab.
-    - You should see the logs indexed by Elasticsearch.
-    - You can now search through logs, filter by different fields, and inspect specific log entries.
-
-4. **Create Dashboards**:
-    - In Kibana, you can create dashboards with visualizations (graphs, bar charts, pie charts) based on your logs.
-    - Go to the **Dashboard** section and click on **Create Dashboard** to start building a visualization.
 
 ### Using Kibana's Features for Observability**
 
