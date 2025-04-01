@@ -731,6 +731,9 @@ def home(request):
     if Feeds.objects.all().count() == 0:
         Feeds().refresh_data()
     feeds = Feeds.objects.order_by('-hits').all()
+    logger.info('', {
+        "user": request.COOKIES.get('email'),
+    })
     return render(request, 'form/index.html', {'feeds': feeds, 'email': request.COOKIES.get('email', '')})
 
 
