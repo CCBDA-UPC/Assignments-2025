@@ -825,7 +825,7 @@ Once the index is selected drag and drop fields appearing in the grey column to 
 <img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
 
 
-### Conclusion
+#### Conclusion
 
 By using **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your application. The
 steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The observability tools like
@@ -834,9 +834,11 @@ Kibana help to gain insights from your logs, track performance, and troubleshoot
 As you continue to evolve your observability pipeline, you can also integrate metrics, traces, and other telemetry data
 into your stack to build a more complete monitoring solution.
 
-**Q74: Assess the current version of the web application against each of the twelve factor application.**
+**Q721: Play with Kibana and the logs that you have obtained. Share your insights.**
 
-**Q75: How long have you been working on this session? What have been the main difficulties that you have faced and how
+**Q722: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q723: How long have you been working on this session? What have been the main difficulties that you have faced and how
 have you solved them? Add your answers to README.md.**
 
 ## How to submit this assignment:
