@@ -818,11 +818,11 @@ Execute the web application that, after filling the form is setting a cookie nam
 
 Once you have a some log records ingested, open **Kibana** and select the **ElasticSearch** index named `logs-webapp` as shown below. **IMPORTANT** select a big-enough time frame, usually it defaults to 15min, to be able to access the index records.
 
-<img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
+<img alt="Lab07-selectLog.png" src="images/Lab07-selectLog.png" width="80%"/>
 
 Once the index is selected drag and drop fields appearing in the grey column to the list of records.
 
-<img alt="Lab07-selectLog.png" src="images/Lab07-selectLog.png" width="80%"/>
+<img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
 
 To obtain something similar to the view below.
 
