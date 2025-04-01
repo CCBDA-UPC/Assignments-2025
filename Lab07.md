@@ -73,7 +73,7 @@ It includes some code changes necessary for this lab session. The file `requirem
 
 # Pre-lab homework
 
-Please go to the [Elastic website](https://www.elastic.co/getting-started/) and request your 14-days trial by following
+Please, go to the [Elastic website](https://www.elastic.co/getting-started/) and request your 14-days trial by following
 the instructions provided in the link.
 
 Once you'll be logged in at https://cloud.elastic.co/home you'll see a hosted delployment. Click on **Manage** where
@@ -541,8 +541,7 @@ pip install elasticsearch logging
 
 The `JsonFormatter` class is a new custom formatter that generates log records in JSON format rather than simple
 string-based logs. This formatter is used by the "elk" log handler, which integrates with the ELK (Elasticsearch,
-Logstash, Kibana) stack for log management. Please open the `settings.py` and add the formatter, hander and replace
-the "file" and "s3" existing handlers by "elk" as shown below.
+Logstash, Kibana) stack for log management. Please open the `settings.py` and add the formatter, hander and restructure the log ingestion sending `django.server` messages to "s3" and `django` to "elk".
 
 ```python
 LOGGING = {
@@ -577,8 +576,13 @@ LOGGING = {
 },
 ...
 "loggers": {
+    "django.server": {
+        "handlers": ["console", "s3"],
+        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        "propagate": False,
+    },
     "django": {
-        "handlers": ["console", "elk"],
+        "handlers": ["elk"],
         "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
         "propagate": False,
     },
