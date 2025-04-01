@@ -785,11 +785,6 @@ class Feeds(models.Model):
                 logger.error(f'Feed reading error: {e}')
 ```
 
-Once you'll execute the web application the log records will be injested by ELK and you'll have plenty of information to
-use for your insights.
-
-<img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
-
 ### Using Kibana's Features for Observability
 
 Kibana offers several powerful features for observability:
@@ -798,18 +793,14 @@ Kibana offers several powerful features for observability:
     - Create pie charts, histograms, and line charts to visualize trends in logs (e.g., error rates, request counts,
       etc.).
 
-2. **Timelion**:
-    - Timelion allows you to query Elasticsearch data over time, making it easy to create time-series visualizations (
-      e.g., CPU usage, traffic volume).
-
-3. **Alerting**:
+2. **Alerting**:
     - You can set up **alerts** based on thresholds in Kibana to notify you when specific conditions are met, such as
       when the error rate exceeds a certain limit.
 
-4. **Machine Learning**:
+3. **Machine Learning**:
     - Kibana offers machine learning features to detect anomalies in your logs and metrics.
 
-### Analyzing and Troubleshooting with Logs
+#### Analyzing and Troubleshooting with Logs
 
 Once you have logs flowing into Elasticsearch and visualized in Kibana, you can use this data to:
 
@@ -817,12 +808,17 @@ Once you have logs flowing into Elasticsearch and visualized in Kibana, you can 
 - **Trace errors and exceptions** (e.g., frequent exceptions or stack traces).
 - **Monitor traffic spikes** (e.g., number of requests or user activity).
 
-#### Example Analysis:
+Using the above configuration, ELK is only going to receive the logs sent to the `django` logger which in the code is
+selected using the code: `logger = logging.getLogger('django')`. The rest of the log records produced by `django.server`
+or other web application components are either sent to the console or to the AWS S3 bucket.
 
-- **Search for Errors**: In Kibana, you can search for log entries with `level: error` to see all errors logged by your
-  application.
-- **Track Trends**: Use Kibana visualizations to track the frequency of certain log entries over time (e.g., number of
-  requests per minute).
+Execute the web application that, after filling the form is setting a cookie named `email` to keep the e-mail address of the last user filling the form. If the cookie is not empty it doesn't show the form and, instead, it shows several news on Cloud Computing. You can change the user by removing the cookie appearing in the "Application" tab of the Google Chrome "Inspect" tool.
+
+<img alt="Lab07-cookies.png" src="images/Lab07-cookies.png" width="80%"/>
+
+
+
+<img alt="Lab07-ELK-log.png" src="images/Lab07-ELK-log.png" width="80%"/>
 
 ### Conclusion
 
