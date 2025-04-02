@@ -508,10 +508,13 @@ The output of this command will return a JSON object with the API's information,
 Example output:
 ```json
 {
-    "ApiId": "abcd1234",
+    "ApiEndpoint": "wss://m96mpy7qz4.execute-api.us-east-1.amazonaws.com",
+    "ApiId": "m96mpy7qz4",
+    "ApiKeySelectionExpression": "$request.header.x-api-key",
+    "CreatedDate": "2025-04-02T14:43:51+00:00",
     "Name": "MyWebSocketAPI",
     "ProtocolType": "WEBSOCKET",
-    "RouteSelectionExpression": "$request.body.action"
+    "RouteSelectionExpression": ".body.action"
 }
 ```
 
@@ -527,19 +530,19 @@ Let’s create the `connect` and `disconnect` routes:
 
 ```bash
 aws apigatewayv2 create-route \
-  --api-id abcd1234 \
+  --api-id m96mpy7qz4 \
   --route-key "$connect" \
   --target "integrations/<integration-id>"
 ```
 
 ```bash
 aws apigatewayv2 create-route \
-  --api-id abcd1234 \
+  --api-id m96mpy7qz4 \
   --route-key "$disconnect" \
   --target "integrations/<integration-id>"
 ```
 
-- Replace `abcd1234` with your actual `ApiId` from the previous step.
+- Replace `m96mpy7qz4` with your actual `ApiId` from the previous step.
 - `--route-key`: This is the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
 
 #### 3. **Create WebSocket Integration**
@@ -550,7 +553,7 @@ Here’s an example of how to create an integration with a Lambda function:
 
 ```bash
 aws apigatewayv2 create-integration \
-  --api-id abcd1234 \
+  --api-id m96mpy7qz4 \
   --integration-type AWS_PROXY \
   --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
   --payload-format-version 2.0
@@ -582,12 +585,12 @@ To make your WebSocket API live, you need to deploy it to a stage (e.g., `prod` 
 
 ```bash
 aws apigatewayv2 create-stage \
-  --api-id abcd1234 \
+  --api-id m96mpy7qz4 \
   --stage-name prod \
   --auto-deploy
 ```
 
-- Replace `abcd1234` with your `ApiId`.
+- Replace `m96mpy7qz4` with your `ApiId`.
 - `--stage-name`: The name of the deployment stage (e.g., `prod`).
 - `--auto-deploy`: This automatically deploys the API to the stage.
 
@@ -599,16 +602,16 @@ After deployment, your WebSocket API will be available at the following URL form
 wss://<api-id>.execute-api.<region>.amazonaws.com/prod
 ```
 
-For example, if your API ID is `abcd1234`, your WebSocket URL will be:
+For example, if your API ID is `m96mpy7qz4`, your WebSocket URL will be:
 
 ```
-wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
+wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
 ```
 
 You can use WebSocket clients like **wscat** or WebSocket libraries in your preferred language to test the connection:
 
 ```bash
-wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
+wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
 ```
 
 ---
@@ -626,14 +629,14 @@ wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
 2. **Create Routes (e.g., connect, disconnect)**:
    ```bash
    aws apigatewayv2 create-route \
-     --api-id abcd1234 \
+     --api-id m96mpy7qz4 \
      --route-key "$connect" \
      --target "integrations/<integration-id>"
    ```
 
    ```bash
    aws apigatewayv2 create-route \
-     --api-id abcd1234 \
+     --api-id m96mpy7qz4 \
      --route-key "$disconnect" \
      --target "integrations/<integration-id>"
    ```
@@ -641,7 +644,7 @@ wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
 3. **Create Lambda Integration**:
    ```bash
    aws apigatewayv2 create-integration \
-     --api-id abcd1234 \
+     --api-id m96mpy7qz4 \
      --integration-type AWS_PROXY \
      --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
      --payload-format-version 2.0
@@ -658,7 +661,7 @@ wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
 5. **Deploy the WebSocket API**:
    ```bash
    aws apigatewayv2 create-stage \
-     --api-id abcd1234 \
+     --api-id m96mpy7qz4 \
      --stage-name prod \
      --auto-deploy
    ```
@@ -666,7 +669,7 @@ wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
 6. **Test the WebSocket API**:
    - Use `wscat` or any WebSocket client to connect to:
      ```bash
-     wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
+     wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      ```
 
 
