@@ -482,174 +482,194 @@ This is a basic example to get you started. You can expand it by adding more res
 
 ## AWS CLI for API Gateway
 
-To create an **AWS API Gateway** using the **AWS CLI**, you can follow these steps. We will create a simple REST API that invokes a Lambda function, but the approach is general enough for creating any type of API Gateway.
+Creating a **WebSocket API** with the **AWS CLI** involves a few steps, and it requires using the **API Gateway WebSocket** feature, which allows you to build real-time, bidirectional communication between clients and servers.
 
-### Prerequisites:
-1. **AWS CLI Installed**: Ensure that the AWS CLI is installed and configured with proper credentials (use `aws configure`).
-2. **Lambda Function**: For this example, we will assume that you already have a Lambda function created.
-3. **IAM Role**: Ensure you have an appropriate IAM role with the correct permissions for API Gateway to invoke the Lambda function.
+Here's how you can create a WebSocket API using the AWS CLI.
 
----
+### Steps to Create a WebSocket API Using AWS CLI:
 
-### Steps to Create an API Gateway Using AWS CLI
+#### 1. **Create the WebSocket API**
 
-#### 1. **Create the API Gateway**
-
-You can create a REST API using the `aws apigateway` command.
+To create a WebSocket API, use the `create-rest-api` command but specify that you want to create a WebSocket API instead of a regular REST API.
 
 ```bash
-aws apigateway create-rest-api --name "MyApi" --description "This is my sample API"
+aws apigatewayv2 create-api \
+  --name "MyWebSocketAPI" \
+  --protocol-type WEBSOCKET \
+  --route-selection-expression "$request.body.action"
 ```
 
-This will create a REST API with the name `MyApi`. You will get a response with the API's **ID** (e.g., `"id": "abcd1234"`), which you will need for the next steps.
+- `--name`: Name of the WebSocket API.
+- `--protocol-type`: This should be set to `WEBSOCKET` for WebSocket APIs.
+- `--route-selection-expression`: This defines the routing logic based on the WebSocket messages. In this example, it routes based on the `action` field in the incoming WebSocket messages (`$request.body.action`).
 
-#### 2. **Get the Root Resource ID**
-
-After creating the API, you need to find the root resource ID. This is usually the top-level resource in your API, often referred to as `/`.
-
-```bash
-aws apigateway get-resources --rest-api-id <api-id>
-```
-
-Replace `<api-id>` with the ID returned from the previous command (e.g., `abcd1234`). This command will return a list of resources, and you'll need the root resource ID (it will look like `"/"`).
+The output of this command will return a JSON object with the API's information, including the `ApiId`. You’ll need this `ApiId` for subsequent steps.
 
 Example output:
 ```json
 {
-    "items": [
-        {
-            "id": "root",
-            "parentId": "string",
-            "pathPart": "",
-            "path": "/"
-        }
-    ]
+    "ApiId": "abcd1234",
+    "Name": "MyWebSocketAPI",
+    "ProtocolType": "WEBSOCKET",
+    "RouteSelectionExpression": "$request.body.action"
 }
 ```
 
-Here, the root resource has the `id` of `"root"`.
+#### 2. **Create WebSocket Routes**
 
-#### 3. **Create a New Resource (Path)**
+In a WebSocket API, you define **routes** that map to different actions or message types. For example, you may define routes for `connect`, `disconnect`, and custom message types like `sendMessage`.
 
-You can create a new resource (path) in the API. For example, let's create a `/hello` path:
+- **Connect Route**: Triggered when a client connects to the WebSocket.
+- **Disconnect Route**: Triggered when a client disconnects.
+- **Custom Routes**: Any custom action you want to handle in your WebSocket API.
+
+Let’s create the `connect` and `disconnect` routes:
 
 ```bash
-aws apigateway create-resource --rest-api-id <api-id> --parent-id <root-id> --path-part "hello"
+aws apigatewayv2 create-route \
+  --api-id abcd1234 \
+  --route-key "$connect" \
+  --target "integrations/<integration-id>"
 ```
 
-Replace `<api-id>` with the ID of your API, and `<root-id>` with the ID of the root resource (often `root`).
-
-#### 4. **Create a Method for the Resource**
-
-Now, we will create a `GET` method on the `/hello` resource. This method will invoke a Lambda function when called.
-
 ```bash
-aws apigateway put-method --rest-api-id <api-id> --resource-id <resource-id> --http-method GET --authorization-type NONE
+aws apigatewayv2 create-route \
+  --api-id abcd1234 \
+  --route-key "$disconnect" \
+  --target "integrations/<integration-id>"
 ```
 
-Here, `<resource-id>` is the ID of the newly created `/hello` resource (you can get it by running `aws apigateway get-resources`), and the method type is `GET`.
+- Replace `abcd1234` with your actual `ApiId` from the previous step.
+- `--route-key`: This is the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
 
-#### 5. **Integrate the Method with Lambda Function**
+#### 3. **Create WebSocket Integration**
 
-Next, you'll integrate this `GET` method with a Lambda function. Assume the Lambda function ARN is `arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction`.
+Next, we need to integrate the routes with a backend service, which is usually an **AWS Lambda function**. You can create an integration with a Lambda function or other AWS services like **DynamoDB** or **SNS**.
+
+Here’s an example of how to create an integration with a Lambda function:
 
 ```bash
-aws apigateway put-integration --rest-api-id <api-id> --resource-id <resource-id> --http-method GET --integration-http-method POST --type AWS_PROXY --uri arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction/invocations
+aws apigatewayv2 create-integration \
+  --api-id abcd1234 \
+  --integration-type AWS_PROXY \
+  --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
+  --payload-format-version 2.0
 ```
 
-In this command:
-- Replace `<api-id>` with your API ID.
-- Replace `<resource-id>` with the ID of the `/hello` resource.
-- The Lambda function ARN should be replaced with your actual Lambda ARN.
+- `--integration-type`: Use `AWS_PROXY` if you want to proxy the request directly to Lambda.
+- `--integration-uri`: The ARN of the Lambda function that will handle the WebSocket connection.
+- `--payload-format-version`: Version of the WebSocket payload (use `2.0` for WebSocket APIs).
 
-The integration type is `AWS_PROXY`, which means the entire request will be passed to the Lambda function, allowing you to handle it however you like.
+Once you create this integration, you can reference its ID (`<integration-id>`) in the `create-route` commands for the WebSocket routes.
 
-#### 6. **Grant API Gateway Permission to Invoke Lambda**
+#### 4. **Grant API Gateway Permission to Invoke Lambda**
 
-Before API Gateway can invoke your Lambda function, you need to grant it permission. You can do that using the following command:
+Before API Gateway can invoke your Lambda function, you need to add permissions for it to do so. You can do that with the following command:
 
 ```bash
-aws lambda add-permission --function-name MyLambdaFunction --principal apigateway.amazonaws.com --statement-id <unique-id> --action "lambda:InvokeFunction"
+aws lambda add-permission --function-name MyLambdaFunction \
+  --principal apigateway.amazonaws.com \
+  --statement-id <unique-id> \
+  --action "lambda:InvokeFunction"
 ```
 
 - Replace `MyLambdaFunction` with your Lambda function name.
-- Replace `<unique-id>` with a unique string for this permission (e.g., `12345`).
+- Replace `<unique-id>` with a unique string (e.g., `websocket-api-invoke`).
 
-This command ensures that API Gateway can invoke your Lambda function.
+#### 5. **Deploy the WebSocket API**
 
-#### 7. **Deploy the API**
-
-After creating the method and integration, you need to deploy the API to make it accessible. First, create a deployment stage:
+To make your WebSocket API live, you need to deploy it to a stage (e.g., `prod` or `dev`). You can do that using the following command:
 
 ```bash
-aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod
+aws apigatewayv2 create-stage \
+  --api-id abcd1234 \
+  --stage-name prod \
+  --auto-deploy
 ```
 
-This will deploy the API to the `prod` stage. You can choose any name for the stage (e.g., `dev`, `test`, etc.).
+- Replace `abcd1234` with your `ApiId`.
+- `--stage-name`: The name of the deployment stage (e.g., `prod`).
+- `--auto-deploy`: This automatically deploys the API to the stage.
 
-#### 8. **Test the API**
+#### 6. **Test the WebSocket API**
 
-After deploying the API, you can test it by sending an HTTP request to the `GET` method you created. The endpoint URL will look like this:
+After deployment, your WebSocket API will be available at the following URL format:
 
 ```
-https://<api-id>.execute-api.<region>.amazonaws.com/prod/hello
+wss://<api-id>.execute-api.<region>.amazonaws.com/prod
 ```
 
-Replace `<api-id>` with your actual API ID, and `<region>` with your AWS region (e.g., `us-west-2`).
+For example, if your API ID is `abcd1234`, your WebSocket URL will be:
 
-For example, if you have a `GET` method on `/hello` that integrates with your Lambda, you can use `curl` or any HTTP client to test it:
+```
+wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
+```
+
+You can use WebSocket clients like **wscat** or WebSocket libraries in your preferred language to test the connection:
 
 ```bash
-curl https://abcd1234.execute-api.us-west-2.amazonaws.com/prod/hello
+wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
 ```
-
-You should receive a response from your Lambda function (e.g., `"Hello from Lambda!"`).
 
 ---
 
-### Summary of AWS CLI Commands:
+### Summary of AWS CLI Commands for WebSocket API:
 
-1. **Create API Gateway**:
+1. **Create the WebSocket API**:
    ```bash
-   aws apigateway create-rest-api --name "MyApi" --description "This is my sample API"
+   aws apigatewayv2 create-api \
+     --name "MyWebSocketAPI" \
+     --protocol-type WEBSOCKET \
+     --route-selection-expression "$request.body.action"
    ```
 
-2. **Get Root Resource ID**:
+2. **Create Routes (e.g., connect, disconnect)**:
    ```bash
-   aws apigateway get-resources --rest-api-id <api-id>
+   aws apigatewayv2 create-route \
+     --api-id abcd1234 \
+     --route-key "$connect" \
+     --target "integrations/<integration-id>"
    ```
 
-3. **Create Resource**:
    ```bash
-   aws apigateway create-resource --rest-api-id <api-id> --parent-id <root-id> --path-part "hello"
+   aws apigatewayv2 create-route \
+     --api-id abcd1234 \
+     --route-key "$disconnect" \
+     --target "integrations/<integration-id>"
    ```
 
-4. **Create Method for Resource**:
+3. **Create Lambda Integration**:
    ```bash
-   aws apigateway put-method --rest-api-id <api-id> --resource-id <resource-id> --http-method GET --authorization-type NONE
+   aws apigatewayv2 create-integration \
+     --api-id abcd1234 \
+     --integration-type AWS_PROXY \
+     --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
+     --payload-format-version 2.0
    ```
 
-5. **Integrate Method with Lambda**:
+4. **Grant API Gateway Permission to Invoke Lambda**:
    ```bash
-   aws apigateway put-integration --rest-api-id <api-id> --resource-id <resource-id> --http-method GET --integration-http-method POST --type AWS_PROXY --uri arn:aws:apigateway:<region>:lambda:path/2015-03-31/functions/arn:aws:lambda:<region>:<account-id>:function:MyLambdaFunction/invocations
+   aws lambda add-permission --function-name MyLambdaFunction \
+     --principal apigateway.amazonaws.com \
+     --statement-id <unique-id> \
+     --action "lambda:InvokeFunction"
    ```
 
-6. **Grant API Gateway Permission to Invoke Lambda**:
+5. **Deploy the WebSocket API**:
    ```bash
-   aws lambda add-permission --function-name MyLambdaFunction --principal apigateway.amazonaws.com --statement-id <unique-id> --action "lambda:InvokeFunction"
+   aws apigatewayv2 create-stage \
+     --api-id abcd1234 \
+     --stage-name prod \
+     --auto-deploy
    ```
 
-7. **Deploy API**:
-   ```bash
-   aws apigateway create-deployment --rest-api-id <api-id> --stage-name prod
-   ```
+6. **Test the WebSocket API**:
+   - Use `wscat` or any WebSocket client to connect to:
+     ```bash
+     wscat -c wss://abcd1234.execute-api.us-west-2.amazonaws.com/prod
+     ```
 
-8. **Test the API**:
-   ```bash
-   curl https://<api-id>.execute-api.<region>.amazonaws.com/prod/hello
-   ```
 
-This should help you set up a basic API Gateway using AWS CLI and integrate it with a Lambda function.
 
 
 
