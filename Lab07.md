@@ -550,7 +550,7 @@ to create dashboards, visualize metrics, and analyze logs.
 Together, **Elasticsearch** and **Kibana** form the **ELK Stack** (Elasticsearch, Logstash, and Kibana), a popular 
 solution for log aggregation, analysis, and visualization. You will have access to a 14-day trial to explore these tools.
 
-### Analyzing and Troubleshooting with Logs
+#### Analyzing and Troubleshooting with Logs
 
 Once you have logs flowing you can use this data to:
 
@@ -782,7 +782,7 @@ The output of the formatter can be a record similar to:
 }
 ```
 
-#### New functionality added to the web application
+### New functionality added to the web application
 
 The `form/views.py` home page view now displays all the feeds, ordered by the number of hits, from highest to lowest.
 Additionally, it now includes a new function that counts one more hit before redirecting to the article's URL. See that
