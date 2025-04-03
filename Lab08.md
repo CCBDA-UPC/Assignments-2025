@@ -1,43 +1,23 @@
-### AWS API Gateway
+#### **Understanding `kwargs` in Python:**
 
-AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS) that enables developers to create, publish, maintain, monitor, and secure APIs at any scale. API Gateway acts as an entry point for applications, enabling communication between client apps (mobile, web, etc.) and backend services (AWS Lambda, EC2, other HTTP services).
+In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
 
-### Key Features of AWS API Gateway:
-1. **Create and Manage APIs**: 
-   - You can create RESTful APIs, WebSocket APIs, or HTTP APIs to connect to services like AWS Lambda, HTTP endpoints, or other AWS services.
-   
-2. **Support for Multiple Protocols**: 
-   - API Gateway supports HTTP, WebSocket, and REST APIs, making it versatile for various use cases.
-   
-3. **Security**:
-   - API Gateway allows you to authenticate and authorize API calls through services like AWS IAM (Identity and Access Management), Amazon Cognito, and Lambda authorizers.
-   - It also supports encryption and custom domain names.
+##### **Example:**
+```python
+def greet_user(**kwargs):
+    print(kwargs)
 
-4. **Rate Limiting and Throttling**:
-   - You can set rate limits and throttling policies to control traffic, protect backend resources, and prevent abuse.
+greet_user(name="Alice", age=30)
 
-5. **Scaling**:
-   - API Gateway automatically scales to handle varying amounts of traffic, ensuring that your APIs perform well under different load conditions.
-
-6. **Logging and Monitoring**:
-   - It integrates with AWS CloudWatch for logging and monitoring API usage, errors, and performance metrics.
-   
-7. **Caching**:
-   - API Gateway supports caching responses to reduce load on backend services, improving performance for repeated requests.
-
-8. **Deployments and Versioning**:
-   - You can manage different stages of an API (development, staging, production) and deploy changes in a controlled manner.
-
-### Use Cases:
-- **Serverless Applications**: Often used with AWS Lambda to create serverless APIs, where no infrastructure management is needed.
-- **Microservices**: API Gateway can serve as the entry point to microservices, handling incoming requests and routing them to different backend services.
-- **Mobile and Web Applications**: Provides a reliable way to manage API calls from mobile apps and websites.
+params = {'name': 'Alice', 'age': 30}
+greet_user(**params)
+```
+In both cases the output is
+```python
+{'name': 'Alice', 'age': 30}
+```
 
 
-### Benefits:
-- **Low Management Overhead**: Fully managed service, so you don’t need to worry about server management or scaling.
-- **Security**: Built-in support for securing APIs through authentication, authorization, and encryption.
-- **Cost-Effective**: Pay only for the API calls you make, with no upfront costs or fixed fees.
 
 
 
@@ -93,6 +73,54 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 - **Cost-Effective**: Pay only for the compute time used, with no cost for idle time.
 - **Quick Deployment**: You can deploy your code in minutes, and AWS automatically handles the scaling and infrastructure.
 - **Integrated with AWS Ecosystem**: Lambda integrates seamlessly with other AWS services like S3, DynamoDB, SNS, and more.
+
+
+
+### AWS API Gateway
+
+AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS) that enables developers to create, publish, maintain, monitor, and secure APIs at any scale. API Gateway acts as an entry point for applications, enabling communication between client apps (mobile, web, etc.) and backend services (AWS Lambda, EC2, other HTTP services).
+
+### Key Features of AWS API Gateway:
+1. **Create and Manage APIs**: 
+   - You can create RESTful APIs, WebSocket APIs, or HTTP APIs to connect to services like AWS Lambda, HTTP endpoints, or other AWS services.
+   
+2. **Support for Multiple Protocols**: 
+   - API Gateway supports HTTP, WebSocket, and REST APIs, making it versatile for various use cases.
+   
+3. **Security**:
+   - API Gateway allows you to authenticate and authorize API calls through services like AWS IAM (Identity and Access Management), Amazon Cognito, and Lambda authorizers.
+   - It also supports encryption and custom domain names.
+
+4. **Rate Limiting and Throttling**:
+   - You can set rate limits and throttling policies to control traffic, protect backend resources, and prevent abuse.
+
+5. **Scaling**:
+   - API Gateway automatically scales to handle varying amounts of traffic, ensuring that your APIs perform well under different load conditions.
+
+6. **Logging and Monitoring**:
+   - It integrates with AWS CloudWatch for logging and monitoring API usage, errors, and performance metrics.
+   
+7. **Caching**:
+   - API Gateway supports caching responses to reduce load on backend services, improving performance for repeated requests.
+
+8. **Deployments and Versioning**:
+   - You can manage different stages of an API (development, staging, production) and deploy changes in a controlled manner.
+
+### Use Cases:
+- **Serverless Applications**: Often used with AWS Lambda to create serverless APIs, where no infrastructure management is needed.
+- **Microservices**: API Gateway can serve as the entry point to microservices, handling incoming requests and routing them to different backend services.
+- **Mobile and Web Applications**: Provides a reliable way to manage API calls from mobile apps and websites.
+
+
+### Benefits:
+- **Low Management Overhead**: Fully managed service, so you don’t need to worry about server management or scaling.
+- **Security**: Built-in support for securing APIs through authentication, authorization, and encryption.
+- **Cost-Effective**: Pay only for the API calls you make, with no upfront costs or fixed fees.
+
+
+
+
+
 
 
 ## WebSockets
@@ -384,39 +412,282 @@ asyncio.run(hello())
 
 # Tasks
 
+## Task 8.1: Simple serverless web application
 
+### CRUD REST API : The 4 Basic Operations in Software Development
 
-## AWS API Gateway
+**CRUD** stands for **Create, Read, Update, Delete**, which are the four fundamental operations used in databases and APIs to manage data.
 
-### **Step 1: Create a Lambda Function**
+| **Operation** | **Description** | **Example in SQL** | **Example in REST API** |
+|--------------|---------------|-------------------|------------------|
+| **Create**   | Adds new data | `INSERT INTO users (name, email) VALUES ('John', 'john@example.com');` | `POST /users` |
+| **Read**     | Retrieves data | `SELECT * FROM users WHERE id = 1;` | `GET /users/1` |
+| **Update**   | Modifies existing data | `UPDATE users SET name = 'Jane' WHERE id = 1;` | `PUT /users/1` |
+| **Delete**   | Removes data | `DELETE FROM users WHERE id = 1;` | `DELETE /users/1` |
 
-First, let's create a simple Lambda function in Python that will process incoming HTTP requests.
+Such operations can be applied in different contexts.
+
+- **REST APIs**: CRUD maps to HTTP methods (`POST`, `GET`, `PUT`, `DELETE`).
+- **Databases**: CRUD operations are used to manipulate records (SQL, MongoDB, Firebase).
+- **User Interfaces**: A CRUD-based UI allows users to **add, view, edit, and delete** items.
+
+In this lab session we'll be creating a REST API. Therefore, you first, create a DynamoDB table named `ccbda-lambda-first` with `thingID` as the partition key. Then, download the repository from [this link](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository.
+
+Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
+
+We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
 
 ```python
+import boto3
 import json
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+dynamodb = boto3.client('dynamodb', region_name='us-east-1')
 
 def lambda_handler(event, context):
-    """
-    Lambda function to handle API Gateway events.
-    """
-    # Example of how to handle GET request
-    http_method = event.get('httpMethod')
-    
-    if http_method == 'GET':
-        return {
-            'statusCode': 200,
-            'body': json.dumps({
-                'message': 'Hello from Lambda!',
-                'input': event,
-            })
-        }
-    
-    # Handle other HTTP methods here (POST, PUT, DELETE, etc.)
-    return {
-        'statusCode': 405,
-        'body': json.dumps({'message': 'Method Not Allowed'})
+    operation = event['requestContext']['http']['method']
+    logger.info(f'operation {operation}')
+    try:
+        if operation == 'GET':
+            return respond(dynamodb.scan(**event['queryStringParameters']))
+        elif operation == 'POST':
+            return respond(dynamodb.put_item(**json.loads(event['body'])))
+        elif operation == 'DELETE':
+            return respond(dynamodb.delete_item(**json.loads(event['body'])))
+        elif operation == 'PUT':
+            return respond(dynamodb.update_item(**json.loads(event['body'])))
+        elif operation == 'OPTIONS':
+            return respond('')
+        else:
+            return respond(None, f'Unsupported method "{operation}"')
+    except Exception as e:
+        respond(None, f'{type(e).__name__} at line {e.__traceback__.tb_lineno} of {__file__}: {e}')
+
+def respond(res, err=None):
+    response = {
+        'statusCode': '200' if err is None else '400',
+        'body': json.dumps(res) if err is None else err,
+        'headers': {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Headers": "Content-Type",
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, OPTIONS",
+        },
     }
+    logger.info(f'response {json.dumps(response, indent=2)}')
+    return response
 ```
+
+The file `requirements.txt` defines the Python environment for the above function to be executed.
+
+### API Gateway creation
+
+We are going to use the AWS CLI to deploy the Lambda function and build the **API Gateway**. Open a terminal and set the variables to the corresponding value. The command `aws lambda create-function` sends the zip file with the Python code and requirements to AWS. In response it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
+
+```bash
+_$ ACCOUNT_ID=<YOUR-ACCOUNT-ID>
+_$ REGION=us-east-1
+_$ cd crud
+_$ zip lambda_crud.zip lambda_crud.py requirements.txt
+updating: lambda_crud.py (deflated 64%)
+updating: requirements.txt (deflated 19%)
+_$ aws lambda create-function --function-name LambdaCRUD \
+  --zip-file fileb://lambda_crud.zip \
+  --handler lambda_crud.lambda_handler \
+  --runtime python3.13 \
+  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole
+{
+    "FunctionName": "LambdaCRUD",
+    "FunctionArn": "arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD",
+    "Runtime": "python3.13",
+    "Role": "arn:aws:iam::992382765078:role/LabRole",
+    "Handler": "lambda_crud.lambda_handler",
+    "CodeSize": 1147,
+    "Description": "",
+    "Timeout": 3,
+    "MemorySize": 128,
+    "LastModified": "2025-04-03T15:24:35.266+0000",
+    "CodeSha256": "CX13dQVlx3hpf3YOcDh07USeHFRcGLfjX6hTKiF/bX8=",
+    "Version": "$LATEST",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "ae25f8b8-1d06-4bc9-826e-3d56c0df3d0e",
+    "State": "Pending",
+    "StateReason": "The function is being created.",
+    "StateReasonCode": "Creating"
+}
+_$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
+```
+
+Using the command [`jq`](https://jqlang.org/) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable:
+
+```bash
+_$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaCRUD \
+  --zip-file fileb://lambda_crud.zip \
+  --handler lambda_crud.lambda_handler \
+  --runtime python3.13 \
+  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole \
+  | jq '.FunctionArn' `
+_$ echo $LAMBDA_ARN
+"arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
+```
+
+
+aws apigatewayv2 create-api \
+  --name "CrudHttpAPI" \
+  --protocol-type HTTP
+
+{
+    "ApiEndpoint": "https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com",
+    "ApiId": "9h1wag0ywe",
+    "ApiKeySelectionExpression": "$request.header.x-api-key",
+    "CreatedDate": "2025-04-03T15:25:33+00:00",
+    "Name": "CrudHttpAPI",
+    "ProtocolType": "HTTP",
+    "RouteSelectionExpression": "$request.method $request.path"
+}
+
+
+
+
+API_ID=9h1wag0ywe
+
+aws apigatewayv2 create-integration \
+    --api-id ${API_ID} \
+    --integration-type AWS_PROXY \
+    --integration-uri ${LAMBDA_ARN} \
+    --integration-method ANY \
+    --payload-format-version 2.0
+
+{
+    "ConnectionType": "INTERNET",
+    "IntegrationId": "wp0uj9i",
+    "IntegrationMethod": "ANY",
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": "arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD",
+    "PayloadFormatVersion": "2.0",
+    "TimeoutInMillis": 30000
+}
+
+INTEGRATION_ID=wp0uj9i
+
+
+aws lambda add-permission \
+  --function-name LambdaCRUD \
+  --principal apigateway.amazonaws.com \
+  --statement-id "45ead975-aef2-526c-3454-0ede099a663b" \
+  --action lambda:InvokeFunction
+
+{
+    "Statement": "{\"Sid\":\"45ead975-aef2-526c-3454-0ede099a663b\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD\"}"
+}
+
+
+
+aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "GET /" \
+  --target "integrations/${INTEGRATION_ID}"
+
+aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "POST /" \
+  --target "integrations/${INTEGRATION_ID}"
+
+aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "OPTIONS /" \
+  --target "integrations/${INTEGRATION_ID}"
+
+aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "PUT /" \
+  --target "integrations/${INTEGRATION_ID}"
+
+aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "DELETE /" \
+  --target "integrations/${INTEGRATION_ID}"
+
+{
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "RouteId": "6jrmmkf",
+    "RouteKey": "GET /",
+    "Target": "integrations/wp0uj9i"
+}
+{
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "RouteId": "zay7v4g",
+    "RouteKey": "POST /",
+    "Target": "integrations/wp0uj9i"
+}
+{
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "RouteId": "b2qe62a",
+    "RouteKey": "OPTIONS /",
+    "Target": "integrations/wp0uj9i"
+}
+{
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "RouteId": "hjwebad",
+    "RouteKey": "PUT /",
+    "Target": "integrations/wp0uj9i"
+}
+{
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "RouteId": "9kyl2hi",
+    "RouteKey": "DELETE /",
+    "Target": "integrations/wp0uj9i"
+}
+
+
+
+
+aws apigatewayv2 create-stage \
+  --api-id ${API_ID} \
+  --stage-name prod
+
+{
+    "CreatedDate": "2025-04-03T15:30:24+00:00",
+    "DefaultRouteSettings": {
+        "DetailedMetricsEnabled": false
+    },
+    "LastUpdatedDate": "2025-04-03T15:30:25+00:00",
+    "RouteSettings": {},
+    "StageName": "prod",
+    "StageVariables": {},
+    "Tags": {}
+}
+
+
+aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
+{
+    "AutoDeployed": false,
+    "CreatedDate": "2025-04-03T15:40:58+00:00",
+    "DeploymentId": "01jigd",
+    "DeploymentStatus": "DEPLOYED"
+}
+
+
+URL=https://$API_ID.execute-api.$REGION.amazonaws.com/prod/?TableName=ccbda-example
+echo $URL
+curl "$URL"
+
+
+
+
+
+
+
 
 ### **Step 2: Create an API in API Gateway**
 
