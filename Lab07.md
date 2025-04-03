@@ -867,19 +867,6 @@ You can create custom queries on the log records.
 
 ### Using Kibana's Features for Observability
 
-Kibana offers several powerful features for observability:
-
-1. **Visualizations**:
-    - Create pie charts, histograms, and line charts to visualize trends in logs (e.g., error rates, request counts,
-      etc.).
-
-2. **Alerting**:
-    - You can set up **alerts** based on thresholds in Kibana to notify you when specific conditions are met, such as
-      when the error rate exceeds a certain limit.
-
-3. **Machine Learning**:
-    - Kibana offers machine learning features to detect anomalies in your logs and metrics.
-
 Using the configuration deployed in this lab session, ELK is only going to receive the logs sent to the `django` logger which in the code is
 selected using the code: `logger = logging.getLogger('django')`.
 
