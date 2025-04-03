@@ -700,53 +700,67 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 
 <img alt="Lab08-APIGateway.png" src="images/Lab08-APIGateway.png" width="100%"/>
 
+### Test the API
 
+Once the API is deployed, you can test it using the files in the `webpage1` folder. But before, you need to change the value of the variable `apiUrl` to the value obtained above.
 
+The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
 
+```javascript
+(function ($) {
+    apiUrl = "https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/prod/"
+    TableName = 'ccbda-lambda-first';
 
+    $.ajax({
+        type: 'GET',
+        url: apiUrl,
+        data: {'TableName': TableName},
+        crossDomain: true,
+        success: function (result) {
+            $.each(result.Items, function (i, item) {
+                $('#items').append('<li>' + item.thingID.S + '</li>');
+            });
+        },
+        error: function (xhr, status, error) {
+            $('#error').toggle().append('<div>' + error + '</div>');
+        }
+    });
 
-
-### **Step 2: Create an API in API Gateway**
-
-1. **Navigate to API Gateway Console**: 
-   - Go to the **API Gateway Console** in AWS.
-   - Select **Create API** and choose **REST API**.
-   - Name your API (e.g., `MyTestAPI`), and choose the protocol type as REST.
-   
-2. **Create a Resource and Method**:
-   - In the **API Gateway Console**, create a new resource. This will be the path that your API responds to, for example `/test`.
-   - Create a **GET** method for this resource, which will invoke the Lambda function when called.
-
-3. **Link API Gateway with Lambda**:
-   - When creating the **GET** method, select **Lambda Function** as the integration type.
-   - Choose the region where you created the Lambda function and enter the name of the Lambda function you created earlier (`lambda_handler`).
-   - Ensure that **Use Lambda Proxy integration** is checked. This allows API Gateway to forward the request as a JSON payload.
-
-4. **Deploy the API**:
-   - Deploy your API to a stage (e.g., `dev`).
-   - After deployment, you will receive an **Invoke URL** for your API (e.g., `https://xyz123.execute-api.us-west-2.amazonaws.com/dev`).
-
-### **Step 3: Test the API**
-
-Once the API is deployed, you can test it using the following Python code that sends an HTTP request to your newly created API endpoint.
-
-```python
-import requests
-
-# Replace with your actual API Gateway Invoke URL
-api_url = "https://xyz123.execute-api.us-west-2.amazonaws.com/dev/test"
-
-# Send a GET request to the API
-response = requests.get(api_url)
-
-# Print the response from the API
-if response.status_code == 200:
-    print("Success!")
-    print("Response Body:", response.json())
-else:
-    print(f"Error: {response.status_code}")
-    print("Response Body:", response.text)
+    // Form submit
+    $("#form").submit(function (event) {
+        event.preventDefault();
+        thingID = $('#thingID').val();
+        payload = {
+            'TableName': TableName,
+            'Item': {
+                'thingID': {
+                    'S': thingID
+                }
+            }
+        }
+        $.ajax({
+            type: 'POST',
+            url: apiUrl,
+            crossDomain: true,
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            cache: false,
+            success: function (result) {
+                $('#thingID').val('');
+                $('#items').append('<li>' + thingID + '</li>');
+            },
+            error: function (xhr, status, error) {
+                $('#error').toggle().append('<div>' + status + ',' + error + '</div>');
+            }
+        });
+    });
+})(jQuery);
 ```
+
+Open the "index.html" file using your browser and start to create items in the list.
+
+<img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="100%"/>
+
 
 ### **Step 4: Deploy and Monitor**
 
