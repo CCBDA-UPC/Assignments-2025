@@ -542,6 +542,15 @@ system performance via customizable dashboards.
 By using **AWS CloudWatch**, you can optimize application performance, troubleshoot issues, and manage costs effectively 
 across AWS environments.
 
+#### Analyzing and Troubleshooting with Logs
+
+Once you have logs flowing you can use this data to:
+
+- **Identify performance bottlenecks** (e.g., high response times, database latency).
+- **Trace errors and exceptions** (e.g., frequent exceptions or stack traces).
+- **Monitor traffic spikes** (e.g., number of requests or user activity).
+- **Identify trends in the use of your web application** (e.g., interest in Cloud Computing articles after singing in)
+
 ### Sending Logs to CloudWatch and Elasticsearch
 
 Once Elasticsearch and Kibana are running, the next step is to configure your application to send logs to
@@ -861,17 +870,8 @@ Kibana offers several powerful features for observability:
 3. **Machine Learning**:
     - Kibana offers machine learning features to detect anomalies in your logs and metrics.
 
-#### Analyzing and Troubleshooting with Logs
-
-Once you have logs flowing into Elasticsearch and visualized in Kibana, you can use this data to:
-
-- **Identify performance bottlenecks** (e.g., high response times, database latency).
-- **Trace errors and exceptions** (e.g., frequent exceptions or stack traces).
-- **Monitor traffic spikes** (e.g., number of requests or user activity).
-
 Using the configuration deployed in this lab session, ELK is only going to receive the logs sent to the `django` logger which in the code is
-selected using the code: `logger = logging.getLogger('django')`. The rest of the log records produced by `django.server`
-or other web application components are either sent to the console or to the AWS S3 bucket.
+selected using the code: `logger = logging.getLogger('django')`.
 
 Execute the web application that, after filling the form is setting a cookie named `email` to keep the e-mail address of the last user filling the form. If the cookie is not empty it doesn't show the form and, instead, it shows several news on Cloud Computing. You can change the user by removing the cookie appearing in the "Application" tab of the Google Chrome "Inspect" tool.
 
