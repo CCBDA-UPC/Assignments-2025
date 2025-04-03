@@ -517,15 +517,24 @@ not necessary to use both environments, this will provide a useful comparison be
 
 #### Key Concepts:
 
+- **AWS CloudWatch** is the default logging and monitoring environment for all AWS services. It collects, processes, and 
+analyzes metrics, logs, and events, allowing users to detect anomalies, set up alarms, automate actions, and visualize 
+system performance via customizable dashboards.
+
 - **Elasticsearch**: A powerful, distributed search and analytics engine commonly used to store, search, and analyze 
 log and event data. It provides real-time querying and efficient storage for large datasets.
   
 - **Kibana**: A visualization tool for interacting with data stored in Elasticsearch. It offers an intuitive interface 
 to create dashboards, visualize metrics, and analyze logs.
 
-- **AWS CloudWatch** is the default logging and monitoring environment for all AWS services. It collects, processes, and 
-analyzes metrics, logs, and events, allowing users to detect anomalies, set up alarms, automate actions, and visualize 
-system performance via customizable dashboards.
+#### Key CloudWatch Features:
+
+- **Metrics Monitoring**: Tracks resource usage such as CPU, memory, and network performance.
+- **Alarms**: Triggers notifications or actions when predefined thresholds are met.
+- **Log Management**: Collects and analyzes logs from AWS services and applications.
+- **Event-driven Automation**: Automates responses based on events using Amazon EventBridge.
+- **Custom Dashboards**: Creates real-time visualizations of key metrics.
+- **Anomaly Detection**: Leverages machine learning to identify abnormal patterns in metrics.
 
 #### **Key Kibana Features**
 
@@ -537,18 +546,6 @@ system performance via customizable dashboards.
 - **Discover**: Explore raw log data in real-time to quickly identify issues.
 - **Machine Learning**: Automatically detect anomalies and outliers in your data with built-in ML features.
 - **Canvas**: Create custom, dynamic reports and presentations using your Elasticsearch data.
-
-#### Key CloudWatch Features:
-
-- **Metrics Monitoring**: Tracks resource usage such as CPU, memory, and network performance.
-- **Alarms**: Triggers notifications or actions when predefined thresholds are met.
-- **Log Management**: Collects and analyzes logs from AWS services and applications.
-- **Event-driven Automation**: Automates responses based on events using Amazon EventBridge.
-- **Custom Dashboards**: Creates real-time visualizations of key metrics.
-- **Anomaly Detection**: Leverages machine learning to identify abnormal patterns in metrics.
-
-By using **AWS CloudWatch**, you can optimize application performance, troubleshoot issues, and manage costs effectively 
-across AWS environments.
 
 Together, **Elasticsearch** and **Kibana** form the **ELK Stack** (Elasticsearch, Logstash, and Kibana), a popular 
 solution for log aggregation, analysis, and visualization. You will have access to a 14-day trial to explore these tools.
