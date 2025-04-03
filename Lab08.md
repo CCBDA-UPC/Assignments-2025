@@ -702,6 +702,17 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 
 ### Test the API
 
+[**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
+
+Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface. You can also download the desktop app and import the Testing operations into your laptop. 
+
+The Testing collection is using two variables defined in the CRUD environment. Make sure that the CRUD environment is selected before testing the HTTP operations.
+
+<img alt="Lab08-Postman-collections.png" src="images/Lab08-Postman-collections.png" width="100%"/>
+
+<img alt="Lab08-Postman-environments.png" src="images/Lab08-Postman-environments.png" width="100%"/>
+
+
 Once the API is deployed, you can test it using the files in the `webpage1` folder. But before, you need to change the value of the variable `apiUrl` to the value obtained above.
 
 The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
