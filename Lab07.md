@@ -846,6 +846,7 @@ class Feeds(models.Model):
             except Exception as e:
                 logger.error(f'Feed reading error: {e}')
 ```
+
 ### Using AWS CloudWatch for Observability
 
 By combining metrics, logs, and event management in one unified platform, it simplifies monitoring and troubleshooting, 
@@ -862,6 +863,7 @@ You can create custom queries on the log records.
 
 <img alt="Lab07-CloudWatch_LogInsights.png" src="images/Lab07-CloudWatch_LogInsights.png" width="100%"/>
 
+**Q721: Play with AWS CloudWatch and the logs that you have obtained. Share your insights.**
 
 ### Using Kibana's Features for Observability
 
@@ -893,8 +895,10 @@ Once the index is selected drag and drop fields appearing in the grey column to 
 
 <img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
 
+**Q722: Play with Kibana and the logs that you have obtained. Share your insights.**
 
-#### Conclusion
+
+### Conclusion
 
 By using **AWS CloudWatch**, **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your
 application. The steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The 
@@ -903,9 +907,7 @@ observability tools help to gain insights from your logs, track performance, and
 As you continue to evolve your observability pipeline, you can also integrate metrics, traces, and other telemetry data
 into your stack to build a more complete monitoring solution.
 
-**Q721: Play with AWS CloudWatch and the logs that you have obtained. Share your insights.**
 
-**Q722: Play with Kibana and the logs that you have obtained. Share your insights.**
 
 **Q723: Assess the current version of the web application against each of the twelve factor application.**
 
