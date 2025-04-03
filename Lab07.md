@@ -570,7 +570,9 @@ Since AWS CloudWatch is timestampping the logs we don't need to send the time st
 The `JsonFormatter` class is a new custom formatter that generates log records in JSON format rather than simple
 string-based logs. This formatter is used by the "elk" log handler, which integrates with the ELK (Elasticsearch,
 Logstash, Kibana) stack for log management. Please open the `settings.py` and add the formatter, hander and restructure
-the log ingestion sending `django.server` messages to "s3" and `django` to "elk" handlers.
+the log ingestion sending `django.server` messages to "cloudwatch" and `django` to "elk" handler.
+
+Modify your `settings.py` configuration using the changes shown below.
 
 ```python
 LOGGING = {
