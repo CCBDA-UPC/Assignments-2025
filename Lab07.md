@@ -784,15 +784,15 @@ The output of the formatter can be a record similar to:
 
 ### New functionality added to the web application
 
-The `form/views.py` home page view now displays all the feeds, ordered by the number of hits, from highest to lowest.
-Additionally, it now includes a new function that counts one more hit before redirecting to the article's URL. See that
-it also creates a log record including the visitor's e-mail address and the article's URL.
+The `form/views.py` home page view now displays all the feeds, in random order. Additionally, it now includes a function
+that counts one more hit before redirecting to the article's URL. See that it also creates a log record including the 
+visitor's e-mail address and the article's URL.
 
 ```python
 def home(request):
     if Feeds.objects.all().count() == 0:
         Feeds().refresh_data()
-    feeds = Feeds.objects.order_by('-hits').all()
+    feeds = Feeds.objects.all().order_by('?')
     logger.info('', {
         "user": request.COOKIES.get('email'),
     })
