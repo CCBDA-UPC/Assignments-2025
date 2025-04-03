@@ -704,7 +704,7 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 
 [**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
 
-Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface where there are some REST API calls to test the above deployed API Gateway. You can also download the desktop app and import the Testing operations into your laptop. 
+Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface where there are some REST API calls to test the above deployed CRUD API Gateway. You can also download the desktop app and import the testing collection of operations into your laptop. 
 
 The Testing collection is using two variables defined in the CRUD environment. Make sure that the CRUD environment is selected before testing the HTTP operations.
 
@@ -712,8 +712,7 @@ The Testing collection is using two variables defined in the CRUD environment. M
 
 <img alt="Lab08-Postman-environments.png" src="images/Lab08-Postman-environments.png" width="100%"/>
 
-
-Once the API is deployed, you can test it using the files in the `webpage1` folder. But before, you need to change the value of the variable `apiUrl` to the value obtained above.
+Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder are the mininmal web page. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the value obtained above.
 
 The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
 
@@ -773,23 +772,11 @@ Open the "index.html" file using your browser and start to create items in the l
 <img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="80%"/>
 
 
-### **Step 4: Deploy and Monitor**
+### Observability
 
-Once your API is deployed and working, you can monitor its usage in the AWS API Gateway and Lambda dashboards:
-- **API Gateway**: You can track metrics like the number of requests, latency, and any errors.
-- **Lambda**: Use AWS CloudWatch Logs to view detailed logs for each invocation of your Lambda function.
+You may have noticed that the Lambda function includes some logging. Open the AWS CloudWatch console and check.
 
-### **Explanation of the Components**:
-1. **Lambda Function**: This is where you process the incoming API requests. In the example, we simply return a JSON message with a "Hello from Lambda!" message.
-2. **API Gateway**: Acts as the entry point to your API, routing incoming HTTP requests to the appropriate Lambda function.
-3. **Requests Library in Python**: The `requests` library is used to send HTTP requests from your local machine or another system to the API Gateway endpoint.
-
-### **Additional Features**:
-- You can handle more HTTP methods like `POST`, `PUT`, or `DELETE` by adding additional logic in your Lambda function.
-- Use **API Gateway Authorizers** (like IAM roles, Lambda authorizers, or Cognito) to secure your API.
-- You can also enable **CORS** (Cross-Origin Resource Sharing) in API Gateway if you need to access the API from a frontend application hosted on a different domain.
-
-This is a basic example to get you started. You can expand it by adding more resources, using environment variables, setting up custom domains, and more depending on your needs.
+<img alt="Lab08-CloudWatch.png" src="images/Lab08-CloudWatch.png" width="100%"/>
 
 
 
