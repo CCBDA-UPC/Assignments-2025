@@ -888,18 +888,20 @@ Once the index is selected drag and drop fields appearing in the grey column to 
 
 #### Conclusion
 
-By using **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your application. The
-steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The observability tools like
-Kibana help to gain insights from your logs, track performance, and troubleshoot issues in real-time.
+By using **AWS CloudWatch**, **Elasticsearch** and **Kibana**, you can build a powerful observability platform for your
+application. The steps outlined above provide the basic setup for collecting, storing, and visualizing logs. The 
+observability tools help to gain insights from your logs, track performance, and troubleshoot issues in real-time.
 
 As you continue to evolve your observability pipeline, you can also integrate metrics, traces, and other telemetry data
 into your stack to build a more complete monitoring solution.
 
-**Q721: Play with Kibana and the logs that you have obtained. Share your insights.**
+**Q721: Play with AWS CloudWatch and the logs that you have obtained. Share your insights.**
 
-**Q722: Assess the current version of the web application against each of the twelve factor application.**
+**Q722: Play with Kibana and the logs that you have obtained. Share your insights.**
 
-**Q723: How long have you been working on this session? What have been the main difficulties that you have faced and how
+**Q723: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q724: How long have you been working on this session? What have been the main difficulties that you have faced and how
 have you solved them? Add your answers to README.md.**
 
 ## How to submit this assignment:
