@@ -765,7 +765,7 @@ The output of the formatter can be a record similar to:
 }
 ```
 
-#### New functionality added
+#### New functionality added to the web application
 
 The `form/views.py` home page view now displays all the feeds, ordered by the number of hits, from highest to lowest.
 Additionally, it now includes a new function that counts one more hit before redirecting to the article's URL. See that
@@ -829,6 +829,22 @@ class Feeds(models.Model):
             except Exception as e:
                 logger.error(f'Feed reading error: {e}')
 ```
+### Using AWS CloudWatch for Observability
+
+By combining metrics, logs, and event management in one unified platform, it simplifies monitoring and troubleshooting, 
+helping you maintain high availability, performance, and cost efficiency.
+
+With **AWS CloudWatch**, you can improve operational efficiency, quickly detect and address issues, and optimize your 
+AWS environment, all while ensuring a seamless experience for your users.
+
+You can use "Live Tail" to observe the latests log records received applying some filters.
+
+<img alt="Lab07-CloudWatch-LiveTail.png" src="images/Lab07-CloudWatch-LiveTail.png" width="100%"/>
+
+You can create custom queries on the log records.
+
+<img alt="Lab07-CloudWatch_LogInsights.png" src="images/Lab07-CloudWatch_LogInsights.png" width="100%"/>
+
 
 ### Using Kibana's Features for Observability
 
