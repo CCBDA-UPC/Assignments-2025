@@ -759,7 +759,7 @@ The JavaScript code uses jQuery to create a "GET" request as soon as the web pag
 
 Open the "index.html" file using your browser and start to create items in the list.
 
-<img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="100%"/>
+<img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="80%"/>
 
 
 ### **Step 4: Deploy and Monitor**
