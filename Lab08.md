@@ -1,39 +1,24 @@
-#### **Understanding `kwargs` in Python:**
+# Lab Session 8: Serverless applications
 
-In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
+## Serverless applications
 
-##### **Example:**
-```python
-def greet_user(**kwargs):
-    print(kwargs)
+**Serverless applications** are applications that run without the need for server management by the developer. In a serverless model, cloud providers handle the infrastructure, scaling, and management of servers. Developers only focus on writing and deploying code, which is executed in response to events, such as HTTP requests, database changes, or file uploads.
 
-greet_user(name="Alice", age=30)
-
-params = {'name': 'Alice', 'age': 30}
-greet_user(**params)
-```
-In both cases the output is
-```python
-{'name': 'Alice', 'age': 30}
-```
-
-
-
-
-
+#### Key features of serverless applications:
+- **No Server Management**: Developers don’t need to provision or maintain servers.
+- **Event-driven**: Functions are executed in response to specific events.
+- **Scalability**: The cloud provider automatically scales resources based on demand.
+- **Cost-efficient**: You pay only for the execution time of the functions, not for idle server resources.
 
 ## AWS Lambda
 
-**AWS Lambda** is a fully managed **serverless computing service** provided by Amazon Web Services (AWS). It allows developers to run code in response to events without provisioning or managing servers. In simple terms, AWS Lambda lets you focus purely on your code, while AWS takes care of all the infrastructure needed to run and scale your application.
+**AWS Lambda** is a fully managed **serverless computing service** provided by AWS. It allows developers to run code in response to events without provisioning or managing servers.
 
-### Key Features of AWS Lambda:
+#### Key Features of AWS Lambda:
 
-1. **Serverless**:
-   - You don’t have to worry about provisioning or managing servers. AWS Lambda automatically manages the compute resources for you, scaling them as needed based on incoming requests or events.
-   - This eliminates the need to maintain infrastructure and reduces overhead.
+- **Serverless**: eliminating the need to maintain infrastructure and reducing overhead.
 
-2. **Event-Driven**:
-   - AWS Lambda is designed to be triggered by various AWS services or external events, such as:
+- **Event-Driven**: designed to be triggered by various AWS services or external events, such as:
      - **S3** events (e.g., file uploads)
      - **API Gateway** requests (for building APIs)
      - **DynamoDB** streams (e.g., when data is added/modified)
@@ -42,38 +27,19 @@ In both cases the output is
      - **Cognito** triggers (for user sign-up/sign-in events)
      - And many other sources (including custom event sources).
 
-3. **Scalability**:
-   - AWS Lambda automatically scales the number of execution environments to match the incoming event load. If there are hundreds or thousands of events, Lambda can scale to handle them without any manual intervention.
-   - It scales **horizontally** by running multiple instances of your function in parallel when needed.
+- **Scalability**: automatically scales the number of execution environments to match the incoming event load. If there are hundreds or thousands of events, Lambda can scale to handle them without any manual intervention. It scales **horizontally** by running multiple instances of your function in parallel when needed.
 
-4. **Pay-As-You-Go Pricing**:
-   - With AWS Lambda, you only pay for the compute time you use, i.e., the time your code runs. You are billed based on the number of requests and the duration of your code execution (in milliseconds).
-   - No charges for idle time – Lambda only charges when the function is triggered.
+- **Pay-As-You-Go Pricing**: pay for the compute time used by the code than runs. The billing is based on the number of requests and the duration of the code execution (in milliseconds).
 
+- **Stateless**: each invocation of an AWS Lambda function is stateless, meaning it doesn’t retain any state between executions. If you need to maintain state, you can use AWS services like **DynamoDB** or **S3** to store persistent data.
 
-6. **Stateless**:
-   - Each invocation of an AWS Lambda function is stateless, meaning it doesn’t retain any state between executions. If you need to maintain state, you can use AWS services like **DynamoDB** or **S3** to store persistent data.
-
-7. **Customizable Execution Role**:
+- **Customizable Execution Role**:
    - You can configure **IAM (Identity and Access Management)** roles for Lambda functions, granting them permissions to interact with other AWS services securely.
    - This enables Lambda functions to read from/write to S3, DynamoDB, or any other AWS service you need to interact with.
 
-8. **Short-lived Execution**:
-   - AWS Lambda functions can run for a maximum of 15 minutes per invocation. If the function doesn't complete within this time frame, it will be terminated. This makes Lambda best suited for tasks that can be completed quickly, such as real-time data processing, image resizing, API responses, etc.
+- **Short-lived Execution**: functions can run for a maximum of 15 minutes per invocation. If the function doesn't complete within this time frame, it will be terminated. This makes Lambda best suited for tasks that can be completed quickly, such as real-time data processing, image resizing, API responses, etc.
 
-9. **Logging and Monitoring**:
-   - AWS Lambda integrates with **Amazon CloudWatch** for logging and monitoring, so you can track metrics such as the number of invocations, execution time, error rates, and more.
-   - Logs are automatically generated by Lambda, making it easy to debug and monitor function performance.
-
-    
-### Benefits of AWS Lambda:
-
-- **No Server Management**: You don’t have to provision or manage servers.
-- **Automatic Scaling**: Automatically scales depending on the number of requests/events, handling any workload.
-- **Cost-Effective**: Pay only for the compute time used, with no cost for idle time.
-- **Quick Deployment**: You can deploy your code in minutes, and AWS automatically handles the scaling and infrastructure.
-- **Integrated with AWS Ecosystem**: Lambda integrates seamlessly with other AWS services like S3, DynamoDB, SNS, and more.
-
+- **Logging and Monitoring**: integrated with **Amazon CloudWatch** for logging and monitoring, so you can track metrics such as the number of invocations, execution time, error rates, and more.
 
 
 ### AWS API Gateway
@@ -406,9 +372,26 @@ asyncio.run(hello())
 
 
 
+# Pre-lab homework
 
+### **Understanding `kwargs` in Python:**
 
+In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
 
+##### **Example:**
+```python
+def greet_user(**kwargs):
+    print(kwargs)
+
+greet_user(name="Alice", age=30)
+
+params = {'name': 'Alice', 'age': 30}
+greet_user(**params)
+```
+In both cases the output is
+```python
+{'name': 'Alice', 'age': 30}
+```
 
 # Tasks
 
@@ -774,9 +757,16 @@ Open the "index.html" file using your browser and start to create items in the l
 
 ### Observability
 
-You may have noticed that the Lambda function includes some logging. Open the AWS CloudWatch console and check.
+You may have noticed that the Lambda function includes some logging calls. Open the AWS CloudWatch console and check the outcome.
 
 <img alt="Lab08-CloudWatch.png" src="images/Lab08-CloudWatch.png" width="100%"/>
+
+
+**Q811: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q812: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.**
+
+
 
 
 
@@ -1174,3 +1164,18 @@ This removes the Lambda function from AWS.
    aws lambda delete-function --function-name my-lambda-function
    ```
 
+
+
+
+
+Q823: Assess the current version of the web application against each of the twelve factor application.
+
+Q824: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
+
+## How to submit this assignment:
+
+Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
+
+Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-8-xx repository.
+
+Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
