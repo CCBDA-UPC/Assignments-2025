@@ -523,7 +523,7 @@ _$ aws lambda create-function --function-name LambdaCRUD \
 _$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
 ```
 
-In Unix, using the command [`jq`](https://jqlang.org/) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable.
+In Unix, using the command `jq` ([(more info)](https://jqlang.org/)) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable.
 
 ```bash
 _$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaCRUD \
