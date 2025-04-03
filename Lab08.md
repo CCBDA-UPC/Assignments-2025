@@ -433,6 +433,8 @@ Such operations can be applied in different contexts.
 
 In this lab session we'll be creating a REST API. Therefore, you first, create a DynamoDB table named `ccbda-lambda-first` with `thingID` as the partition key. Then, download the repository from [this link](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository.
 
+### Deploying the CRUD Lambda function
+
 Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
 We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
@@ -483,8 +485,6 @@ def respond(res, err=None):
 
 The file `requirements.txt` defines the Python environment for the above function to be executed.
 
-### API Gateway creation
-
 We are going to use the AWS CLI to deploy the Lambda function and build the **API Gateway**. Open a terminal and set the variables to the corresponding value. The command `aws lambda create-function` sends the zip file with the Python code and requirements to AWS. In response it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
 
 ```bash
@@ -523,7 +523,7 @@ _$ aws lambda create-function --function-name LambdaCRUD \
 _$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
 ```
 
-Using the command [`jq`](https://jqlang.org/) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable:
+In Unix, using the command [`jq`](https://jqlang.org/) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable.
 
 ```bash
 _$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaCRUD \
@@ -536,11 +536,35 @@ _$ echo $LAMBDA_ARN
 "arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
 ```
 
+Go to the AWS Lambda console and see the outcome of the above commands.
 
-aws apigatewayv2 create-api \
+<img alt="Lab08-LambdaConsole.png" src="images/Lab08-LambdaConsole.png" width="100%"/>
+
+
+### API Gateway creation
+
+It is now necessary to create a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value. The command `aws lambda add-permission` allows the Lambda function to be accessed by any API Gateway.
+
+```bash
+_$ STATEMENT_ID=`uuidgen`
+_$ echo $STATEMENT_ID
+CDCFB599-79CC-4877-B480-6B97B4125D4D
+_$ aws lambda add-permission \
+  --function-name LambdaCRUD \
+  --principal apigateway.amazonaws.com \
+  --statement-id "${STATEMENT_ID}" \
+  --action lambda:InvokeFunction
+{
+    "Statement": "{\"Sid\":\"CDCFB599-79CC-4877-B480-6B97B4125D4D\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD\"}"
+}
+```
+
+Once the Lambda function is deployed we'll go and create the API Gateway name ("CrudHttpAPI") and type (HTTP). Use the "ApiId" field to set the value of the variable `API_ID` or use `jq` instead.
+
+```bash
+_$ aws apigatewayv2 create-api \
   --name "CrudHttpAPI" \
   --protocol-type HTTP
-
 {
     "ApiEndpoint": "https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com",
     "ApiId": "9h1wag0ywe",
@@ -550,19 +574,18 @@ aws apigatewayv2 create-api \
     "ProtocolType": "HTTP",
     "RouteSelectionExpression": "$request.method $request.path"
 }
+_$ API_ID=9h1wag0ywe
+```
 
+The following step binds the created API Gateway with the Lambda function deployed before. Make sure that you save the value of the `INTEGRATION_ID` variable using the "IntegrationId" response field.
 
-
-
-API_ID=9h1wag0ywe
-
-aws apigatewayv2 create-integration \
+```bash
+_$ aws apigatewayv2 create-integration \
     --api-id ${API_ID} \
     --integration-type AWS_PROXY \
     --integration-uri ${LAMBDA_ARN} \
     --integration-method ANY \
     --payload-format-version 2.0
-
 {
     "ConnectionType": "INTERNET",
     "IntegrationId": "wp0uj9i",
@@ -572,47 +595,16 @@ aws apigatewayv2 create-integration \
     "PayloadFormatVersion": "2.0",
     "TimeoutInMillis": 30000
 }
+_$ INTEGRATION_ID=wp0uj9i
+```
 
-INTEGRATION_ID=wp0uj9i
+The next step is to create different routes in the API Gateway for each HTTP method. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method.
 
-
-aws lambda add-permission \
-  --function-name LambdaCRUD \
-  --principal apigateway.amazonaws.com \
-  --statement-id "45ead975-aef2-526c-3454-0ede099a663b" \
-  --action lambda:InvokeFunction
-
-{
-    "Statement": "{\"Sid\":\"45ead975-aef2-526c-3454-0ede099a663b\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD\"}"
-}
-
-
-
-aws apigatewayv2 create-route \
+```bash
+_$ aws apigatewayv2 create-route \
   --api-id ${API_ID} \
   --route-key "GET /" \
   --target "integrations/${INTEGRATION_ID}"
-
-aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "POST /" \
-  --target "integrations/${INTEGRATION_ID}"
-
-aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "OPTIONS /" \
-  --target "integrations/${INTEGRATION_ID}"
-
-aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "PUT /" \
-  --target "integrations/${INTEGRATION_ID}"
-
-aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "DELETE /" \
-  --target "integrations/${INTEGRATION_ID}"
-
 {
     "ApiKeyRequired": false,
     "AuthorizationType": "NONE",
@@ -620,6 +612,10 @@ aws apigatewayv2 create-route \
     "RouteKey": "GET /",
     "Target": "integrations/wp0uj9i"
 }
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "POST /" \
+  --target "integrations/${INTEGRATION_ID}"
 {
     "ApiKeyRequired": false,
     "AuthorizationType": "NONE",
@@ -627,6 +623,10 @@ aws apigatewayv2 create-route \
     "RouteKey": "POST /",
     "Target": "integrations/wp0uj9i"
 }
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "OPTIONS /" \
+  --target "integrations/${INTEGRATION_ID}"
 {
     "ApiKeyRequired": false,
     "AuthorizationType": "NONE",
@@ -634,6 +634,10 @@ aws apigatewayv2 create-route \
     "RouteKey": "OPTIONS /",
     "Target": "integrations/wp0uj9i"
 }
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "PUT /" \
+  --target "integrations/${INTEGRATION_ID}"
 {
     "ApiKeyRequired": false,
     "AuthorizationType": "NONE",
@@ -641,6 +645,10 @@ aws apigatewayv2 create-route \
     "RouteKey": "PUT /",
     "Target": "integrations/wp0uj9i"
 }
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
+  --route-key "DELETE /" \
+  --target "integrations/${INTEGRATION_ID}"
 {
     "ApiKeyRequired": false,
     "AuthorizationType": "NONE",
@@ -648,14 +656,16 @@ aws apigatewayv2 create-route \
     "RouteKey": "DELETE /",
     "Target": "integrations/wp0uj9i"
 }
+```
 
+The API Gateway can have different stages: production, development, testing, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
 
-
-
-aws apigatewayv2 create-stage \
+```bash
+_$ STAGE="prod"
+_$ aws apigatewayv2 create-stage \
   --api-id ${API_ID} \
-  --stage-name prod
-
+  --stage-name ${STAGE}
+  --no-auto-deploy
 {
     "CreatedDate": "2025-04-03T15:30:24+00:00",
     "DefaultRouteSettings": {
@@ -667,20 +677,24 @@ aws apigatewayv2 create-stage \
     "StageVariables": {},
     "Tags": {}
 }
+```
 
+Finally, the API Gateway is deployed and can be used. The URL is made of
 
-aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
+https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/
+
+```bash
+_$ aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
 {
     "AutoDeployed": false,
     "CreatedDate": "2025-04-03T15:40:58+00:00",
     "DeploymentId": "01jigd",
     "DeploymentStatus": "DEPLOYED"
 }
-
-
-URL=https://$API_ID.execute-api.$REGION.amazonaws.com/prod/?TableName=ccbda-example
-echo $URL
-curl "$URL"
+_$ URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/"
+_$ echo $URL
+https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/prod/
+```
 
 
 
