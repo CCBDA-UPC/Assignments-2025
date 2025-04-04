@@ -1,7 +1,5 @@
 # Lab Session 8: Serverless applications
 
-### Serverless applications
-
 **Serverless applications** are applications that run without the need for server management by the developer. In a serverless model, cloud providers handle the infrastructure, scaling, and management of servers. Developers only focus on writing and deploying code, which is executed in response to events, such as HTTP requests, database changes, or file uploads.
 
 #### Key features of serverless applications:
