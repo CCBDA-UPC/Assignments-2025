@@ -68,15 +68,18 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 **WebSockets** are a communication protocol that enables **full-duplex** (two-way) communication channels over a single, long-lived connection between a client (usually a web browser) and a server. Unlike the traditional HTTP request-response model, which is **stateless** and works in a **request-response** pattern, WebSockets provide a persistent, open connection that allows continuous, real-time data exchange between the client and server.
 
-#### Key Features of WebSockets:
+#### Advantages of WebSockets:
 
-- **Full-Duplex Communication**: allows for real-time interactions, making it ideal for applications like live chats, online gaming, financial apps, etc.
+- **Real-Time Communication**: WebSockets enable instant communication between the client and server, making them ideal for real-time applications.
+- **Reduced Latency**: Since the connection is persistent, there’s no need to repeatedly open and close connections, which results in lower latency.
+- **Efficiency**: WebSockets use less bandwidth and are more efficient than HTTP for frequent message exchanges, as they avoid the overhead of HTTP headers with every request.
+- **Lower Overhead**: There’s less overhead compared to HTTP polling or long-polling because WebSockets maintain a single connection, and data can be sent immediately when available.
 
-- **Persistent Connection**/**Low Latency**: eliminates the need to repeatedly open and close connections, reducing the overhead compared to traditional HTTP requests.
+#### Limitations of WebSockets:
 
-- **Efficient Communication**: reduce the amount of data overhead, as there’s no need for the repeated HTTP headers that occur with each request in a standard HTTP communication.
-
-- **Bidirectional**: enable both the client and the server to send messages at any time.
+- **Browser and Network Compatibility**: WebSockets require support from the client (browser or app) and the server. Some firewalls or proxies might block WebSocket traffic.
+- **Single Connection**: WebSockets typically use a single connection for each client, which can become limiting if you need to scale to millions of users.
+- **No Built-In Message Queuing**: WebSockets don’t provide built-in message persistence, so you need to implement your own system for queuing or persisting messages.
 
 #### How WebSockets Work:
 
@@ -129,18 +132,7 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 
 
-#### Advantages of WebSockets:
 
-- **Real-Time Communication**: WebSockets enable instant communication between the client and server, making them ideal for real-time applications.
-- **Reduced Latency**: Since the connection is persistent, there’s no need to repeatedly open and close connections, which results in lower latency.
-- **Efficiency**: WebSockets use less bandwidth and are more efficient than HTTP for frequent message exchanges, as they avoid the overhead of HTTP headers with every request.
-- **Lower Overhead**: There’s less overhead compared to HTTP polling or long-polling because WebSockets maintain a single connection, and data can be sent immediately when available.
-
-#### Limitations of WebSockets:
-
-- **Browser and Network Compatibility**: WebSockets require support from the client (browser or app) and the server. Some firewalls or proxies might block WebSocket traffic.
-- **Single Connection**: WebSockets typically use a single connection for each client, which can become limiting if you need to scale to millions of users.
-- **No Built-In Message Queuing**: WebSockets don’t provide built-in message persistence, so you need to implement your own system for queuing or persisting messages.
 
 
 
