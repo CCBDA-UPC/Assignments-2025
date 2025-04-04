@@ -277,7 +277,7 @@ Once the Lambda function is deployed you can go to the AWS Lambda console and se
 
 ### API Gateway creation
 
-To allow the Lambda function to be accessed by any API Gateway it is necessary to create a "statement" with a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value to be used by the command `aws lambda add-permission` which creates that premission.
+To allow the Lambda function to be accessed by any API Gateway it is necessary to create a "statement" with a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value to be used by the command `aws lambda add-permission` which creates that premission. Please note the ``` backslashes used in the first command.
 
 ```bash
 _$ STATEMENT_ID=`uuidgen`
@@ -333,7 +333,7 @@ _$ aws apigatewayv2 create-integration \
 _$ INTEGRATION_ID=wp0uj9i
 ```
 
-Now, `aws apigatewayv2 create-route` creates different routes in the API Gateway, one for each HTTP **method** and **path**. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method.
+Now, `aws apigatewayv2 create-route` creates different routes in the API Gateway, one for each HTTP **method** and **path**. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method and path.
 
 ```bash
 _$ aws apigatewayv2 create-route \
