@@ -107,205 +107,15 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 - **Closing the Connection**: Either the client or the server can close the WebSocket connection at any time by sending a **close frame**. Once the connection is closed, no more messages can be sent or received.
 
-### Common Use Cases of WebSockets:
+#### Common Use Cases of WebSockets:
 
-- **Real-Time Messaging and Chat Applications**:
-   - WebSockets are ideal for applications like live chat or messaging, where users need instant communication with each other.
-   
-- **Online Gaming**:
-   - In multiplayer games, WebSockets enable fast, real-time communication between players, which is crucial for game states, actions, and updates.
-   
-- **Stock Market or Financial Applications**:
-   - Financial apps that require real-time updates (e.g., stock prices, cryptocurrency rates) benefit from WebSockets because of the low latency and continuous data flow.
-   
-- **Live Sports Updates**:
-   - WebSockets allow sports applications to push live scores, statistics, and news to users without requiring them to refresh the page.
-
-- **Collaborative Applications**:
-   - Applications like collaborative document editing (e.g., Google Docs) require real-time updates to synchronize changes made by different users.
-
-- **IoT (Internet of Things)**:
-   - WebSockets are also useful for real-time communication between IoT devices (e.g., smart home devices, sensors) and control systems, where the devices need to send continuous streams of data.
-
-- **Push Notifications**:
-   - WebSockets can be used for implementing push notifications in web applications, allowing users to receive instant alerts about various events (e.g., new messages, system updates).
-
-### Example WebSocket Usage:
-
-Here’s a basic example of how WebSocket communication works in a **web browser** using JavaScript (client-side) and **Node.js** (server-side).
-
-#### **Client-Side (JavaScript - Browser)**:
-
-```javascript
-// Create a new WebSocket connection to the server
-const socket = new WebSocket('ws://localhost:8080');
-
-// When the WebSocket connection is established
-socket.onopen = function(event) {
-    console.log("Connected to the server!");
-    socket.send('Hello, Server!');
-};
-
-// When a message is received from the server
-socket.onmessage = function(event) {
-    console.log("Message from server:", event.data);
-};
-
-// When the WebSocket connection is closed
-socket.onclose = function(event) {
-    console.log("Disconnected from the server.");
-};
-
-// Handling errors
-socket.onerror = function(error) {
-    console.log("WebSocket error:", error);
-};
-```
-
-#### **Server-Side **:
-
-
-To create a WebSocket server in Python, you can use the `websockets` library, which provides an easy way to handle WebSocket connections. 
-First, you'll need to install the `websockets` library. You can do that by running:
-
-```bash
-pip install websockets
-```
-
-##### Server-Side WebSocket Example in Python:
-
-Here is a simple WebSocket server in Python using the `websockets` library:
-
-```python
-import asyncio
-import websockets
-
-# This function will handle a WebSocket connection from the client
-async def echo(websocket, path):
-    # Print when a new client connects
-    print(f"Client connected: {path}")
-    
-    # Send a welcome message to the client
-    await websocket.send("Hello, Client!")
-
-    try:
-        # Wait for messages from the client
-        async for message in websocket:
-            print(f"Received from client: {message}")
-            # Echo the received message back to the client
-            await websocket.send(f"Echo: {message}")
-    except websockets.exceptions.ConnectionClosed as e:
-        print(f"Connection closed: {e}")
-    finally:
-        print("Connection closed by client.")
-
-# Start the WebSocket server
-async def main():
-    # Start the WebSocket server on localhost:8765
-    async with websockets.serve(echo, "localhost", 8765):
-        print("Server started on ws://localhost:8765")
-        # Run the server indefinitely
-        await asyncio.Future()  # This will keep the server running
-
-# Run the main coroutine
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-##### Explanation of the Code:
-
-- **`echo` Function**:
-   - This function handles the WebSocket connection for each client. It first sends a welcome message to the client and then listens for messages from the client. Any message received from the client is echoed back with the prefix "Echo: ".
-   
-- **`main` Function**:
-   - This function starts the WebSocket server by calling `websockets.serve(echo, "localhost", 8765)`, which listens for incoming WebSocket connections on `ws://localhost:8765`.
-   - The `asyncio.Future()` keeps the server running indefinitely by waiting for events (like new incoming connections).
-
-- **Running the Server**:
-   - The server will print `"Server started on ws://localhost:8765"` when it is up and running, and it will listen for incoming WebSocket connections.
-   - If a client sends a message, the server will log the message and send it back (echo).
-
-##### 3. Client-Side Example in JavaScript (Web Browser):
-
-You can test this WebSocket server using the following JavaScript client code in the browser:
-
-```javascript
-// Create a new WebSocket connection to the server
-const socket = new WebSocket('ws://localhost:8765');
-
-// When the WebSocket connection is established
-socket.onopen = function(event) {
-    console.log("Connected to the server!");
-    socket.send('Hello, Server!');
-};
-
-// When a message is received from the server
-socket.onmessage = function(event) {
-    console.log("Message from server:", event.data);
-};
-
-// When the WebSocket connection is closed
-socket.onclose = function(event) {
-    console.log("Disconnected from the server.");
-};
-
-// Handling errors
-socket.onerror = function(error) {
-    console.log("WebSocket error:", error);
-};
-```
-
-##### How to Test:
-
-- **Run the Python WebSocket Server**:
-   - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
-   - Run the server:
-     ```bash
-     python websocket_server.py
-     ```
-
-- **Run the JavaScript Client**:
-   - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
-   
-   Example HTML file:
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>WebSocket Client</title>
-   </head>
-   <body>
-       <h1>WebSocket Client</h1>
-       <script src="client.js"></script>
-   </body>
-   </html>
-   ```
-
-   Save the JavaScript code in a file called `client.js`, then open the HTML file in your web browser.
-
-##### 4. WebSocket Client (Python Example):
-
-You can also write a Python WebSocket client to test the server using the `websockets` library:
-
-```python
-import asyncio
-import websockets
-
-async def hello():
-    uri = "ws://localhost:8765"
-    async with websockets.connect(uri) as websocket:
-        # Send a message to the server
-        await websocket.send("Hello, Server!")
-        
-        # Receive the response from the server
-        response = await websocket.recv()
-        print(f"Response from server: {response}")
-
-# Run the client
-asyncio.run(hello())
-```
+- Real-Time Messaging and Chat Applications.
+- Online Gaming.
+- Stock Market or Financial Applications**: instant value update (e.g., stock prices, cryptocurrency rates).
+- Live Sports Updates.
+- Collaborative Applications with real-time updates (e.g., Google Docs)
+- IoT (Internet of Things) communication between IoT devices (e.g., smart home devices, sensors) and control systems
+- Push Notifications in web applications
 
 
 
@@ -319,16 +129,14 @@ asyncio.run(hello())
 
 
 
-
-
-### Advantages of WebSockets:
+#### Advantages of WebSockets:
 
 - **Real-Time Communication**: WebSockets enable instant communication between the client and server, making them ideal for real-time applications.
 - **Reduced Latency**: Since the connection is persistent, there’s no need to repeatedly open and close connections, which results in lower latency.
 - **Efficiency**: WebSockets use less bandwidth and are more efficient than HTTP for frequent message exchanges, as they avoid the overhead of HTTP headers with every request.
 - **Lower Overhead**: There’s less overhead compared to HTTP polling or long-polling because WebSockets maintain a single connection, and data can be sent immediately when available.
 
-### Limitations of WebSockets:
+#### Limitations of WebSockets:
 
 - **Browser and Network Compatibility**: WebSockets require support from the client (browser or app) and the server. Some firewalls or proxies might block WebSocket traffic.
 - **Single Connection**: WebSockets typically use a single connection for each client, which can become limiting if you need to scale to millions of users.
@@ -798,6 +606,144 @@ aws apigatewayv2 create-route \
 
 - Replace `m96mpy7qz4` with your actual `ApiId` from the previous step.
 - `--route-key`: This is the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
+
+
+
+
+
+---------------------------
+
+
+#### **Server-Side **:
+
+
+To create a WebSocket server in Python, you can use the `websockets` library, which provides an easy way to handle WebSocket connections. 
+First, you'll need to install the `websockets` library. You can do that by running:
+
+```bash
+pip install websockets
+```
+
+##### Server-Side WebSocket Example in Python:
+
+Here is a simple WebSocket server in Python using the `websockets` library:
+
+```python
+import asyncio
+import websockets
+
+# This function will handle a WebSocket connection from the client
+async def echo(websocket, path):
+    # Print when a new client connects
+    print(f"Client connected: {path}")
+    
+    # Send a welcome message to the client
+    await websocket.send("Hello, Client!")
+
+    try:
+        # Wait for messages from the client
+        async for message in websocket:
+            print(f"Received from client: {message}")
+            # Echo the received message back to the client
+            await websocket.send(f"Echo: {message}")
+    except websockets.exceptions.ConnectionClosed as e:
+        print(f"Connection closed: {e}")
+    finally:
+        print("Connection closed by client.")
+
+# Start the WebSocket server
+async def main():
+    # Start the WebSocket server on localhost:8765
+    async with websockets.serve(echo, "localhost", 8765):
+        print("Server started on ws://localhost:8765")
+        # Run the server indefinitely
+        await asyncio.Future()  # This will keep the server running
+
+# Run the main coroutine
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+##### Explanation of the Code:
+
+- **`echo` Function**:
+   - This function handles the WebSocket connection for each client. It first sends a welcome message to the client and then listens for messages from the client. Any message received from the client is echoed back with the prefix "Echo: ".
+   
+- **`main` Function**:
+   - This function starts the WebSocket server by calling `websockets.serve(echo, "localhost", 8765)`, which listens for incoming WebSocket connections on `ws://localhost:8765`.
+   - The `asyncio.Future()` keeps the server running indefinitely by waiting for events (like new incoming connections).
+
+- **Running the Server**:
+   - The server will print `"Server started on ws://localhost:8765"` when it is up and running, and it will listen for incoming WebSocket connections.
+   - If a client sends a message, the server will log the message and send it back (echo).
+
+##### 3. Client-Side Example in JavaScript (Web Browser):
+
+You can test this WebSocket server using the following JavaScript client code in the browser:
+
+```javascript
+// Create a new WebSocket connection to the server
+const socket = new WebSocket('ws://localhost:8765');
+
+// When the WebSocket connection is established
+socket.onopen = function(event) {
+    console.log("Connected to the server!");
+    socket.send('Hello, Server!');
+};
+
+// When a message is received from the server
+socket.onmessage = function(event) {
+    console.log("Message from server:", event.data);
+};
+
+// When the WebSocket connection is closed
+socket.onclose = function(event) {
+    console.log("Disconnected from the server.");
+};
+
+// Handling errors
+socket.onerror = function(error) {
+    console.log("WebSocket error:", error);
+};
+```
+
+##### How to Test:
+
+- **Run the Python WebSocket Server**:
+   - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
+   - Run the server:
+     ```bash
+     python websocket_server.py
+     ```
+
+- **Run the JavaScript Client**:
+   - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
+   
+   Example HTML file:
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>WebSocket Client</title>
+   </head>
+   <body>
+       <h1>WebSocket Client</h1>
+       <script src="client.js"></script>
+   </body>
+   </html>
+   ```
+
+   Save the JavaScript code in a file called `client.js`, then open the HTML file in your web browser.
+
+
+--------------------
+
+
+
+
+
 
 #### 3. **Create WebSocket Integration**
 
