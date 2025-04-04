@@ -275,6 +275,38 @@ Once the Lambda function is deployed you can go to the AWS Lambda console and se
 <img alt="Lab08-LambdaConsole.png" src="images/Lab08-LambdaConsole.png" width="100%"/>
 
 
+#### Summary of Commands
+
+- **Zip the Lambda code**:
+   ```bash
+   zip function.zip lambda_function.py
+   ```
+
+- **Create the Lambda function**:
+   ```bash
+   aws lambda create-function --function-name my-lambda-function \
+     --zip-file fileb://function.zip \
+     --handler lambda_function.lambda_handler \
+     --runtime python3.13 \
+     --role arn:aws:iam::your-account-id:role/lambda-execution-role
+   ```
+
+- **Invoke the Lambda function**:
+   ```bash
+   aws lambda invoke --function-name my-lambda-function output.txt
+   ```
+
+- **Update the Lambda function** (if needed):
+   ```bash
+   aws lambda update-function-code --function-name my-lambda-function \
+     --zip-file fileb://function.zip
+   ```
+
+- **Delete the Lambda function** (if needed):
+   ```bash
+   aws lambda delete-function --function-name my-lambda-function
+   ```
+
 ### API Gateway creation
 
 To allow the Lambda function to be accessed by any API Gateway it is necessary to create a "statement" with a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value to be used by the command `aws lambda add-permission` which creates that premission. Please note the ``` backslashes used in the first command.
@@ -449,7 +481,7 @@ The variable in the Postman environment named "CRUD".
 
 ### Use the REST API
 
-Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder of the zip file that you downloaded, are the mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
+Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder of the zip file that you downloaded, are a mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
 
 The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
 
@@ -521,48 +553,38 @@ You may have noticed that the Lambda function includes some logging calls. Open 
 **Q812: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.**
 
 
+# Task 8.2: Simple serverless using WebSockets
 
 
-
-## AWS CLI for API Gateway
-
-Creating a **WebSocket API** with the **AWS CLI** involves a few steps, and it requires using the **API Gateway WebSocket** feature, which allows you to build real-time, bidirectional communication between clients and servers.
-
-Here's how you can create a WebSocket API using the AWS CLI.
-
-### Steps to Create a WebSocket API Using AWS CLI:
-
-#### 1. **Create the WebSocket API**
-
-To create a WebSocket API, use the `create-rest-api` command but specify that you want to create a WebSocket API instead of a regular REST API.
+To create the new API Gateway we will follow similar steps. Now `--protocol-type` is set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages. In this example, it routes based on the `action` field in the incoming WebSocket messages (`$request.body.action`).
 
 ```bash
-aws apigatewayv2 create-api \
+_$ aws apigatewayv2 create-api \
   --name "MyWebSocketAPI" \
   --protocol-type WEBSOCKET \
   --route-selection-expression "$request.body.action"
-```
-
-- `--name`: Name of the WebSocket API.
-- `--protocol-type`: This should be set to `WEBSOCKET` for WebSocket APIs.
-- `--route-selection-expression`: This defines the routing logic based on the WebSocket messages. In this example, it routes based on the `action` field in the incoming WebSocket messages (`$request.body.action`).
-
-The output of this command will return a JSON object with the API's information, including the `ApiId`. You’ll need this `ApiId` for subsequent steps.
-
-Example output:
-```json
 {
-    "ApiEndpoint": "wss://m96mpy7qz4.execute-api.us-east-1.amazonaws.com",
-    "ApiId": "m96mpy7qz4",
+    "ApiEndpoint": "wss://ww0pxtgs8g.execute-api.us-east-1.amazonaws.com",
+    "ApiId": "ww0pxtgs8g",
     "ApiKeySelectionExpression": "$request.header.x-api-key",
-    "CreatedDate": "2025-04-02T14:43:51+00:00",
+    "CreatedDate": "2025-04-04T09:53:49+00:00",
     "Name": "MyWebSocketAPI",
     "ProtocolType": "WEBSOCKET",
     "RouteSelectionExpression": ".body.action"
 }
+_$ API_ID=ww0pxtgs8g
 ```
 
-#### 2. **Create WebSocket Routes**
+```bash
+_$ aws apigatewayv2 create-integration \
+    --api-id ${API_ID} \
+    --integration-type AWS_PROXY \
+    --integration-uri ${LAMBDA_ARN} \
+    --integration-method ANY \
+    --payload-format-version 2.0
+
+_$ INTEGRATION_ID=
+```
 
 In a WebSocket API, you define **routes** that map to different actions or message types. For example, you may define routes for `connect`, `disconnect`, and custom message types like `sendMessage`.
 
@@ -570,233 +592,20 @@ In a WebSocket API, you define **routes** that map to different actions or messa
 - **Disconnect Route**: Triggered when a client disconnects.
 - **Custom Routes**: Any custom action you want to handle in your WebSocket API.
 
-Let’s create the `connect` and `disconnect` routes:
+Let’s create the `connect` and `disconnect` routes. `--route-key` sets the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
 
 ```bash
-aws apigatewayv2 create-route \
-  --api-id m96mpy7qz4 \
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
   --route-key "$connect" \
-  --target "integrations/<integration-id>"
-```
+  --target "integrations/${INTEGRATION_ID}"
 
-```bash
-aws apigatewayv2 create-route \
-  --api-id m96mpy7qz4 \
+_$ aws apigatewayv2 create-route \
+  --api-id ${API_ID} \
   --route-key "$disconnect" \
-  --target "integrations/<integration-id>"
+  --target "integrations/${INTEGRATION_ID}"
 ```
 
-- Replace `m96mpy7qz4` with your actual `ApiId` from the previous step.
-- `--route-key`: This is the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
-
-
-
-
-
----------------------------
-
-
-#### **Server-Side **:
-
-
-To create a WebSocket server in Python, you can use the `websockets` library, which provides an easy way to handle WebSocket connections. 
-First, you'll need to install the `websockets` library. You can do that by running:
-
-```bash
-pip install websockets
-```
-
-##### Server-Side WebSocket Example in Python:
-
-Here is a simple WebSocket server in Python using the `websockets` library:
-
-```python
-import asyncio
-import websockets
-
-# This function will handle a WebSocket connection from the client
-async def echo(websocket, path):
-    # Print when a new client connects
-    print(f"Client connected: {path}")
-    
-    # Send a welcome message to the client
-    await websocket.send("Hello, Client!")
-
-    try:
-        # Wait for messages from the client
-        async for message in websocket:
-            print(f"Received from client: {message}")
-            # Echo the received message back to the client
-            await websocket.send(f"Echo: {message}")
-    except websockets.exceptions.ConnectionClosed as e:
-        print(f"Connection closed: {e}")
-    finally:
-        print("Connection closed by client.")
-
-# Start the WebSocket server
-async def main():
-    # Start the WebSocket server on localhost:8765
-    async with websockets.serve(echo, "localhost", 8765):
-        print("Server started on ws://localhost:8765")
-        # Run the server indefinitely
-        await asyncio.Future()  # This will keep the server running
-
-# Run the main coroutine
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-##### Explanation of the Code:
-
-- **`echo` Function**:
-   - This function handles the WebSocket connection for each client. It first sends a welcome message to the client and then listens for messages from the client. Any message received from the client is echoed back with the prefix "Echo: ".
-   
-- **`main` Function**:
-   - This function starts the WebSocket server by calling `websockets.serve(echo, "localhost", 8765)`, which listens for incoming WebSocket connections on `ws://localhost:8765`.
-   - The `asyncio.Future()` keeps the server running indefinitely by waiting for events (like new incoming connections).
-
-- **Running the Server**:
-   - The server will print `"Server started on ws://localhost:8765"` when it is up and running, and it will listen for incoming WebSocket connections.
-   - If a client sends a message, the server will log the message and send it back (echo).
-
-##### 3. Client-Side Example in JavaScript (Web Browser):
-
-You can test this WebSocket server using the following JavaScript client code in the browser:
-
-```javascript
-// Create a new WebSocket connection to the server
-const socket = new WebSocket('ws://localhost:8765');
-
-// When the WebSocket connection is established
-socket.onopen = function(event) {
-    console.log("Connected to the server!");
-    socket.send('Hello, Server!');
-};
-
-// When a message is received from the server
-socket.onmessage = function(event) {
-    console.log("Message from server:", event.data);
-};
-
-// When the WebSocket connection is closed
-socket.onclose = function(event) {
-    console.log("Disconnected from the server.");
-};
-
-// Handling errors
-socket.onerror = function(error) {
-    console.log("WebSocket error:", error);
-};
-```
-
-##### How to Test:
-
-- **Run the Python WebSocket Server**:
-   - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
-   - Run the server:
-     ```bash
-     python websocket_server.py
-     ```
-
-- **Run the JavaScript Client**:
-   - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
-   
-   Example HTML file:
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>WebSocket Client</title>
-   </head>
-   <body>
-       <h1>WebSocket Client</h1>
-       <script src="client.js"></script>
-   </body>
-   </html>
-   ```
-
-   Save the JavaScript code in a file called `client.js`, then open the HTML file in your web browser.
-
-
---------------------
-
-
-
-
-
-
-#### 3. **Create WebSocket Integration**
-
-Next, we need to integrate the routes with a backend service, which is usually an **AWS Lambda function**. You can create an integration with a Lambda function or other AWS services like **DynamoDB** or **SNS**.
-
-Here’s an example of how to create an integration with a Lambda function:
-
-```bash
-aws apigatewayv2 create-integration \
-  --api-id m96mpy7qz4 \
-  --integration-type AWS_PROXY \
-  --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
-  --payload-format-version 2.0
-```
-
-- `--integration-type`: Use `AWS_PROXY` if you want to proxy the request directly to Lambda.
-- `--integration-uri`: The ARN of the Lambda function that will handle the WebSocket connection.
-- `--payload-format-version`: Version of the WebSocket payload (use `2.0` for WebSocket APIs).
-
-Once you create this integration, you can reference its ID (`<integration-id>`) in the `create-route` commands for the WebSocket routes.
-
-#### 4. **Grant API Gateway Permission to Invoke Lambda**
-
-Before API Gateway can invoke your Lambda function, you need to add permissions for it to do so. You can do that with the following command:
-
-```bash
-aws lambda add-permission --function-name MyLambdaFunction \
-  --principal apigateway.amazonaws.com \
-  --statement-id <unique-id> \
-  --action "lambda:InvokeFunction"
-```
-
-- Replace `MyLambdaFunction` with your Lambda function name.
-- Replace `<unique-id>` with a unique string (e.g., `websocket-api-invoke`).
-
-#### 5. **Deploy the WebSocket API**
-
-To make your WebSocket API live, you need to deploy it to a stage (e.g., `prod` or `dev`). You can do that using the following command:
-
-```bash
-aws apigatewayv2 create-stage \
-  --api-id m96mpy7qz4 \
-  --stage-name prod \
-  --auto-deploy
-```
-
-- Replace `m96mpy7qz4` with your `ApiId`.
-- `--stage-name`: The name of the deployment stage (e.g., `prod`).
-- `--auto-deploy`: This automatically deploys the API to the stage.
-
-#### 6. **Test the WebSocket API**
-
-After deployment, your WebSocket API will be available at the following URL format:
-
-```
-wss://<api-id>.execute-api.<region>.amazonaws.com/prod
-```
-
-For example, if your API ID is `m96mpy7qz4`, your WebSocket URL will be:
-
-```
-wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
-```
-
-You can use WebSocket clients like **wscat** or WebSocket libraries in your preferred language to test the connection:
-
-```bash
-wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
-```
-
----
 
 ### Summary of AWS CLI Commands for WebSocket API:
 
@@ -863,198 +672,86 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
 
 
 
+##### Client-Side Example in JavaScript (Web Browser):
 
+You can test this WebSocket server using the following JavaScript client code in the browser.
+Save the JavaScript code in a file called `client.js`, then open the HTML file in your web browser.
 
+```javascript
+// Create a new WebSocket connection to the server
+const socket = new WebSocket('ws://localhost:8765');
 
+// When the WebSocket connection is established
+socket.onopen = function(event) {
+    console.log("Connected to the server!");
+    socket.send('Hello, Server!');
+};
 
+// When a message is received from the server
+socket.onmessage = function(event) {
+    console.log("Message from server:", event.data);
+};
 
-## AWS CLI for Lambda
+// When the WebSocket connection is closed
+socket.onclose = function(event) {
+    console.log("Disconnected from the server.");
+};
 
-Deploying a Lambda function using the AWS CLI involves a few steps. Here's a comprehensive guide to deploying your Lambda function from the command line.
-
-### Prerequisites:
-
-- **AWS CLI Installed**: Ensure the AWS Command Line Interface (CLI) is installed on your machine. You can install it by following the instructions [here](https://aws.amazon.com/cli/).
-
-- **AWS Account and Credentials**: Ensure you have an AWS account, and your AWS credentials are configured (Access Key ID and Secret Access Key) using the `aws configure` command.
-   ```bash
-   aws configure
-   ```
-   - Enter your **AWS Access Key** and **Secret Access Key**.
-   - Enter the **Region** where your Lambda function will be deployed (e.g., `us-west-2`).
-   - Enter the **default output format** (e.g., `json`).
-
-- **IAM Role for Lambda**: Ensure you have an IAM role for your Lambda function that grants necessary permissions. Lambda requires a role with policies like `AWSLambdaBasicExecutionRole` to write logs to CloudWatch.
-
-### Steps to Deploy a Lambda Function Using AWS CLI:
-
-#### 1. **Write Your Lambda Function Code**
-
-Create a file with your Lambda function code. For example, let's use a simple Python Lambda function (`lambda_function.py`).
-
-```python
-def lambda_handler(event, context):
-    return {
-        'statusCode': 200,
-        'body': 'Hello from Lambda!'
-    }
+// Handling errors
+socket.onerror = function(error) {
+    console.log("WebSocket error:", error);
+};
 ```
 
-#### 2. **Create a ZIP Archive of Your Code**
+##### How to Test:
 
-You need to package your Lambda function into a ZIP file before deploying. If your Lambda code is in a single file (like `lambda_function.py`), you can run the following command to create the ZIP:
+- **Run the Python WebSocket Server**:
+   - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
+   - Run the server:
+     ```bash
+     python websocket_server.py
+     ```
 
-```bash
-zip function.zip lambda_function.py
-```
-
-If you have additional dependencies, you need to install them first into a directory and include them in the ZIP file. Here’s how to package everything together:
-
-```bash
-mkdir my_lambda_package
-cd my_lambda_package
-# Copy your lambda function code into this directory
-cp ../lambda_function.py .
-
-# If you have any dependencies, install them into the directory
-# Example (if you have external libraries):
-# pip install requests -t .
-
-# Zip everything
-zip -r ../function.zip .
-cd ..
-```
-
-#### 3. **Create an IAM Role for Lambda (If Not Already Created)**
-
-If you don't have an IAM role with the necessary permissions for Lambda, you can create one using the following steps:
-
-```bash
-aws iam create-role --role-name lambda-execution-role \
-  --assume-role-policy-document file://trust-policy.json
-```
-
-`trust-policy.json` is a JSON file defining the trust relationship between AWS Lambda and IAM, and it should look like this:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-```
-
-You can also attach a basic Lambda execution policy (if not done yet) to the role for logging permissions:
-
-```bash
-aws iam attach-role-policy --role-name lambda-execution-role \
-  --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-```
-
-#### 4. **Deploy the Lambda Function Using the AWS CLI**
-
-Now, you're ready to deploy the function. Use the following command to create the Lambda function:
-
-```bash
-aws lambda create-function --function-name my-lambda-function \
-  --zip-file fileb://function.zip \
-  --handler lambda_function.lambda_handler \
-  --runtime python3.8 \
-  --role arn:aws:iam::your-account-id:role/lambda-execution-role
-```
-
-- `--function-name`: The name you want to give to your Lambda function (e.g., `my-lambda-function`).
-- `--zip-file`: The path to the ZIP file containing your Lambda function code (e.g., `fileb://function.zip`).
-- `--handler`: The function that AWS Lambda will call when your function is invoked. It’s the file name (without the `.py` extension) and the function name (e.g., `lambda_function.lambda_handler`).
-- `--runtime`: The runtime environment for the Lambda function. Use the appropriate runtime (e.g., `python3.8`, `nodejs14.x`, etc.).
-- `--role`: The ARN (Amazon Resource Name) of the IAM role your Lambda function will assume.
-
-Make sure to replace `your-account-id` with your actual AWS account ID.
-
-#### 5. **Verify the Lambda Deployment**
-
-To verify that the function has been created successfully, you can use the following command:
-
-```bash
-aws lambda get-function --function-name my-lambda-function
-```
-
-This will return metadata about the function you just created, including its ARN and other configuration details.
-
-#### 6. **Invoke Your Lambda Function**
-
-To invoke the Lambda function from the CLI and test it, use the following command:
-
-```bash
-aws lambda invoke --function-name my-lambda-function output.txt
-```
-
-- `--function-name`: The name of your Lambda function (e.g., `my-lambda-function`).
-- `output.txt`: The file where the output from the Lambda function will be written.
-
-If everything works fine, you'll see the result in `output.txt`.
-
-#### 7. **Update an Existing Lambda Function (Optional)**
-
-If you want to update an existing Lambda function, you can use the `update-function-code` command:
-
-```bash
-aws lambda update-function-code --function-name my-lambda-function \
-  --zip-file fileb://function.zip
-```
-
-This will update the Lambda function code with the new contents of `function.zip`.
-
-#### 8. **Delete the Lambda Function (Optional)**
-
-If you want to delete the Lambda function after testing, you can do so with the following command:
-
-```bash
-aws lambda delete-function --function-name my-lambda-function
-```
-
-This removes the Lambda function from AWS.
-
----
-
-### Summary of Commands
-
-- **Zip the Lambda code**:
-   ```bash
-   zip function.zip lambda_function.py
+- **Run the JavaScript Client**:
+   - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
+   
+   Example HTML file:
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>WebSocket Client</title>
+   </head>
+   <body>
+       <h1>WebSocket Client</h1>
+       <script src="client.js"></script>
+   </body>
+   </html>
    ```
 
-- **Create the Lambda function**:
-   ```bash
-   aws lambda create-function --function-name my-lambda-function \
-     --zip-file fileb://function.zip \
-     --handler lambda_function.lambda_handler \
-     --runtime python3.8 \
-     --role arn:aws:iam::your-account-id:role/lambda-execution-role
-   ```
 
-- **Invoke the Lambda function**:
-   ```bash
-   aws lambda invoke --function-name my-lambda-function output.txt
-   ```
 
-- **Update the Lambda function** (if needed):
-   ```bash
-   aws lambda update-function-code --function-name my-lambda-function \
-     --zip-file fileb://function.zip
-   ```
 
-- **Delete the Lambda function** (if needed):
-   ```bash
-   aws lambda delete-function --function-name my-lambda-function
-   ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
