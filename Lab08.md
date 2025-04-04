@@ -449,7 +449,7 @@ The variable in the Postman environment named "CRUD".
 
 ### Use the REST API
 
-Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder are the mininmal web page. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the value obtained above.
+Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder of the zip file that you downloaded, are the mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
 
 The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
 
