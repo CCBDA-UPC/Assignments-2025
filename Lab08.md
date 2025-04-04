@@ -59,7 +59,7 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 - **Deployments and Versioning**: management of different stages of an API (development, staging, production) and deploy changes in a controlled manner.
 
-#### Use Cases:
+#### Use Cases of AWS API Gateway:
 - **Serverless Applications**: Often used with AWS Lambda to create serverless APIs, where no infrastructure management is needed.
 - **Microservices**: API Gateway can serve as the entry point to microservices, handling incoming requests and routing them to different backend services.
 - **Mobile and Web Applications**: Provides a reliable way to manage API calls from mobile apps and websites.
@@ -68,27 +68,19 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 **WebSockets** are a communication protocol that enables **full-duplex** (two-way) communication channels over a single, long-lived connection between a client (usually a web browser) and a server. Unlike the traditional HTTP request-response model, which is **stateless** and works in a **request-response** pattern, WebSockets provide a persistent, open connection that allows continuous, real-time data exchange between the client and server.
 
-### Key Features of WebSockets:
+#### Key Features of WebSockets:
 
-1. **Full-Duplex Communication**:
-   - WebSockets allow both the client and the server to send messages to each other independently, at any time, over a single connection. This allows for real-time interactions, making it ideal for applications like live chats, online gaming, financial apps, etc.
+- **Full-Duplex Communication**: allows for real-time interactions, making it ideal for applications like live chats, online gaming, financial apps, etc.
 
-2. **Persistent Connection**:
-   - Once established, a WebSocket connection remains open until either the client or the server decides to close it. This eliminates the need to repeatedly open and close connections, reducing the overhead compared to traditional HTTP requests.
+- **Persistent Connection**/**Low Latency**: eliminates the need to repeatedly open and close connections, reducing the overhead compared to traditional HTTP requests.
 
-3. **Low Latency**:
-   - WebSockets provide a low-latency communication channel because there’s no need to establish a new connection for each message. Once the connection is established, messages can be sent and received instantly.
+- **Efficient Communication**: reduce the amount of data overhead, as there’s no need for the repeated HTTP headers that occur with each request in a standard HTTP communication.
 
-4. **Efficient Communication**:
-   - WebSockets reduce the amount of data overhead, as there’s no need for the repeated HTTP headers that occur with each request in a standard HTTP communication. This makes WebSockets more efficient for applications requiring frequent communication.
+- **Bidirectional**: enable both the client and the server to send messages at any time.
 
-5. **Bidirectional**:
-   - Unlike HTTP, which only allows the client to request and the server to respond, WebSockets enable both the client and the server to send messages at any time. This allows for real-time updates (e.g., chat messages, notifications, live score updates).
+#### How WebSockets Work:
 
-### How WebSockets Work:
-
-1. **Handshake**:
-   - A WebSocket connection starts with an HTTP handshake. The client sends an HTTP request to the server with an **Upgrade** header, indicating that it wants to establish a WebSocket connection.
+- **Handshake**: a WebSocket connection starts with an HTTP handshake. The client sends an HTTP request to the server with an **Upgrade** header, indicating that it wants to establish a WebSocket connection.
    
    - Example WebSocket request:
      ```
@@ -100,8 +92,7 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
      Sec-WebSocket-Version: 13
      ```
 
-2. **Connection Upgrade**:
-   - If the server supports WebSockets, it responds with a status code **101 Switching Protocols**, indicating that the protocol has been switched to WebSocket and the connection is now open.
+- **Connection Upgrade**: If the server supports WebSockets, it responds with a status code **101 Switching Protocols**, indicating that the protocol has been switched to WebSocket and the connection is now open.
    
    - Example WebSocket response:
      ```
@@ -111,34 +102,32 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
      Sec-WebSocket-Accept: dGhlIHNhbXBsZSBub25jZQ==
      ```
 
-3. **Data Exchange**:
-   - After the handshake, the connection is upgraded to WebSocket, and both the client and the server can send messages back and forth in real time.
+- **Data Exchange**: After the handshake, the connection is upgraded to WebSocket, and both the client and the server can send messages back and forth in real time.
    - WebSocket messages can be sent in text or binary format, making it flexible for various types of data.
 
-4. **Closing the Connection**:
-   - Either the client or the server can close the WebSocket connection at any time by sending a **close frame**. Once the connection is closed, no more messages can be sent or received.
+- **Closing the Connection**: Either the client or the server can close the WebSocket connection at any time by sending a **close frame**. Once the connection is closed, no more messages can be sent or received.
 
 ### Common Use Cases of WebSockets:
 
-1. **Real-Time Messaging and Chat Applications**:
+- **Real-Time Messaging and Chat Applications**:
    - WebSockets are ideal for applications like live chat or messaging, where users need instant communication with each other.
    
-2. **Online Gaming**:
+- **Online Gaming**:
    - In multiplayer games, WebSockets enable fast, real-time communication between players, which is crucial for game states, actions, and updates.
    
-3. **Stock Market or Financial Applications**:
+- **Stock Market or Financial Applications**:
    - Financial apps that require real-time updates (e.g., stock prices, cryptocurrency rates) benefit from WebSockets because of the low latency and continuous data flow.
    
-4. **Live Sports Updates**:
+- **Live Sports Updates**:
    - WebSockets allow sports applications to push live scores, statistics, and news to users without requiring them to refresh the page.
 
-5. **Collaborative Applications**:
+- **Collaborative Applications**:
    - Applications like collaborative document editing (e.g., Google Docs) require real-time updates to synchronize changes made by different users.
 
-6. **IoT (Internet of Things)**:
+- **IoT (Internet of Things)**:
    - WebSockets are also useful for real-time communication between IoT devices (e.g., smart home devices, sensors) and control systems, where the devices need to send continuous streams of data.
 
-7. **Push Notifications**:
+- **Push Notifications**:
    - WebSockets can be used for implementing push notifications in web applications, allowing users to receive instant alerts about various events (e.g., new messages, system updates).
 
 ### Example WebSocket Usage:
@@ -225,14 +214,14 @@ if __name__ == "__main__":
 
 ##### Explanation of the Code:
 
-1. **`echo` Function**:
+- **`echo` Function**:
    - This function handles the WebSocket connection for each client. It first sends a welcome message to the client and then listens for messages from the client. Any message received from the client is echoed back with the prefix "Echo: ".
    
-2. **`main` Function**:
+- **`main` Function**:
    - This function starts the WebSocket server by calling `websockets.serve(echo, "localhost", 8765)`, which listens for incoming WebSocket connections on `ws://localhost:8765`.
    - The `asyncio.Future()` keeps the server running indefinitely by waiting for events (like new incoming connections).
 
-3. **Running the Server**:
+- **Running the Server**:
    - The server will print `"Server started on ws://localhost:8765"` when it is up and running, and it will listen for incoming WebSocket connections.
    - If a client sends a message, the server will log the message and send it back (echo).
 
@@ -268,14 +257,14 @@ socket.onerror = function(error) {
 
 ##### How to Test:
 
-1. **Run the Python WebSocket Server**:
+- **Run the Python WebSocket Server**:
    - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
    - Run the server:
      ```bash
      python websocket_server.py
      ```
 
-2. **Run the JavaScript Client**:
+- **Run the JavaScript Client**:
    - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
    
    Example HTML file:
@@ -883,7 +872,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
 
 ### Summary of AWS CLI Commands for WebSocket API:
 
-1. **Create the WebSocket API**:
+- **Create the WebSocket API**:
    ```bash
    aws apigatewayv2 create-api \
      --name "MyWebSocketAPI" \
@@ -891,7 +880,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      --route-selection-expression "$request.body.action"
    ```
 
-2. **Create Routes (e.g., connect, disconnect)**:
+- **Create Routes (e.g., connect, disconnect)**:
    ```bash
    aws apigatewayv2 create-route \
      --api-id m96mpy7qz4 \
@@ -906,7 +895,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      --target "integrations/<integration-id>"
    ```
 
-3. **Create Lambda Integration**:
+- **Create Lambda Integration**:
    ```bash
    aws apigatewayv2 create-integration \
      --api-id m96mpy7qz4 \
@@ -915,7 +904,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      --payload-format-version 2.0
    ```
 
-4. **Grant API Gateway Permission to Invoke Lambda**:
+- **Grant API Gateway Permission to Invoke Lambda**:
    ```bash
    aws lambda add-permission --function-name MyLambdaFunction \
      --principal apigateway.amazonaws.com \
@@ -923,7 +912,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      --action "lambda:InvokeFunction"
    ```
 
-5. **Deploy the WebSocket API**:
+- **Deploy the WebSocket API**:
    ```bash
    aws apigatewayv2 create-stage \
      --api-id m96mpy7qz4 \
@@ -931,7 +920,7 @@ wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
      --auto-deploy
    ```
 
-6. **Test the WebSocket API**:
+- **Test the WebSocket API**:
    - Use `wscat` or any WebSocket client to connect to:
      ```bash
      wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
@@ -957,9 +946,9 @@ Deploying a Lambda function using the AWS CLI involves a few steps. Here's a com
 
 ### Prerequisites:
 
-1. **AWS CLI Installed**: Ensure the AWS Command Line Interface (CLI) is installed on your machine. You can install it by following the instructions [here](https://aws.amazon.com/cli/).
+- **AWS CLI Installed**: Ensure the AWS Command Line Interface (CLI) is installed on your machine. You can install it by following the instructions [here](https://aws.amazon.com/cli/).
 
-2. **AWS Account and Credentials**: Ensure you have an AWS account, and your AWS credentials are configured (Access Key ID and Secret Access Key) using the `aws configure` command.
+- **AWS Account and Credentials**: Ensure you have an AWS account, and your AWS credentials are configured (Access Key ID and Secret Access Key) using the `aws configure` command.
    ```bash
    aws configure
    ```
@@ -967,7 +956,7 @@ Deploying a Lambda function using the AWS CLI involves a few steps. Here's a com
    - Enter the **Region** where your Lambda function will be deployed (e.g., `us-west-2`).
    - Enter the **default output format** (e.g., `json`).
 
-3. **IAM Role for Lambda**: Ensure you have an IAM role for your Lambda function that grants necessary permissions. Lambda requires a role with policies like `AWSLambdaBasicExecutionRole` to write logs to CloudWatch.
+- **IAM Role for Lambda**: Ensure you have an IAM role for your Lambda function that grants necessary permissions. Lambda requires a role with policies like `AWSLambdaBasicExecutionRole` to write logs to CloudWatch.
 
 ### Steps to Deploy a Lambda Function Using AWS CLI:
 
@@ -1109,12 +1098,12 @@ This removes the Lambda function from AWS.
 
 ### Summary of Commands
 
-1. **Zip the Lambda code**:
+- **Zip the Lambda code**:
    ```bash
    zip function.zip lambda_function.py
    ```
 
-2. **Create the Lambda function**:
+- **Create the Lambda function**:
    ```bash
    aws lambda create-function --function-name my-lambda-function \
      --zip-file fileb://function.zip \
@@ -1123,18 +1112,18 @@ This removes the Lambda function from AWS.
      --role arn:aws:iam::your-account-id:role/lambda-execution-role
    ```
 
-3. **Invoke the Lambda function**:
+- **Invoke the Lambda function**:
    ```bash
    aws lambda invoke --function-name my-lambda-function output.txt
    ```
 
-4. **Update the Lambda function** (if needed):
+- **Update the Lambda function** (if needed):
    ```bash
    aws lambda update-function-code --function-name my-lambda-function \
      --zip-file fileb://function.zip
    ```
 
-5. **Delete the Lambda function** (if needed):
+- **Delete the Lambda function** (if needed):
    ```bash
    aws lambda delete-function --function-name my-lambda-function
    ```
