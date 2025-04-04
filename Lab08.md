@@ -105,8 +105,7 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
      Sec-WebSocket-Accept: dGhlIHNhbXBsZSBub25jZQ==
      ```
 
-- **Data Exchange**: After the handshake, the connection is upgraded to WebSocket, and both the client and the server can send messages back and forth in real time.
-   - WebSocket messages can be sent in text or binary format, making it flexible for various types of data.
+- **Data Exchange**: After the handshake, the connection is upgraded to WebSocket, and both the client and the server can send messages back and forth in real time. WebSocket messages can be sent in text or binary format, making it flexible for various types of data.
 
 - **Closing the Connection**: Either the client or the server can close the WebSocket connection at any time by sending a **close frame**. Once the connection is closed, no more messages can be sent or received.
 
@@ -114,29 +113,15 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 - Real-Time Messaging and Chat Applications.
 - Online Gaming.
-- Stock Market or Financial Applications**: instant value update (e.g., stock prices, cryptocurrency rates).
+- Stock Market or Financial Applications for instant value update (e.g., stock prices, cryptocurrency rates).
 - Live Sports Updates.
 - Collaborative Applications with real-time updates (e.g., Google Docs)
 - IoT (Internet of Things) communication between IoT devices (e.g., smart home devices, sensors) and control systems
 - Push Notifications in web applications
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Pre-lab homework
+
+In this lab session we'll be creating a REST API. Therefore, you first, create a DynamoDB table named `ccbda-lambda-first` with `thingID` as the partition key.
 
 ### **Understanding `kwargs` in Python:**
 
@@ -161,7 +146,7 @@ In both cases the output is
 
 ## Task 8.1: Simple serverless web application
 
-### CRUD REST API : The 4 Basic Operations in Software Development
+### CRUD REST API : Implementing the 4 Basic Operations in Software Development
 
 **CRUD** stands for **Create, Read, Update, Delete**, which are the four fundamental operations used in databases and APIs to manage data.
 
@@ -178,13 +163,13 @@ Such operations can be applied in different contexts.
 - **Databases**: CRUD operations are used to manipulate records (SQL, MongoDB, Firebase).
 - **User Interfaces**: A CRUD-based UI allows users to **add, view, edit, and delete** items.
 
-In this lab session we'll be creating a REST API. Therefore, you first, create a DynamoDB table named `ccbda-lambda-first` with `thingID` as the partition key. Then, download the repository from [this link](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository.
-
 ### Deploying the CRUD Lambda function
 
-Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
+Download the repository from [this link](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
 We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
+Check the [Boto3 DynamoDB documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html)
+for more information on the [`scan`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/scan.html), [`put_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html), [`delete_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/delete_item.html), and [`update_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/update_item.html) functions.
 
 ```python
 import boto3
