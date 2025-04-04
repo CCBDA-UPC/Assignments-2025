@@ -1,6 +1,6 @@
 # Lab Session 8: Serverless applications
 
-## Serverless applications
+### Serverless applications
 
 **Serverless applications** are applications that run without the need for server management by the developer. In a serverless model, cloud providers handle the infrastructure, scaling, and management of servers. Developers only focus on writing and deploying code, which is executed in response to events, such as HTTP requests, database changes, or file uploads.
 
@@ -10,7 +10,7 @@
 - **Scalability**: The cloud provider automatically scales resources based on demand.
 - **Cost-efficient**: You pay only for the execution time of the functions, not for idle server resources.
 
-## AWS Lambda
+### AWS Lambda
 
 **AWS Lambda** is a fully managed **serverless computing service** provided by AWS. It allows developers to run code in response to events without provisioning or managing servers.
 
@@ -39,55 +39,34 @@
 
 - **Logging and Monitoring**: integrated with **Amazon CloudWatch**.
 
-
 ### AWS API Gateway
 
 AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS) that enables developers to create, publish, maintain, monitor, and secure APIs at any scale. API Gateway acts as an entry point for applications, enabling communication between client apps (mobile, web, etc.) and backend services (AWS Lambda, EC2, other HTTP services).
 
-### Key Features of AWS API Gateway:
-1. **Create and Manage APIs**: 
-   - You can create RESTful APIs, WebSocket APIs, or HTTP APIs to connect to services like AWS Lambda, HTTP endpoints, or other AWS services.
+#### Key Features of AWS API Gateway:
+
+- **Create and Manage APIs**: RESTful APIs, WebSocket APIs, or HTTP APIs to connect to services like AWS Lambda, HTTP endpoints, or other AWS services.
    
-2. **Support for Multiple Protocols**: 
-   - API Gateway supports HTTP, WebSocket, and REST APIs, making it versatile for various use cases.
+- **Support for Multiple Protocols**: HTTP, WebSocket, and REST APIs.
    
-3. **Security**:
-   - API Gateway allows you to authenticate and authorize API calls through services like AWS IAM (Identity and Access Management), Amazon Cognito, and Lambda authorizers.
-   - It also supports encryption and custom domain names.
+- **Security**: allows you to authenticate and authorize API calls through services like AWS IAM (Identity and Access Management), Amazon Cognito, and Lambda authorizers.
 
-4. **Rate Limiting and Throttling**:
-   - You can set rate limits and throttling policies to control traffic, protect backend resources, and prevent abuse.
+- **Rate Limiting and Throttling**: seting of rate limits and throttling policies to control traffic, protect backend resources, and prevent abuse.
 
-5. **Scaling**:
-   - API Gateway automatically scales to handle varying amounts of traffic, ensuring that your APIs perform well under different load conditions.
+- **Scaling**: automatically scales to handle varying amounts of traffic, ensuring that your APIs perform well under different load conditions.
 
-6. **Logging and Monitoring**:
-   - It integrates with AWS CloudWatch for logging and monitoring API usage, errors, and performance metrics.
+- **Logging and Monitoring**: integrates with AWS CloudWatch for logging and monitoring API usage, errors, and performance metrics.
    
-7. **Caching**:
-   - API Gateway supports caching responses to reduce load on backend services, improving performance for repeated requests.
+- **Caching** responses to reduce load on backend services, improving performance for repeated requests.
 
-8. **Deployments and Versioning**:
-   - You can manage different stages of an API (development, staging, production) and deploy changes in a controlled manner.
+- **Deployments and Versioning**: management of different stages of an API (development, staging, production) and deploy changes in a controlled manner.
 
-### Use Cases:
+#### Use Cases:
 - **Serverless Applications**: Often used with AWS Lambda to create serverless APIs, where no infrastructure management is needed.
 - **Microservices**: API Gateway can serve as the entry point to microservices, handling incoming requests and routing them to different backend services.
 - **Mobile and Web Applications**: Provides a reliable way to manage API calls from mobile apps and websites.
 
-
-### Benefits:
-- **Low Management Overhead**: Fully managed service, so you don’t need to worry about server management or scaling.
-- **Security**: Built-in support for securing APIs through authentication, authorization, and encryption.
-- **Cost-Effective**: Pay only for the API calls you make, with no upfront costs or fixed fees.
-
-
-
-
-
-
-
-## WebSockets
+### WebSockets
 
 **WebSockets** are a communication protocol that enables **full-duplex** (two-way) communication channels over a single, long-lived connection between a client (usually a web browser) and a server. Unlike the traditional HTTP request-response model, which is **stateless** and works in a **request-response** pattern, WebSockets provide a persistent, open connection that allows continuous, real-time data exchange between the client and server.
 
