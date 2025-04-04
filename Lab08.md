@@ -167,7 +167,7 @@ Such operations can be applied in different contexts.
 
 Download the [serverless-app repository](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. 
 
-Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
+Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by the AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
 We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
 Check the [Boto3 DynamoDB documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html)
@@ -217,9 +217,9 @@ def respond(res, err=None):
     return response
 ```
 
-The file `requirements.txt` defines the Python environment for the above function to be executed.
+The file `requirements.txt` in the `crud` folder defines the Python environment for the above function to be executed.
 
-We are going to use the AWS CLI to deploy the Lambda function and build the **API Gateway**. Open a terminal and set the variables to the corresponding value. The command `aws lambda create-function` sends the zip file with the Python code and requirements to AWS. In response it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
+We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set the variables to the corresponding value. Create a zip file with the Python code and its requirements. The command `aws lambda create-function` sends the zip file to AWS. In response, it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
 
 ```bash
 _$ ACCOUNT_ID=<YOUR-ACCOUNT-ID>
@@ -243,7 +243,7 @@ _$ aws lambda create-function --function-name LambdaCRUD \
     "Description": "",
     "Timeout": 3,
     "MemorySize": 128,
-    "LastModified": "2025-04-03T15:24:35.266+0000",
+    "LastModified": "2025-03-12T15:24:35.266+0000",
     "CodeSha256": "CX13dQVlx3hpf3YOcDh07USeHFRcGLfjX6hTKiF/bX8=",
     "Version": "$LATEST",
     "TracingConfig": {
@@ -257,7 +257,7 @@ _$ aws lambda create-function --function-name LambdaCRUD \
 _$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
 ```
 
-In Unix, using the command `jq` ([more info](https://jqlang.org/)) and the backquotes ``` we can automatically set the value of the LAMBDA_ARN variable.
+In Unix, using the command `jq` ([more info](https://jqlang.org/)) and the backquotes ``` we can execute the command and automatically extract the JSON field value to set the LAMBDA_ARN variable.
 
 ```bash
 _$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaCRUD \
@@ -270,14 +270,14 @@ _$ echo $LAMBDA_ARN
 "arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
 ```
 
-Go to the AWS Lambda console and see the outcome of the above commands.
+Once the Lambda function is deployed you can go to the AWS Lambda console and see the outcome of the above commands.
 
 <img alt="Lab08-LambdaConsole.png" src="images/Lab08-LambdaConsole.png" width="100%"/>
 
 
 ### API Gateway creation
 
-It is now necessary to create a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value. The command `aws lambda add-permission` allows the Lambda function to be accessed by any API Gateway.
+To allow the Lambda function to be accessed by any API Gateway it is necessary to create a "statement" with a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value. The command `aws lambda add-permission` creates that premission.
 
 ```bash
 _$ STATEMENT_ID=`uuidgen`
@@ -293,7 +293,8 @@ _$ aws lambda add-permission \
 }
 ```
 
-Once the Lambda function is deployed we'll go and create the API Gateway name ("CrudHttpAPI") and type (HTTP). Use the "ApiId" field to set the value of the variable `API_ID` or use `jq` instead.
+To create the API Gateway named "CrudHttpAPI" of HTTP type we use `aws apigatewayv2 create-api` that produces, amongst others, the "ApiId" field used to set the value of the variable `API_ID`.
+You can use `jq` instead of doing it manually.
 
 ```bash
 _$ aws apigatewayv2 create-api \
@@ -303,7 +304,7 @@ _$ aws apigatewayv2 create-api \
     "ApiEndpoint": "https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com",
     "ApiId": "9h1wag0ywe",
     "ApiKeySelectionExpression": "$request.header.x-api-key",
-    "CreatedDate": "2025-04-03T15:25:33+00:00",
+    "CreatedDate": "2025-03-12T15:25:33+00:00",
     "Name": "CrudHttpAPI",
     "ProtocolType": "HTTP",
     "RouteSelectionExpression": "$request.method $request.path"
@@ -311,7 +312,7 @@ _$ aws apigatewayv2 create-api \
 _$ API_ID=9h1wag0ywe
 ```
 
-The following step binds the created API Gateway with the Lambda function deployed before. Make sure that you save the value of the `INTEGRATION_ID` variable using the "IntegrationId" response field.
+The following step uses `aws apigatewayv2 create-integration` to bind the created API Gateway with the Lambda function deployed before. Make sure that you save the value of the `INTEGRATION_ID` variable using the "IntegrationId" response field.
 
 ```bash
 _$ aws apigatewayv2 create-integration \
@@ -332,7 +333,7 @@ _$ aws apigatewayv2 create-integration \
 _$ INTEGRATION_ID=wp0uj9i
 ```
 
-The next step is to create different routes in the API Gateway for each HTTP method. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method.
+Now, `aws apigatewayv2 create-route` creates different routes in the API Gateway, one for each HTTP **method** and **path**. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method.
 
 ```bash
 _$ aws apigatewayv2 create-route \
@@ -392,7 +393,7 @@ _$ aws apigatewayv2 create-route \
 }
 ```
 
-The API Gateway can have different stages: production, development, testing, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
+As mentioned above, each API Gateway can have different stages: production, development, testing, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
 
 ```bash
 _$ STAGE="prod"
@@ -401,11 +402,11 @@ _$ aws apigatewayv2 create-stage \
   --stage-name ${STAGE}
   --no-auto-deploy
 {
-    "CreatedDate": "2025-04-03T15:30:24+00:00",
+    "CreatedDate": "2025-03-12T15:30:24+00:00",
     "DefaultRouteSettings": {
         "DetailedMetricsEnabled": false
     },
-    "LastUpdatedDate": "2025-04-03T15:30:25+00:00",
+    "LastUpdatedDate": "2025-03-12T15:30:25+00:00",
     "RouteSettings": {},
     "StageName": "prod",
     "StageVariables": {},
@@ -413,15 +414,13 @@ _$ aws apigatewayv2 create-stage \
 }
 ```
 
-Finally, the API Gateway is deployed and can be used. The URL is made of
-
-https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/
+Finally, `aws apigatewayv2 create-deployment` allows the API Gateway to be deployed and ready to be used. The "**CrudHttpAPI**" API Gateway URL is composed using the value of different variables set up above: `https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/`
 
 ```bash
 _$ aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
 {
     "AutoDeployed": false,
-    "CreatedDate": "2025-04-03T15:40:58+00:00",
+    "CreatedDate": "2025-03-12T15:40:58+00:00",
     "DeploymentId": "01jigd",
     "DeploymentStatus": "DEPLOYED"
 }
