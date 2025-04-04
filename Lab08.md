@@ -275,11 +275,11 @@ Once the Lambda function is deployed you can go to the AWS Lambda console and se
 <img alt="Lab08-LambdaConsole.png" src="images/Lab08-LambdaConsole.png" width="100%"/>
 
 
-#### Summary of Commands
+#### Summary of AWS CLI for Lambda
 
 - **Zip the Lambda code**:
    ```bash
-   zip function.zip lambda_function.py
+   zip function.zip lambda_function.py requirements.txt
    ```
 
 - **Create the Lambda function**:
