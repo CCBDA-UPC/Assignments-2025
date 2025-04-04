@@ -165,7 +165,7 @@ Such operations can be applied in different contexts.
 
 ### Deploying the CRUD Lambda function
 
-Download the repository from [this link](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
+Download the [repository](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
 We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
 Check the [Boto3 DynamoDB documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html)
