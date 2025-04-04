@@ -33,13 +33,11 @@
 
 - **Stateless**: each invocation of an AWS Lambda function is stateless, meaning it doesn’t retain any state between executions. If you need to maintain state, you can use AWS services like **DynamoDB** or **S3** to store persistent data.
 
-- **Customizable Execution Role**:
-   - You can configure **IAM (Identity and Access Management)** roles for Lambda functions, granting them permissions to interact with other AWS services securely.
-   - This enables Lambda functions to read from/write to S3, DynamoDB, or any other AWS service you need to interact with.
+- **Customizable Execution Role**: using **IAM (Identity and Access Management)** for granting them permissions to interact with other AWS services securely.
 
-- **Short-lived Execution**: functions can run for a maximum of 15 minutes per invocation. If the function doesn't complete within this time frame, it will be terminated. This makes Lambda best suited for tasks that can be completed quickly, such as real-time data processing, image resizing, API responses, etc.
+- **Short-lived Execution**: functions can run for a maximum of 15 minutes per invocation. Best suited for tasks that can be completed quickly, such as real-time data processing, image resizing, API responses, etc.
 
-- **Logging and Monitoring**: integrated with **Amazon CloudWatch** for logging and monitoring, so you can track metrics such as the number of invocations, execution time, error rates, and more.
+- **Logging and Monitoring**: integrated with **Amazon CloudWatch**.
 
 
 ### AWS API Gateway
