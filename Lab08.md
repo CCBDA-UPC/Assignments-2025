@@ -393,7 +393,7 @@ _$ aws apigatewayv2 create-route \
 }
 ```
 
-As mentioned above, each API Gateway can have different stages: production, development, testing, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
+As mentioned above, each API Gateway can have different stages: *production*, *development*, *testing*, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
 
 ```bash
 _$ STAGE="prod"
@@ -437,11 +437,13 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 
 [**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
 
-Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface where there are some REST API calls to test the above deployed CRUD API Gateway. You can also download the desktop app and import the testing collection of operations into your laptop. 
+Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface where there are some REST API calls to test the above deployed CRUD API Gateway. You can also download the Postman desktop app and import the testing collection of operations into your laptop. 
 
-The Testing collection is using two variables defined in the CRUD environment. Make sure that the CRUD environment is selected before testing the HTTP operations.
+The testing collection is using two variables defined in the Postman environment named "CRUD". Make sure that the Postman environment named "CRUD" is selected before testing the HTTP operations.
 
 <img alt="Lab08-Postman-collections.png" src="images/Lab08-Postman-collections.png" width="100%"/>
+
+The variable in the Postman environment named "CRUD".
 
 <img alt="Lab08-Postman-environments.png" src="images/Lab08-Postman-environments.png" width="100%"/>
 
