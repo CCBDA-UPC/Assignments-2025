@@ -556,11 +556,41 @@ You may have noticed that the Lambda function includes some logging calls. Open 
 # Task 8.2: Simple serverless using WebSockets
 
 
+```bash
+_$ ACCOUNT_ID=992382765078
+_$ REGION=us-east-1
+_$ cd websocket
+_$ zip lambda_websocket.zip lambda_websocket.py requirements.txt
+  adding: lambda_websocket.py (deflated 66%)
+  adding: requirements.txt (deflated 19%)
+_$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaWebSocket \
+  --zip-file fileb://lambda_websocket.zip \
+  --handler lambda_websocket.lambda_handler \
+  --runtime python3.13 \
+  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole\
+  | jq '.FunctionArn' ` 
+_$ echo $LAMBDA_ARN
+"arn:aws:lambda:us-east-1:992382765078:function:LambdaWebSocket"
+_$ STATEMENT_ID=`uuidgen`
+_$ echo $STATEMENT_ID
+C951F044-D042-4282-A48B-11E83113CE63
+_$ aws lambda add-permission \
+  --function-name LambdaWebSocket \
+  --principal apigateway.amazonaws.com \
+  --statement-id "${STATEMENT_ID}" \
+  --action lambda:InvokeFunction
+{
+    "Statement": "{\"Sid\":\"C951F044-D042-4282-A48B-11E83113CE63\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaWebSocket\"}"
+}
+
+```
+
+
 To create the new API Gateway we will follow similar steps. Now `--protocol-type` is set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages. In this example, it routes based on the `action` field in the incoming WebSocket messages (`$request.body.action`).
 
 ```bash
 _$ aws apigatewayv2 create-api \
-  --name "MyWebSocketAPI" \
+  --name "WebSocketAPI" \
   --protocol-type WEBSOCKET \
   --route-selection-expression "$request.body.action"
 {
@@ -576,14 +606,14 @@ _$ API_ID=ww0pxtgs8g
 ```
 
 ```bash
-_$ aws apigatewayv2 create-integration \
+_$ INTEGRATION_ID=`aws apigatewayv2 create-integration \
     --api-id ${API_ID} \
     --integration-type AWS_PROXY \
     --integration-uri ${LAMBDA_ARN} \
     --integration-method ANY \
-    --payload-format-version 2.0
+    | jq -r '.IntegrationId' `
 
-_$ INTEGRATION_ID=
+_$ echo $INTEGRATION_ID
 ```
 
 In a WebSocket API, you define **routes** that map to different actions or message types. For example, you may define routes for `connect`, `disconnect`, and custom message types like `sendMessage`.
@@ -660,7 +690,7 @@ _$ aws apigatewayv2 create-route \
 - **Test the WebSocket API**:
    - Use `wscat` or any WebSocket client to connect to:
      ```bash
-     wscat -c wss://m96mpy7qz4.execute-api.us-west-2.amazonaws.com/prod
+     wscat -c wss://${API_ID}.execute-api.us-west-2.amazonaws.com/prod
      ```
 
 
