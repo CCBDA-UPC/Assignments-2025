@@ -669,7 +669,7 @@ INFO: Running ssh -i /Users/angeltoribio/.ssh/aws-eb -o IdentitiesOnly yes ec2-u
       ~~._.   _/
          _/ _/
        _/m/'
-Last login: Sun Mar 30 10:10:33 2025 from 91.126.28.15
+Last login: Sun Mar 30 10:10:33 2025 from 91.134.180.105
 [ec2-user@ip-172-31-9-174 ~]$ sudo bash
 [root@ip-172-31-9-174 ec2-user]# docker ps
 CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS      NAMES
