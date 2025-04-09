@@ -1,6 +1,6 @@
 # Lab session 6: Running a custom web app in the cloud
 
-This lab session builds upon the work from the previous session, where we isolated the web application within a Docker container running locally.
+This lab session **builds upon the work from the previous session**, where we isolated the web application within a Docker container running locally. Make sure that you have available and working everything done in the previous session.
 
 In this session, we will use a more robust SQL database engine and scale the application by running multiple instances. A load balancer will be used to distribute incoming requests across these instances, ensuring optimal performance.
 
