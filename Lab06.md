@@ -134,7 +134,7 @@ If you have followed the above steps correctly, using the PyCharm database wizar
 
 <img alt="Lab06-pycharm-rds.png" src="images/Lab06-pycharm-rds.png" width="80%"/>
 
-**QS611: Would you keep that access open on a production system? Justify your response.**
+**Q6-11: Would you keep that access open on a production system? Justify your response.**
 
 Let's now build a new Docker image, tagging it with a version number. Next test the web application running in Docker in your laptop and connect it to the AWS RDS database. Now, copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password as shown below.
 
@@ -163,7 +163,7 @@ DATABASE="postgresql"
 PGPASSWORD="MyP4ssW0rd!"
 ```
 
-**QS612: Using the above configuration file, what steps will you follow to have the web application running in your local Docker use the AWS RDS database engine?**
+**Q6-12: Using the above configuration file, what steps will you follow to have the web application running in your local Docker use the AWS RDS database engine?**
 
 The unix command `psql` is installed in the `django-docker` image, and you can use it by typing the command below. The values of `$DB_HOST` and `$DB_PORT` are declared inside the unix environment of the container. If an evironment variable named `PGPASSWORD` exits, psql uses its value to authenticate against the PostGreSQL database engine.
 
@@ -215,9 +215,9 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
-**QS613: Explain what does the code in the box above. How can you execute it inside the Docker container?**
+**Q6-13: Explain what does the code in the box above. How can you execute it inside the Docker container?**
 
-**QS614:  What is the result of "select * FROM django_migrations;"**
+**Q6-14:  What is the result of "select * FROM django_migrations;"**
 
 **VERY IMPORTANT: AWS RDS is a very expensive service, and it continues running even if your Learner Lab session stops. DO NOT FORGET to stop the database when you don't need it.**
 
@@ -700,13 +700,13 @@ ccbdadb=>
 
 Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
-**Q631. What have you found on the zip file? Why do you think it is like that?.**
+**Q6-31. What have you found on the zip file? Why do you think it is like that?.**
 
-**Q632. Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.**
+**Q6-32. Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.**
 
-**Q633. Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?**
+**Q6-33. Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?**
 
-**Q634. Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
+**Q6-34. Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?**
 
 Finish the execution of the AWS Elastic Beanstalk environment.
 
@@ -917,11 +917,11 @@ AWS_S3_BUCKET_NAME=team99.ccbda.upc.edu
 AWS_S3_LOGS_PREFIX=logs/
 ```
 
-**QS641: What issues have you met when following the above instructions?**
+**Q6-41: What issues have you met when following the above instructions?**
 
 Use `logging.error()` or `logging.info()` inside of the web application to provide logging feedback of what is happening.
 
-**QS643: Run the web application locally and play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
+**Q6-43: Run the web application locally and play with the log size of the s3 handler and see how the bucket keeps receiving log files. Share your thoughts.**
 
 <a name="Task65" />
 
@@ -998,7 +998,7 @@ setup, we will use a URL from our domain, something like *static.mydomain.com* t
 <link href="//RANDOM-ID-FROM-CLOUDFRONT.cloudfront.net/custom.css" rel="stylesheet">
 ```
 
-**Q641: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
+**Q6-51: Take a couple of screenshots of you S3 and CloudFront consoles to demonstrate that everything worked all right.**
 
 Commit the changes on your web app, deploy them on Docker and check that it also works fine from there: **use
 Google Chrome and check the origin of the files that you are loading**:
@@ -1180,18 +1180,18 @@ runs in your computer.
 
 If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change whatever is necessary to make it work.
 
-**Q51: Has everything gone alright? What have you changed?**
+**Q6-51: Has everything gone alright? What have you changed?**
 
-**Q52: Explain all the steps that you have followed after changing the web application code to have the web application updates running in the cloud.** 
-
-**Q53: Draw a diagram of the current deployment of the web app using a tool such as [Draw.io](https://www.drawio.com/blog/aws-diagrams)**
-
-**Q54: Assess the current version of the web application against each of the twelve factor application.**
-
-**Q55: How long have you been working on this session? What have been the main
-difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
+**Q6-52: Explain all the steps that you have followed after changing the web application code to have the web application updates running in the cloud.**
 
 ## How to submit this assignment:
+
+**Q6-1: Draw a diagram of the current deployment of the web app using a tool such as [Draw.io](https://www.drawio.com/blog/aws-diagrams)**
+
+**Q6-2: Assess the current version of the web application against each of the twelve factor application.**
+
+**Q6-3: How long have you been working on this session? What have been the main
+difficulties that you have faced and how have you solved them?** Add your answers to `README.md`.
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
 

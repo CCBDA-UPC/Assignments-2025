@@ -308,7 +308,7 @@ app through your browser [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 Go to the DynamoDB table browser tab and verify that the **ccbda-signup-table** table contains the new records that the
 web app should have created. If all the above works correctly, you are almost ready to transfer the web app to Docker.
 
-**Q53: Create a screen capture of your DyanmoDB table with the data of the new leads. Add your thoughts on the above
+**Q5-3: Create a screen capture of your DyanmoDB table with the data of the new leads. Add your thoughts on the above
 tasks.**
 
 <a name="Tasks54" />
@@ -390,7 +390,7 @@ SNS message sent.
 "POST /signup HTTP/1.1" 200 0
 ```
 
-**Q54: Has everything gone alright? Share your thoughts on the task developed above.**
+**Q5-4: Has everything gone alright? Share your thoughts on the task developed above.**
 
 <a name="Tasks55" />
 
@@ -538,7 +538,7 @@ SNS message sent.
 Open the URL http://0.0.0.0:8080/ in your browser and test the web application. If you did all the steps correctly you
 shall be able to add a new entry to the database.
 
-**Q55: Has everything gone alright? Share your thoughts on the task developed above.**
+**Q5-5: Has everything gone alright? Share your thoughts on the task developed above.**
 
 
 <a name="Tasks56" />
@@ -1029,7 +1029,7 @@ drwxr-xr-x   2 root root 4096 Feb 24 00:00 srv
 ^D
 ```
 
-**Q55: Share your thoughts on the task developed above.**
+**Q5-6: Share your thoughts on the task developed above.**
 
 
 <a name="Tasks57"/>
@@ -1084,9 +1084,8 @@ The [twelve-factor app](https://12factor.net/) is a methodology for building sof
 1. **Admin processes**:
    Run admin/management tasks as one-off processes
 
-**Q56: For the above lab session, explain, one by one, how each factor is taken into consideration, or what would you
-change or add to comply with each factor**
-
+**Q5-6: For the above lab session, explain, one by one, how each factor is taken into 
+consideration, or what would you change or add to comply with each factor**
 # How to submit this assignment:
 
 Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with
