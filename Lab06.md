@@ -846,6 +846,8 @@ In the handlers section we have three outputs for the messages: console, file an
 
 Finally, the configuration states that administrative logs will only be sent to the console while the django application will output its content simultaneously to the console, a local rotated log file and an AWS S3 bucket.
 
+**Log rollover** is the process of starting a new log file when the current one reaches a certain size or age. This helps manage log file sizes, preventing them from growing too large and making them easier to organize and analyze.
+
 We can include the `ccbda.S3RotatingFileHandler` class (see the logs configuration) in the `ccbda/__init__.py` file. When the class is first instantiated, as the web application starts, it creates a connection to the S3 bucket that will be used in the log rotate operation.
 
 The function `emit` is invoked everytime a function like `logging.info(f'ROLLOVER {record.name}')` is called.
