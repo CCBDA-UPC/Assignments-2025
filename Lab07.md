@@ -3,7 +3,7 @@
 This lab session focuses on three critical areas in modern software development: 
 **Continuous Integration (CI)**, **Continuous Delivery (CD)**, **Observability**.
 
-This lab session **builds upon the work from the previous session**, where we isolated the web application within a Docker container running locally. Make sure that you have available and working everything done in the previous session.
+This lab session **builds upon the work from the previous session**, where we published the web application using AWS Elastic Breanstalk and Docker. Make sure that you have available and working everything done in the previous session.
 
 ### Continuous Integration (CI)
 
