@@ -553,14 +553,14 @@ print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
 - a very small EC2 instance type `t2.nano` will be used (see `ebOptions` in the Python code above).
 - the name of your team will be used as the name of the environment (see command below).
 
-The final hostname that Elastic Beanstalk is creating will be `team99.us-east-1.elasticbeanstalk.com` that host name needs to be unique. I suggest you to use team and two digits of your team number for this lab session.
+The final hostname that Elastic Beanstalk is creating will be `team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com` that host name needs to be unique. I suggest you to use team and two digits of your team number for this lab session.
 
 The output of the command is extremely long, scroll to the right inside the box below or see the output in your terminal.
 
 ```bash
 _$ cd .houskeeping/elasticbeanstalk
-_$ python ../scripts/ebcreate.py ../../aws.env team99
-eb create team99 --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --cname team99 --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team99.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
+_$ python ../scripts/ebcreate.py ../../aws.env team<YOUR-TEAM-NUMBER>
+eb create team<YOUR-TEAM-NUMBER> --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --cname team<YOUR-TEAM-NUMBER> --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
 ```
 
 There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `elasticbeanstalk` folder. Make sure you change `<registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
@@ -582,11 +582,11 @@ There is just one final thing to do before we issue the command above. Create a 
 In Unix, you can use the back quotes to execute the text produced by the script above. If you are using windows copy and paste in the command line the output of the Python script. In Windows, you'll need to copy and paste the output text of the script.
 
 ```bash
-_$ `python .housekeeping/scripts/ebcreate.py aws.env team99`
+_$ `python .housekeeping/scripts/ebcreate.py aws.env team<YOUR-TEAM-NUMBER>`
 Creating application version archive "app-250319_155025031208".
 Uploading django-webapp-eb/app-250319_155025031208.zip to S3. This may take a while.
 Upload Complete.
-Environment details for: team99
+Environment details for: team<YOUR-TEAM-NUMBER>
   Application name: django-webapp-eb
   Region: us-east-1
   Deployed Version: app-250319_155025031208
@@ -601,15 +601,15 @@ Printing Status:
 2025-03-19 14:50:49    INFO    Created security group named: sg-0b7beef319967146f
 2025-03-19 14:51:05    INFO    Created target group named: arn:aws:elasticloadbalancing:us-east-1:<registry-id>:targetgroup/awseb-AWSEB-BZUZMCTWTRWQ/9862edfd7688018f
 ......
-2025-03-19 14:54:30    INFO    Application available at team99.us-east-1.elasticbeanstalk.com.
-2025-03-19 14:54:31    INFO    Successfully launched environment: team99
+2025-03-19 14:54:30    INFO    Application available at team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com.
+2025-03-19 14:54:31    INFO    Successfully launched environment: team<YOUR-TEAM-NUMBER>
 ```
 If you have followed all the steps above you shall have now a web application deployed and accesible. It will take a few minutes until you are able to read `Successfully launched environment`.
 
 You can use the `eb` command to query and interact with the Elastic Beanstalk environment.
 
 ```bash
-_$ eb use team99
+_$ eb use team<YOUR-TEAM-NUMBER>
 _$ eb printenv
  Environment Variables:
      AWS_ACCESS_KEY_ID = *****
@@ -622,7 +622,7 @@ _$ eb printenv
      DB_PASSWORD = ccbdapassword
      DB_PORT = 5432
      DB_USER = ccbdauser
-     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:team99.us-east-1.elasticbeanstalk.com
+     DJANGO_ALLOWED_HOSTS = 0.0.0.0:127.0.0.1:localhost:team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com
      DJANGO_DEBUG = True
      DJANGO_LOGLEVEL = info
      DJANGO_SECRET_KEY = -lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh
@@ -713,15 +713,15 @@ Finish the execution of the AWS Elastic Beanstalk environment.
 ```bash
 _$ cd .housekeeping/elasticbeanstalk
 _$ eb terminate
-The environment "team99" and all associated instances will be terminated.
-To confirm, type the environment name: team99
+The environment "team<YOUR-TEAM-NUMBER>" and all associated instances will be terminated.
+To confirm, type the environment name: team<YOUR-TEAM-NUMBER>
 2025-03-24 18:23:23    INFO    terminateEnvironment is starting.
 2025-03-24 18:23:23    INFO    Validating environment's EC2 instances have termination protection disabled before performing termination.
 2025-03-24 18:23:23    INFO    Finished validating environment's EC2 instances for termination protection.
 ....
 2025-03-24 18:25:43    INFO    Deleted security group named: awseb-e-gcmgtmhupr-stack-AWSEBSecurityGroup-gjEZoswAShaF
 2025-03-24 18:25:43    INFO    Deleted security group named: sg-0ea7bdd8c119da953
-2025-03-24 18:25:45    INFO    Deleting SNS topic for environment team99.
+2025-03-24 18:25:45    INFO    Deleting SNS topic for environment team<YOUR-TEAM-NUMBER>.
 2025-03-24 18:25:46    INFO    terminateEnvironment completed successfully.
 ```
 
@@ -913,7 +913,7 @@ class S3RotatingFileHandler(logging.handlers.RotatingFileHandler):
 You need to add two additional variables to the web application environment which need to be also included inside of settings.py.
 
 ```text
-AWS_S3_BUCKET_NAME=team99.ccbda.upc.edu
+AWS_S3_BUCKET_NAME=team<YOUR-TEAM-NUMBER>.ccbda.upc.edu
 AWS_S3_LOGS_PREFIX=logs/
 ```
 

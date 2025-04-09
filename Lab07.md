@@ -287,7 +287,7 @@ AWS_SESSION_TOKEN = < YOUR - AWS_SESSION_TOKEN >
 CONTAINER_NAME = django - webapp
 ECR_REPOSITORY = django - webapp - docker - repo
 ELASTIC_BEANSTALK_APP_NAME = django - webapp - eb
-ELASTIC_BEANSTALK_ENV_NAME = team99
+ELASTIC_BEANSTALK_ENV_NAME = team<YOUR-TEAM-NUMBER>
 ```
 
 Once the credentials are set up in the environment it uses an AWS specific action to log into the AWS Elastic Container
