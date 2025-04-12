@@ -144,6 +144,8 @@ In both cases the output is
 
 ## Task 8.1: Simple serverless web application
 
+Despite the name, “serverless” doesn’t mean there are no servers, it just means you don’t manage them. The cloud provider handles all the infrastructure, scaling, patching, etc. You just write your code and deploy. We are going to begin with a simple 
+
 ### CRUD REST API : Implementing the 4 Basic Operations in Software Development
 
 **CRUD** stands for **Create, Read, Update, Delete**, which are the four fundamental operations used in databases and APIs to manage data.
@@ -660,10 +662,7 @@ You may have noticed that the Lambda function includes some logging calls. Open 
 
 <img alt="Lab08-CloudWatch.png" src="images/Lab08-CloudWatch.png" width="100%"/>
 
-
-**Q811: Assess the current version of the web application against each of the twelve factor application.**
-
-**Q812: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.**
+**Q8.11: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.**
 
 ### Automatic deployment
 
@@ -774,12 +773,33 @@ LOG_LEVEL=INFO
 _$ ./deploy.sh .env
 ```
 
-**Q813: What steps will be necessary to be able to execute the bash shell script?**
+**Q8.12: Assess the current version of the web application against each of the twelve factor application.**
 
-**Q814: Create a new shell script that removes all the assets that have been created. (Optional)**
+**Q8.13: What steps will be necessary to be able to execute the bash shell script?**
+
+**Q8.14: Create a new shell script that removes all the assets that have been created. (Optional)**
 
 
 # Task 8.2: Simple serverless using WebSockets
+
+
+#### Polling
+
+Think of it like checking your mailbox every 5 minutes to see if there’s a letter. Even if there’s nothing new, you keep walking out to check. That’s what polling does—your app keeps asking the server, “Anything new yet?” over and over.
+
+- **Good for:** Simpler apps, low-frequency updates, easy setup.
+- **Bad for:** Real-time needs, battery and bandwidth efficiency.
+
+
+
+#### WebSocket
+
+Now imagine the mailman just rings your doorbell as soon as something arrives. You don’t have to check constantly—updates come to you instantly. That’s WebSocket. It creates a live, open connection where data can flow both ways whenever needed.
+
+- **Good for:** Real-time apps (chat, notifications, live sports scores).
+- **Bad for:** Simple or static use cases, or when server can't handle persistent connections.
+
+
 
 
 ```bash
