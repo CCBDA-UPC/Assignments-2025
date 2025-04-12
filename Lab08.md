@@ -121,8 +121,6 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 
 # Pre-lab homework
 
-In this lab session we'll be creating a REST API. Therefore, you first, create a DynamoDB table named `ccbda-lambda-first` with `thingID` as the partition key.
-
 ### **Understanding `kwargs` in Python:**
 
 In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
@@ -163,13 +161,61 @@ Such operations can be applied in different contexts.
 - **Databases**: CRUD operations are used to manipulate records (SQL, MongoDB, Firebase).
 - **User Interfaces**: A CRUD-based UI allows users to **add, view, edit, and delete** items.
 
+### Creating a DynamoDB table
+
+The following commands create a DynamoDB table using **AWS CLI**. It first needs to define a shell variable with the name of the table and then creates the table with only one attribute named `thingID` of string type. The `REGION` shell variable will be used in the following steps.
+
+```bash
+_$ TABLE=ccbda-lambda-first
+_$ REGION=us-east-1
+_$ aws dynamodb create-table \
+  --table-name ${TABLE} \
+  --attribute-definitions \
+        AttributeName=thingID,AttributeType=S \
+  --key-schema \
+        AttributeName=thingID,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST \
+  --region ${REGION}
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "thingID",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "ccbda-lambda-first",
+        "KeySchema": [
+            {
+                "AttributeName": "thingID",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2025-04-12T16:37:11.699000+02:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 0,
+            "WriteCapacityUnits": 0
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:us-east-1:<YOUR-ACCOUNT-ID>:table/ccbda-lambda-first",
+        "TableId": "481c8722-4994-4652-a68a-c0246643e206",
+        "BillingModeSummary": {
+            "BillingMode": "PAY_PER_REQUEST"
+        }
+    }
+}
+```
+
 ### Deploying the CRUD Lambda function
 
 Download the [serverless-app repository](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. 
 
-Inside the `crud` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by the AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
+Inside the `crud/lambda/` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by the AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
-We’ll use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
+We will use `kwargs` to dynamically pass the values of parameters directly to the `boto3` operations in our Lambda function.
 Check the [Boto3 DynamoDB documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html)
 for more information on the [`scan`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/scan.html), [`put_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/put_item.html), [`delete_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/delete_item.html), and [`update_item`](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/update_item.html) functions.
 
@@ -177,15 +223,19 @@ for more information on the [`scan`](https://boto3.amazonaws.com/v1/documentatio
 import boto3
 import json
 import logging
+import os
+
+REGION = os.environ['REGION']
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(os.environ['LOG_LEVEL'])
 
-dynamodb = boto3.client('dynamodb', region_name='us-east-1')
+dynamodb = boto3.client('dynamodb', region_name=REGION)
+
 
 def lambda_handler(event, context):
     operation = event['requestContext']['http']['method']
-    logger.info(f'operation {operation}')
+    logger.debug(f'operation {operation}')
     try:
         if operation == 'GET':
             return respond(dynamodb.scan(**event['queryStringParameters']))
@@ -213,61 +263,87 @@ def respond(res, err=None):
             "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, OPTIONS",
         },
     }
-    logger.info(f'response {json.dumps(response, indent=2)}')
+    logger.debug(f'response {json.dumps(response, indent=2)}')
     return response
 ```
 
-The file `requirements.txt` in the `crud` folder defines the Python environment for the above function to be executed.
+The file `requirements.txt` in the `crud/lambda/` folder defines the Python environment for the above function to be executed.
 
-We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set the variables to the corresponding value. Create a zip file with the Python code and its requirements. The command `aws lambda create-function` sends the zip file to AWS. In response, it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
+We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set more shell variables to the corresponding value. Then we will create a string containing the environment values to be passed along to the Lambda function.
 
 ```bash
 _$ ACCOUNT_ID=<YOUR-ACCOUNT-ID>
-_$ REGION=us-east-1
-_$ cd crud
+_$ ROLE=arn:aws:iam::<YOUR-ACCOUNT-ID>:role/LabRole
+_$ LAMBDA=LambdaCRUD
+_$ LOG_LEVEL=INFO
+_$ ENVIRONMENT_VARIABLES=()
+_$ for var in  REGION LOG_LEVEL; do
+  ENVIRONMENT_VARIABLES+=($var=${!var})
+done
+_$ ENVIRONMENT=$(IFS=, ; echo "${ENVIRONMENT_VARIABLES[*]}")
+_$ echo "ENVIRONMENT: ${ENVIRONMENT}"
+ENVIRONMENT: REGION=us-east-1,LOG_LEVEL=INFO
+```
+
+Now, create a zip file with the Python code and its requirements. The command `aws lambda create-function` sends the zip file to AWS. In response, it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
+
+```bash
+_$ pushd lambda
 _$ zip lambda_crud.zip lambda_crud.py requirements.txt
 updating: lambda_crud.py (deflated 64%)
 updating: requirements.txt (deflated 19%)
-_$ aws lambda create-function --function-name LambdaCRUD \
+_$ aws lambda create-function \
+   --function-name ${LAMBDA} \
   --zip-file fileb://lambda_crud.zip \
   --handler lambda_crud.lambda_handler \
   --runtime python3.13 \
-  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole
+  --role ${ROLE} \
+  --environment "Variables={${ENVIRONMENT}}"
 {
     "FunctionName": "LambdaCRUD",
     "FunctionArn": "arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD",
     "Runtime": "python3.13",
-    "Role": "arn:aws:iam::992382765078:role/LabRole",
+    "Role": "arn:aws:iam::<YOUR-ACCOUNT-ID>:role/LabRole",
     "Handler": "lambda_crud.lambda_handler",
-    "CodeSize": 1147,
+    "CodeSize": 1077,
     "Description": "",
     "Timeout": 3,
     "MemorySize": 128,
-    "LastModified": "2025-03-12T15:24:35.266+0000",
-    "CodeSha256": "CX13dQVlx3hpf3YOcDh07USeHFRcGLfjX6hTKiF/bX8=",
+    "LastModified": "2025-04-12T14:58:40.007+0000",
+    "CodeSha256": "XLzOJOsfZQPRh4gVKgDETC1A9v3QpXwlJAPu7NlWinU=",
     "Version": "$LATEST",
+    "Environment": {
+        "Variables": {
+            "LOG_LEVEL": "INFO",
+            "REGION": "us-east-1"
+        }
+    },
     "TracingConfig": {
         "Mode": "PassThrough"
     },
-    "RevisionId": "ae25f8b8-1d06-4bc9-826e-3d56c0df3d0e",
+    "RevisionId": "62a5c252-e577-4fe0-a5f9-e44de63ec35e",
     "State": "Pending",
     "StateReason": "The function is being created.",
     "StateReasonCode": "Creating"
 }
 _$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
+_$ popd
 ```
 
 In Unix, using the command `jq` ([more info](https://jqlang.org/)) and the backquotes ``` we can execute the command and automatically extract the JSON field value to set the LAMBDA_ARN variable.
 
 ```bash
-_$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaCRUD \
+_$ LAMBDA_ARN=`aws lambda create-function \
+   --function-name ${LAMBDA} \
   --zip-file fileb://lambda_crud.zip \
   --handler lambda_crud.lambda_handler \
   --runtime python3.13 \
-  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole \
-  | jq '.FunctionArn' `
-_$ echo $LAMBDA_ARN
-"arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD"
+  --role ${ROLE} \
+  --environment "Variables={${ENVIRONMENT}}" \
+  | jq -r '.FunctionArn'`
+
+echo "LAMBDA_ARN: ${LAMBDA_ARN}"
+LAMBDA_ARN: arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD
 ```
 
 Once the Lambda function is deployed you can go to the AWS Lambda console and see the outcome of the above commands.
@@ -279,32 +355,34 @@ Once the Lambda function is deployed you can go to the AWS Lambda console and se
 
 - **Zip the Lambda code**:
    ```bash
-   zip function.zip lambda_function.py requirements.txt
+   _$ zip function.zip lambda_function.py requirements.txt
    ```
 
 - **Create the Lambda function**:
    ```bash
-   aws lambda create-function --function-name my-lambda-function \
-     --zip-file fileb://function.zip \
-     --handler lambda_function.lambda_handler \
-     --runtime python3.13 \
-     --role arn:aws:iam::your-account-id:role/lambda-execution-role
+   _$ aws lambda create-function \
+     --function-name ${LAMBDA} \
+    --zip-file fileb://lambda_crud.zip \
+    --handler lambda_crud.lambda_handler \
+    --runtime python3.13 \
+    --role ${ROLE} \
+    --environment "Variables={${ENVIRONMENT}}"
    ```
 
 - **Invoke the Lambda function**:
    ```bash
-   aws lambda invoke --function-name my-lambda-function output.txt
+   _$ aws lambda invoke --function-name ${LAMBDA} output.txt
    ```
 
 - **Update the Lambda function** (if needed):
    ```bash
-   aws lambda update-function-code --function-name my-lambda-function \
+   _$ aws lambda update-function-code --function-name ${LAMBDA} \
      --zip-file fileb://function.zip
    ```
 
 - **Delete the Lambda function** (if needed):
    ```bash
-   aws lambda delete-function --function-name my-lambda-function
+   _$ aws lambda delete-function --function-name ${LAMBDA}
    ```
 
 ### API Gateway creation
@@ -313,15 +391,15 @@ To allow the Lambda function to be accessed by any API Gateway it is necessary t
 
 ```bash
 _$ STATEMENT_ID=`uuidgen`
-_$ echo $STATEMENT_ID
-CDCFB599-79CC-4877-B480-6B97B4125D4D
+_$ echo "STATEMENT_ID ${STATEMENT_ID}"
+STATEMENT_ID: CDCFB599-79CC-4877-B480-6B97B4125D4D
 _$ aws lambda add-permission \
-  --function-name LambdaCRUD \
+  --function-name ${LAMBDA} \
   --principal apigateway.amazonaws.com \
   --statement-id "${STATEMENT_ID}" \
   --action lambda:InvokeFunction
 {
-    "Statement": "{\"Sid\":\"CDCFB599-79CC-4877-B480-6B97B4125D4D\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD\"}"
+    "Statement": "{\"Sid\":\"CDCFB599-79CC-4877-B480-6B97B4125D4D\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD\"}"
 }
 ```
 
@@ -358,11 +436,13 @@ _$ aws apigatewayv2 create-integration \
     "IntegrationId": "wp0uj9i",
     "IntegrationMethod": "ANY",
     "IntegrationType": "AWS_PROXY",
-    "IntegrationUri": "arn:aws:lambda:us-east-1:992382765078:function:LambdaCRUD",
+    "IntegrationUri": "arn:aws:lambda:us-east-1:<YOUR-ACCOUNT-ID>:function:LambdaCRUD",
     "PayloadFormatVersion": "2.0",
     "TimeoutInMillis": 30000
 }
 _$ INTEGRATION_ID=wp0uj9i
+_$ echo "INTEGRATION_ID: ${INTEGRATION_ID}"
+INTEGRATION_ID: wp0uj9i
 ```
 
 Now, `aws apigatewayv2 create-route` creates different routes in the API Gateway, one for each HTTP **method** and **path**. In this example all methods use the same Lambda function, but usually different Lambda functions serve each HTTP method and path.
@@ -425,15 +505,16 @@ _$ aws apigatewayv2 create-route \
 }
 ```
 
-As mentioned above, each API Gateway can have different stages: *production*, *development*, *testing*, etc. We are only going to create one stage named "prod" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
+As mentioned above, each API Gateway can have different stages: *production*, *development*, *testing*, etc. We are only going to create one stage named "production" that will need to be manually deployed. Changing `--not-auto-deploy` to `--auto-deploy` will make it redeploy as soon as there is a change in the configuration or the Lambda function.
 
 ```bash
-_$ STAGE="prod"
+_$ STAGE="production"
 _$ aws apigatewayv2 create-stage \
   --api-id ${API_ID} \
-  --stage-name ${STAGE}
+  --stage-name ${STAGE} \
   --no-auto-deploy
 {
+    "AutoDeploy": false,
     "CreatedDate": "2025-03-12T15:30:24+00:00",
     "DefaultRouteSettings": {
         "DetailedMetricsEnabled": false
@@ -449,7 +530,9 @@ _$ aws apigatewayv2 create-stage \
 Finally, `aws apigatewayv2 create-deployment` allows the API Gateway to be deployed and ready to be used. The "**CrudHttpAPI**" API Gateway URL is composed using the value of different variables set up above: `https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/`
 
 ```bash
-_$ aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
+_$ aws apigatewayv2 create-deployment \
+   --api-id ${API_ID} \
+   --stage-name ${STAGE}
 {
     "AutoDeployed": false,
     "CreatedDate": "2025-03-12T15:40:58+00:00",
@@ -457,10 +540,33 @@ _$ aws apigatewayv2 create-deployment --api-id ${API_ID} --stage-name prod
     "DeploymentStatus": "DEPLOYED"
 }
 _$ URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/"
-_$ echo $URL
-https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/prod/
+_$ echo "URL: ${URL}"
+URL: https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/production/
 ```
+We can test if it responds to the GET method using `curl`:
 
+```bash
+_$ curl "${URL}?TableName=${TABLE}"
+{
+  "Items": [],
+  "Count": 0,
+  "ScannedCount": 0,
+  "ResponseMetadata": {
+    "RequestId": "UG9KFPA1TJOKE98VNIM6DVT70NVV4KQNSO5AEMVJF66Q9ASUAAJG",
+    "HTTPStatusCode": 200,
+    "HTTPHeaders": {
+      "server": "Server",
+      "date": "Sat, 12 Apr 2025 15:18:00 GMT",
+      "content-type": "application/x-amz-json-1.0",
+      "content-length": "39",
+      "connection": "keep-alive",
+      "x-amzn-requestid": "UG9KFPA1TJOKE98VNIM6DVT70NVV4KQNSO5AEMVJF66Q9ASUAAJG",
+      "x-amz-crc32": "3413411624"
+    },
+    "RetryAttempts": 0
+  }
+}
+```
 Go to the AWS API Gateway console and see the outcome of the above commands.
 
 <img alt="Lab08-APIGateway.png" src="images/Lab08-APIGateway.png" width="100%"/>
@@ -481,15 +587,12 @@ The variable in the Postman environment named "CRUD".
 
 ### Use the REST API
 
-Once the API is tested, you can see it working inside a web page. The files in the `webpage1` folder of the zip file that you downloaded, are a mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
+Once the API is tested, you can see it working inside a web page. The files in the `crud` folder of the zip file that you downloaded, are a mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
 
 The JavaScript code uses jQuery to create a "GET" request as soon as the web page loads and a "POST" request when the visitor submits the form.
 
 ```javascript
 (function ($) {
-    apiUrl = "https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/prod/"
-    TableName = 'ccbda-lambda-first';
-
     $.ajax({
         type: 'GET',
         url: apiUrl,
@@ -536,6 +639,14 @@ The JavaScript code uses jQuery to create a "GET" request as soon as the web pag
 })(jQuery);
 ```
 
+To always update the values of the variables that the script uses we can add the command:
+
+```bash
+_$ echo -e "var apiUrl = '${URL}';\nvar TableName = '${TABLE}';" > variables.js; cat variables.js
+var apiUrl = 'https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/production/';
+var TableName = 'ccbda-lambda-first';
+```
+
 Open the "index.html" file using your browser and start to create items in the list.
 
 <img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="80%"/>
@@ -551,6 +662,118 @@ You may have noticed that the Lambda function includes some logging calls. Open 
 **Q811: Assess the current version of the web application against each of the twelve factor application.**
 
 **Q812: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.**
+
+### Automatic deployment
+
+Inside the `crud` directory you can find the file `deploy.sh` which is a bash shell script that performs all the steps 
+explanied above.
+
+```bash
+#!/bin/bash
+
+set -e # exit on first error
+
+source $1
+
+ENVIRONMENT_VARIABLES=()
+for var in  REGION LOG_LEVEL; do
+  ENVIRONMENT_VARIABLES+=($var=${!var})
+done
+ENVIRONMENT=$(IFS=, ; echo "${ENVIRONMENT_VARIABLES[*]}")
+
+echo "ENVIRONMENT: ${ENVIRONMENT}"
+
+aws dynamodb create-table \
+  --table-name ${TABLE} \
+  --attribute-definitions \
+        AttributeName=thingID,AttributeType=S \
+  --key-schema \
+        AttributeName=thingID,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST \
+  --region ${REGION}
+
+pushd lambda
+zip lambda_crud.zip lambda_crud.py requirements.txt
+LAMBDA_ARN=`aws lambda create-function \
+   --function-name ${LAMBDA} \
+  --zip-file fileb://lambda_crud.zip \
+  --handler lambda_crud.lambda_handler \
+  --runtime python3.13 \
+  --role ${ROLE} \
+  --environment "Variables={${ENVIRONMENT}}" \
+  | jq -r '.FunctionArn'`
+
+echo "LAMBDA_ARN: ${LAMBDA_ARN}"
+popd
+
+STATEMENT_ID=`uuidgen`
+echo "STATEMENT_ID: ${STATEMENT_ID}"
+
+aws lambda add-permission \
+    --function-name ${LAMBDA} \
+    --principal apigateway.amazonaws.com \
+    --statement-id "${STATEMENT_ID}" \
+    --action lambda:InvokeFunction
+
+API_ID=`aws apigatewayv2 create-api \
+  --name "CrudHttpAPI" \
+  --protocol-type HTTP \
+   | jq -r '.ApiId'`
+
+echo "API_ID ${API_ID}"
+
+INTEGRATION_ID=`aws apigatewayv2 create-integration \
+    --api-id ${API_ID} \
+    --integration-type AWS_PROXY \
+    --integration-uri ${LAMBDA_ARN} \
+    --integration-method ANY \
+    --payload-format-version 2.0 \
+    | jq -r '.IntegrationId' `
+
+echo "INTEGRATION_ID: ${INTEGRATION_ID}"
+
+
+for ROUTE in GET POST OPTIONS PUT DELETE; do
+    aws apigatewayv2 create-route \
+        --api-id ${API_ID} \
+        --route-key "${ROUTE} /" \
+        --target "integrations/${INTEGRATION_ID}"
+done
+
+
+STAGE="production"
+aws apigatewayv2 create-stage \
+     --api-id ${API_ID} \
+     --stage-name ${STAGE} \
+     --no-auto-deploy
+
+aws apigatewayv2 create-deployment \
+    --api-id ${API_ID} \
+    --stage-name ${STAGE}
+
+
+URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/?TableName=${TABLE}"
+echo "URL: ${URL}"
+curl $URL
+
+echo -e "var apiUrl = '${URL}';\nvar TableName = '${TABLE}';" > variables.js; cat variables.js
+```
+
+To run the script it is necessary to create a configuration file with the names of the variables and make the script executable.
+
+```bash
+_$ cat .env
+TABLE=ccbda-lambda-first
+REGION=us-east-1
+ACCOUNT_ID=383312122003
+ROLE=arn:aws:iam::383312122003:role/LabRole
+LAMBDA=LambdaCRUD
+LOG_LEVEL=INFO
+_$ ./deploy.sh .env
+```
+
+**Q813: What steps will be necessary to be able to execute the bash shell script?**
+**Q814: Create a new shell script that removes all the assets that have been created. (Optional)**
 
 
 # Task 8.2: Simple serverless using WebSockets
