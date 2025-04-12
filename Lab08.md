@@ -792,9 +792,7 @@ Now imagine the mailman just rings your doorbell as soon as something arrives. Y
 
 <img alt="Lab08-websockets.png" src="images/Lab08-websockets.png" width="80%"/>
 
-AWS API Gateway supports the HTTP/REST APIs and also the WebSocket API. The configuration is a bit different
-
-In a WebSocket API on AWS, `$connect`, `$disconnect`, and `$default` are special **routes** that handle key moments in the WebSocket connection lifecycle.
+**AWS API Gateway** supports the HTTP/REST APIs and also the WebSocket API. In a WebSocket API on AWS, `$connect`, `$disconnect`, and `$default` are special **routes** that handle key moments in the WebSocket connection lifecycle.
 
 When a client **first connects**, the `$connect` route gets triggered. This is where you might authenticate the user and store their connection ID so you can send them messages later.
 
