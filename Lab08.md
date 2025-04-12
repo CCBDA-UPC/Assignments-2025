@@ -150,6 +150,8 @@ The final goal is to have a simple HTML page running some JavaScript that manage
 
 <img alt="Lab08-Lamba-APIGW.png" src="images/Lab08-Lamba-APIGW.png" width="50%"/>
 
+AWS is charging only for the execution of the Lamba function and the DynamoDB storage and interactions. That means there are no server charges when there are no visitors or server maintenance. If suddenly many visitors appear, the system immediately adapts to the new load since every REST API request is managed by a new independent execution of the Lambda function.
+
 ### CRUD REST API : Implementing the 4 Basic Operations in Software Development
 
 **CRUD** stands for **Create, Read, Update, Delete**, which are the four fundamental operations used in databases and APIs to manage data.
