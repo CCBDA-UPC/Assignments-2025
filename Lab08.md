@@ -144,7 +144,11 @@ In both cases the output is
 
 ## Task 8.1: Simple serverless web application
 
-Despite the name, “serverless” doesn’t mean there are no servers, it just means you don’t manage them. The cloud provider handles all the infrastructure, scaling, patching, etc. You just write your code and deploy. We are going to begin with a simple 
+Despite the name, “serverless” doesn’t mean there are no servers, it just means you don’t manage them. The cloud provider handles all the infrastructure, scaling, patching, etc. You just write your code and deploy. We are going to begin with a simple web application that manages a database (CRUD operations) and shows the contents in the browser.
+
+The final goal is to have a simple HTML page running some JavaScript that manages the visitor interaction and invokes the API Gateway which implements a CRUD REST API.
+
+<img alt="Lab08-Lamba-APIGW.png" src="images/Lab08-Lamba-APIGW.png" width="50%"/>
 
 ### CRUD REST API : Implementing the 4 Basic Operations in Software Development
 
@@ -388,8 +392,6 @@ Once the Lambda function is deployed you can go to the AWS Lambda console and se
    ```
 
 ### API Gateway creation
-
-<img alt="Lab08-Lamba-APIGW.png" src="images/Lab08-Lamba-APIGW.png" width="50%"/>
 
 To allow the Lambda function to be accessed by any API Gateway it is necessary to create a "statement" with a unique value for the parameter `statement-id`. The Unix command `uuidgen` creates a random value to be used by the command `aws lambda add-permission` which creates that premission. Please note the ``` backslashes used in the first command.
 
