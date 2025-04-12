@@ -119,6 +119,16 @@ AWS API Gateway is a fully managed service provided by Amazon Web Services (AWS)
 - IoT (Internet of Things) communication between IoT devices (e.g., smart home devices, sensors) and control systems
 - Push Notifications in web applications
 
+### AWS Kinesis 
+
+**AWS Kinesis** is a fully managed service designed to handle real-time streaming data. It allows you to collect, process, and analyze data streams at scale. It's commonly used for applications that need real-time data processing, such as data analytics, video processing, log analysis, or IoT data ingestion.
+
+Some common use cases for Kinesis include:
+- Real-time analytics on streaming data (e.g., monitoring and alerting).
+- Real-time dashboards.
+- Data processing pipelines.
+- Machine learning applications (e.g., predictive analytics based on streaming data).
+
 # Pre-lab homework
 
 ### **Understanding `kwargs` in Python:**
@@ -805,7 +815,170 @@ So in short:
 - `$disconnect` is the cleanup crew,  
 - `$default` is the "I don't know what this is, but here you go" handler.
 
+In the zip that you downloaded for the previous section go to the folder `websockets/lambda/websocket` to find three files named `lambda_connect.py`, `lambda_disconnect.py`, and `lambda_default.py`.
 
+The connection handler receives from the API Gateway a `connectionId` that is stored in a DynamoDB table. It also needs the URL to which it belongs.
+
+```python
+from datetime import datetime, timezone
+import json
+import logging
+import boto3
+import os
+import library_functions as library
+
+DYNAMO_TABLE = os.environ['DYNAMO_TABLE']
+REGION = os.environ['REGION']
+
+logger = logging.getLogger()
+logger.setLevel(os.environ['LOG_LEVEL'])
+
+def lambda_handler(event, context):
+    logger.debug(f'event {json.dumps(event, indent=2)}')
+    connection_id = event['requestContext']['connectionId']
+    url = library.get_url(event, REGION)
+    logger.info(f'New connection: {url} {connection_id}')
+    try:
+        dynamodb = boto3.client('dynamodb', region_name=REGION)
+        dynamodb.put_item(TableName=DYNAMO_TABLE,
+                          Item={
+                              'connectionid': {'S': connection_id},
+                              'url': {'S': url},
+                              'when': {'S': datetime.now(timezone.utc).isoformat()}
+                          })
+    except Exception as e:
+        logger.error(f'PutItem {str(e)}')
+        return library.handle_response(json.dumps('Error connecting!'), 400)
+    return library.handle_response(json.dumps('Connection sucessful!'))
+```
+
+By using both values, any Lambda function will be able to send information directly to the browser as shown below:
+
+```python
+apigw = boto3.client('apigatewaymanagementapi', endpoint_url=url)
+try:
+    apigw.post_to_connection(
+        ConnectionId=connectionid,
+        Data=message
+    )
+```
+
+The `lambda_disconnect.py` function simply removes the corresponding record from the DynamoDB table. The `lambda_default.py` waits for a "hello!" message from the browser and responds sending some configuration parameters, in this case to the sender of the message.
+
+```python
+import json
+import logging
+import boto3
+import os
+import library_functions as library
+
+API_KEY = os.environ['API_KEY']
+REGION = os.environ['REGION']
+CENTER = os.environ['CENTER'].split(':')
+TOP_LEFT = os.environ['TOP_LEFT'].split(':')
+BOTTOM_RIGHT = os.environ['BOTTOM_RIGHT'].split(':')
+
+logger = logging.getLogger()
+logger.setLevel(os.environ['LOG_LEVEL'])
+
+
+def lambda_handler(event, context):
+    connection_id = event['requestContext']['connectionId']
+    logger.info(f'event {json.dumps(event, indent=2)}')
+
+    if event['body'] == 'hello!':
+        config = {
+            'type': 'init',
+            'apiKey': API_KEY,
+            'center': CENTER,
+            'bounds': [TOP_LEFT, BOTTOM_RIGHT],
+        }
+        message = json.dumps(config)
+        logger.debug(f'send_message_to_client "{connection_id}" message {message}')
+        apigw = boto3.client('apigatewaymanagementapi', endpoint_url=library.get_url(event,REGION))
+        try:
+            apigw.post_to_connection(
+                ConnectionId=connection_id,
+                Data=message
+            )
+        except apigw.exceptions.GoneException:
+            logger.info(f'Connection "{connection_id}" is no longer valid.')
+        except Exception as e:
+            logger.error(f'Error sending "{message}" to connection "{connection_id}" {str(e)}')
+        return library.handle_response(json.dumps('Init message sent.'))
+    else:
+        return library.handle_response(json.dumps('I cannot respond'), 400)
+```
+
+The file `library_functions.py` includes the two functions that all three Lamba funtions use. `get_url()` uses the event data and the region to compose the URL. While `handle_response()` provides a JSON response that the API Gateway will use to provide the corresponding HTTP formatted response for the browser.
+
+```python
+def get_url(event, region):
+    return f'https://{event['requestContext']['apiId']}.execute-api.{region}.amazonaws.com/{event['requestContext']['stage']}/'
+
+def handle_response(res, status=200):
+    return {
+        'statusCode': status,
+        'body': res,
+        'headers': {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Headers": "Content-Type",
+            'Access-Control-Allow-Origin': '*',
+            "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT, OPTIONS",
+        },
+    }
+```
+
+Once the browser has opened the connection it is ready to receive messages whenever they are available. For that matter there is another Lambda function in the folder `kinesis` inside the file `lambda_kinesis.py`. That Lambda function is triggered whenever new data appears in AWS Kinesis.
+
+The function iterates over the AWS Kinesis records received, it creates a message to be sent, and it looks for all the websockets open connections, to send the new message to every browser.
+
+
+```python
+import boto3
+import json
+import logging
+import os
+import base64
+
+REGION = os.environ['REGION']
+DYNAMO_TABLE = os.environ['DYNAMO_TABLE']
+
+logger = logging.getLogger()
+logger.setLevel(os.environ['LOG_LEVEL'])
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        try:
+            record_data = base64.b64decode(record['kinesis']['data']).decode('utf-8')
+            logger.debug(f'event {json.dumps(event, indent=2)}')
+            message = json.dumps({
+                'type': 'show',
+                'aircrafts': json.loads(record_data)
+            })
+            dynamodb = boto3.client('dynamodb', region_name=REGION)
+            response = dynamodb.scan(TableName=DYNAMO_TABLE)
+            for item in response['Items']:
+                connectionid = item['connectionid']['S']
+                url = item['url']['S']
+                logger.debug(f'send_message_to_client "{connectionid}" message {message}')
+                apigw = boto3.client('apigatewaymanagementapi', endpoint_url=url)
+                try:
+                    apigw.post_to_connection(
+                        ConnectionId=connectionid,
+                        Data=message
+                    )
+                except apigw.exceptions.GoneException:
+                    logger.error(f'Connection "{connectionid}" is no longer valid.')
+                except Exception as e:
+                    logger.error(f'Error sending "{message}" to connection "{connectionid}" {str(e)}')
+        except Exception as e:
+            logger.error(f'Error reading records {str(e)}')
+```
+
+All the above functions try to create a simplified version of [FlightRadar24](https://www.flightradar24.com/).
+
+<img alt="Lab08-flightRadar.png" src="images/Lab08-flightRadar.png"/>
 
 
 ```bash
