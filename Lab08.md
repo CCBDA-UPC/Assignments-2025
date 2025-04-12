@@ -765,14 +765,15 @@ To run the script it is necessary to create a configuration file with the names 
 _$ cat .env
 TABLE=ccbda-lambda-first
 REGION=us-east-1
-ACCOUNT_ID=383312122003
-ROLE=arn:aws:iam::383312122003:role/LabRole
+ACCOUNT_ID=<YOUR-ACCOUNT-ID>
+ROLE=arn:aws:iam::<YOUR-ACCOUNT-ID>:role/LabRole
 LAMBDA=LambdaCRUD
 LOG_LEVEL=INFO
 _$ ./deploy.sh .env
 ```
 
 **Q813: What steps will be necessary to be able to execute the bash shell script?**
+
 **Q814: Create a new shell script that removes all the assets that have been created. (Optional)**
 
 
