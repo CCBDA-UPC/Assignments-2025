@@ -786,22 +786,26 @@ _$ ./deploy.sh .env
 
 # Task 8.2: Simple serverless using WebSockets
 
-
-#### Polling
-
 Think of it like checking your mailbox every 5 minutes to see if there’s a letter. Even if there’s nothing new, you keep walking out to check. That’s what polling does—your app keeps asking the server, “Anything new yet?” over and over.
 
-- **Good for:** Simpler apps, low-frequency updates, easy setup.
-- **Bad for:** Real-time needs, battery and bandwidth efficiency.
+Now imagine the mailman just rings your doorbell as soon as something arrives. You don’t have to check constantly—updates come to you instantly. That’s **WebSocket**. It creates a live, open connection where data can flow both ways whenever needed.
 
+<img alt="Lab08-websockets.png" src="images/Lab08-websockets.png" width="80%"/>
 
+AWS API Gateway supports the HTTP/REST APIs and also the WebSocket API. The configuration is a bit different
 
-#### WebSocket
+In a WebSocket API on AWS, `$connect`, `$disconnect`, and `$default` are special **routes** that handle key moments in the WebSocket connection lifecycle.
 
-Now imagine the mailman just rings your doorbell as soon as something arrives. You don’t have to check constantly—updates come to you instantly. That’s WebSocket. It creates a live, open connection where data can flow both ways whenever needed.
+When a client **first connects**, the `$connect` route gets triggered. This is where you might authenticate the user and store their connection ID so you can send them messages later.
 
-- **Good for:** Real-time apps (chat, notifications, live sports scores).
-- **Bad for:** Simple or static use cases, or when server can't handle persistent connections.
+When the client **leaves or disconnects**, whether they close their browser or lose connection, the `$disconnect` route runs. That’s your chance to clean up—like removing their connection ID from your database.
+
+While the connection is open, the client can **send messages**. If the message matches a custom route (like `sendMessage`), that one gets triggered. But if it doesn’t match anything, AWS uses the `$default` route. It’s like a fallback, catching anything unexpected or unrecognized.
+
+So in short:  
+- `$connect` is the welcome handler,  
+- `$disconnect` is the cleanup crew,  
+- `$default` is the "I don't know what this is, but here you go" handler.
 
 
 
