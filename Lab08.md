@@ -149,6 +149,13 @@ In both cases the output is
 ```python
 {'name': 'Alice', 'age': 30}
 ```
+### Geoapify
+
+[Geoapify](https://www.geoapify.com/) is a geolocation and mapping service that provides APIs and tools for location-based applications. It allows developers to integrate various location-related functionalities into their applications, such as geocoding, reverse geocoding, route planning, map rendering, and place search. Geoapify offers a wide range of services and is known for its user-friendly APIs and the ability to scale based on user needs.
+
+Geoapify provides services that are similar to Google Maps but with more customizable options, and often appeals to developers due to its more flexible and developer-friendly pricing model.
+
+Create an account, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
 
 # Tasks
 
@@ -976,186 +983,200 @@ def lambda_handler(event, context):
             logger.error(f'Error reading records {str(e)}')
 ```
 
-All the above functions try to create a simplified version of [FlightRadar24](https://www.flightradar24.com/).
+All the above functions try to create a simplified version of [FlightRadar24](https://www.flightradar24.com/). It can be used as model to create interactive dashboards where many visitors can keep track on the processing of several sources of Big Data.
 
 <img alt="Lab08-flightRadar.png" src="images/Lab08-flightRadar.png"/>
 
+Inside the folder `websockets` there is a file named `deploy.sh` that is similar to the one on the previous section.
 
 ```bash
-_$ ACCOUNT_ID=992382765078
-_$ REGION=us-east-1
-_$ cd websocket
-_$ zip lambda_websocket.zip lambda_websocket.py requirements.txt
-  adding: lambda_websocket.py (deflated 66%)
-  adding: requirements.txt (deflated 19%)
-_$ LAMBDA_ARN=`aws lambda create-function --function-name LambdaWebSocket \
-  --zip-file fileb://lambda_websocket.zip \
-  --handler lambda_websocket.lambda_handler \
+#!/bin/bash
+
+set -e # exit on first error
+
+source $1
+
+ENVIRONMENT_VARIABLES=()
+for var in API_KEY REGION CENTER TOP_LEFT BOTTOM_RIGHT DYNAMO_TABLE LOG_LEVEL; do
+  ENVIRONMENT_VARIABLES+=($var=${!var})
+done
+ENVIRONMENT=$(IFS=, ; echo "${ENVIRONMENT_VARIABLES[*]}")
+
+echo "ENVIRONMENT: ${ENVIRONMENT}"
+
+pushd lambda/kinesis
+zip lambda_kinesis.zip lambda_kinesis.py library_functions.py requirements.txt
+LAMBDA_ARN=`aws lambda create-function \
+   --function-name ${LAMBDA_KINESIS} \
+  --zip-file fileb://lambda_kinesis.zip \
+  --handler lambda_kinesis.lambda_handler \
   --runtime python3.13 \
-  --role arn:aws:iam::${ACCOUNT_ID}:role/LabRole\
-  | jq '.FunctionArn' ` 
-_$ echo $LAMBDA_ARN
-"arn:aws:lambda:us-east-1:992382765078:function:LambdaWebSocket"
-_$ STATEMENT_ID=`uuidgen`
-_$ echo $STATEMENT_ID
-C951F044-D042-4282-A48B-11E83113CE63
-_$ aws lambda add-permission \
-  --function-name LambdaWebSocket \
-  --principal apigateway.amazonaws.com \
-  --statement-id "${STATEMENT_ID}" \
-  --action lambda:InvokeFunction
-{
-    "Statement": "{\"Sid\":\"C951F044-D042-4282-A48B-11E83113CE63\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:992382765078:function:LambdaWebSocket\"}"
-}
+  --role ${ROLE} \
+  --environment "Variables={${ENVIRONMENT}}" \
+  | jq -r '.FunctionArn'`
 
-```
+echo "LAMBDA_ARN: ${LAMBDA_ARN}"
+popd
 
 
-To create the new API Gateway we will follow similar steps. Now `--protocol-type` is set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages. In this example, it routes based on the `action` field in the incoming WebSocket messages (`$request.body.action`).
-
-```bash
-_$ aws apigatewayv2 create-api \
+API_ID=`aws apigatewayv2 create-api \
   --name "WebSocketAPI" \
   --protocol-type WEBSOCKET \
-  --route-selection-expression "$request.body.action"
-{
-    "ApiEndpoint": "wss://ww0pxtgs8g.execute-api.us-east-1.amazonaws.com",
-    "ApiId": "ww0pxtgs8g",
-    "ApiKeySelectionExpression": "$request.header.x-api-key",
-    "CreatedDate": "2025-04-04T09:53:49+00:00",
-    "Name": "MyWebSocketAPI",
-    "ProtocolType": "WEBSOCKET",
-    "RouteSelectionExpression": ".body.action"
-}
-_$ API_ID=ww0pxtgs8g
-```
+  --route-selection-expression "\$request.body.action" \
+   | jq -r '.ApiId'`
 
-```bash
-_$ INTEGRATION_ID=`aws apigatewayv2 create-integration \
+
+echo "API_ID ${API_ID}"
+
+pushd lambda/websocket
+
+for ROUTE in connect disconnect default; do
+    echo "ROUTE: ${ROUTE}"
+
+    zip lambda_websocket_${ROUTE}.zip lambda_${ROUTE}.py library_functions.py requirements.txt
+    LAMBDA_ARN=`aws lambda create-function \
+    --function-name ${LAMBDA_WEBSOCKET}_${ROUTE} \
+    --zip-file fileb://lambda_websocket_${ROUTE}.zip \
+    --handler lambda_${ROUTE}.lambda_handler \
+    --runtime python3.13 \
+    --role ${ROLE} \
+    --environment "Variables={${ENVIRONMENT}}" \
+    | jq -r '.FunctionArn'`
+
+    echo "LAMBDA_ARN: ${}"
+
+    STATEMENT_ID=`uuidgen`
+
+    echo "STATEMENT_ID ${}"
+
+    aws lambda add-permission \
+      --function-name ${LAMBDA_WEBSOCKET}_${ROUTE} \
+      --principal apigateway.amazonaws.com \
+      --statement-id "${STATEMENT_ID}" \
+      --action lambda:InvokeFunction \
+      --source-arn "arn:aws:execute-api:${REGION}:${ACCOUNT_ID}:${API_ID}/*/\$${ROUTE}"
+
+    INTEGRATION_ID=`aws apigatewayv2 create-integration \
     --api-id ${API_ID} \
     --integration-type AWS_PROXY \
-    --integration-uri ${LAMBDA_ARN} \
-    --integration-method ANY \
+    --integration-uri arn:aws:apigateway:${REGION}:lambda:path/2015-03-31/functions/${LAMBDA_ARN}/invocations \
+    --integration-method POST \
     | jq -r '.IntegrationId' `
 
-_$ echo $INTEGRATION_ID
+    echo "INTEGRATION_ID: ${INTEGRATION_ID}"
+
+    aws apigatewayv2 create-route \
+      --api-id ${API_ID} \
+      --route-key \$${ROUTE} \
+      --target "integrations/${INTEGRATION_ID}"
+done
+popd
+
+STAGE="production"
+aws apigatewayv2 create-stage \
+     --api-id ${API_ID} \
+     --stage-name ${STAGE} \
+     --auto-deploy | cat
+
+URL="wss://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/"
+
+echo "URL: ${URL}"
 ```
 
-In a WebSocket API, you define **routes** that map to different actions or message types. For example, you may define routes for `connect`, `disconnect`, and custom message types like `sendMessage`.
-
-- **Connect Route**: Triggered when a client connects to the WebSocket.
-- **Disconnect Route**: Triggered when a client disconnects.
-- **Custom Routes**: Any custom action you want to handle in your WebSocket API.
-
-Let’s create the `connect` and `disconnect` routes. `--route-key` sets the route identifier. For the `connect` route, use `$connect`, and for the `disconnect` route, use `$disconnect`.
+To execute it is necessary to have a `.env` file. The API Key is from [Geoapify](https://www.geoapify.com/).
 
 ```bash
-_$ aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "$connect" \
-  --target "integrations/${INTEGRATION_ID}"
-
-_$ aws apigatewayv2 create-route \
-  --api-id ${API_ID} \
-  --route-key "$disconnect" \
-  --target "integrations/${INTEGRATION_ID}"
+_$ cat .env
+ACCOUNT_ID=<YOUR-ACCOUNT-ID>
+ROLE=arn:aws:iam::<YOUR-ACCOUNT-ID>:role/LabRole
+REGION=us-east-1
+LAMBDA_WEBSOCKET=WebSocket
+LAMBDA_KINESIS=Kinesis
+DYNAMO_TABLE=flightRadar
+API_KEY=<YOUR-GEOAPIFY-KEY>
+CENTER=41.29707:2.078463
+TOP_LEFT=41.56630517082504:1.7208344642261142
+BOTTOM_RIGHT=41.02671881757673:2.4390623709499297
+LOG_LEVEL=INFO
+_$ ./deploy.sh .env
 ```
 
-
-### Summary of AWS CLI Commands for WebSocket API:
-
-- **Create the WebSocket API**:
-   ```bash
-   aws apigatewayv2 create-api \
-     --name "MyWebSocketAPI" \
-     --protocol-type WEBSOCKET \
-     --route-selection-expression "$request.body.action"
-   ```
-
-- **Create Routes (e.g., connect, disconnect)**:
-   ```bash
-   aws apigatewayv2 create-route \
-     --api-id m96mpy7qz4 \
-     --route-key "$connect" \
-     --target "integrations/<integration-id>"
-   ```
-
-   ```bash
-   aws apigatewayv2 create-route \
-     --api-id m96mpy7qz4 \
-     --route-key "$disconnect" \
-     --target "integrations/<integration-id>"
-   ```
-
-- **Create Lambda Integration**:
-   ```bash
-   aws apigatewayv2 create-integration \
-     --api-id m96mpy7qz4 \
-     --integration-type AWS_PROXY \
-     --integration-uri arn:aws:lambda:us-west-2:123456789012:function:MyLambdaFunction \
-     --payload-format-version 2.0
-   ```
-
-- **Grant API Gateway Permission to Invoke Lambda**:
-   ```bash
-   aws lambda add-permission --function-name MyLambdaFunction \
-     --principal apigateway.amazonaws.com \
-     --statement-id <unique-id> \
-     --action "lambda:InvokeFunction"
-   ```
-
-- **Deploy the WebSocket API**:
-   ```bash
-   aws apigatewayv2 create-stage \
-     --api-id m96mpy7qz4 \
-     --stage-name prod \
-     --auto-deploy
-   ```
-
-- **Test the WebSocket API**:
-   - Use `wscat` or any WebSocket client to connect to:
-     ```bash
-     wscat -c wss://${API_ID}.execute-api.us-west-2.amazonaws.com/prod
-     ```
-
-
-
-
-
-
-
-
-
+See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages. 
 
 ##### Client-Side Example in JavaScript (Web Browser):
 
-You can test this WebSocket server using the following JavaScript client code in the browser.
-Save the JavaScript code in a file called `client.js`, then open the HTML file in your web browser.
+The JavaScript below creates a wrapper function with triggers on different websocket events: `onopen`, `onclose`, `onerror` and `onmessage`. When the websocket is stablished with the API Gateway, the browser requests the initial configuration by sending a "hello!" message.
+
+The browser is ready to receive messages that can be of type `init` or `show`. The `init` message initializes the map and receives the Geoapify API Key that won't be wise to store in the browser code. It also receives the center ponint where aircraft are flying around and the bounding box of the area being monitored. The `show` message sends the coordinates and some aircraft data for the airplanes being monitored.
 
 ```javascript
-// Create a new WebSocket connection to the server
-const socket = new WebSocket('ws://localhost:8765');
+function WrapperWS() {
+    if ("WebSocket" in window) {
+        var ws = new WebSocket(url);
 
-// When the WebSocket connection is established
-socket.onopen = function(event) {
-    console.log("Connected to the server!");
-    socket.send('Hello, Server!');
-};
+        ws.onopen = function (evt) {
+            ws.send("hello!")
+            console.log("Waiting for the configuration...", evt);
+        };
 
-// When a message is received from the server
-socket.onmessage = function(event) {
-    console.log("Message from server:", event.data);
-};
+        ws.onclose = function (evt) {
+            console.log("Closing connection. Bye!", evt);
+        };
 
-// When the WebSocket connection is closed
-socket.onclose = function(event) {
-    console.log("Disconnected from the server.");
-};
+        ws.onerror = function (evt) {
+            console.log("Error: " + evt.data);
+        };
 
-// Handling errors
-socket.onerror = function(error) {
-    console.log("WebSocket error:", error);
-};
+        ws.onmessage = ({data}) => {
+            const event = JSON.parse(data);
+            console.log('message received', event);
+            if (!event.hasOwnProperty("type")) {
+                console.log('Error: Incorrect event structure');
+                return;
+            }
+            switch (event.type) {
+                case 'init':
+                    apiKey = event.apiKey;
+                    map = L.map('map').setView(event.center).fitBounds(event.bounds);
+                    L.rectangle(event.bounds, {color: "#ff7800", opacity: 0.3, weight: 1}).addTo(map);
+                    L.tileLayer(`https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}.png?apiKey=${apiKey}`, {
+                        attribution: '&copy; 2025 <a href="https://www.geoapify.com/">Geoapify</a>',
+                        maxZoom: 15
+                    }).addTo(map);
+                    break;
+                case 'show':
+                    if (map === undefined) return; // Ignore message. Can't show anything before the map is initialized
+                    map.eachLayer((layer) => {
+                        if (layer.options.aircraftid === undefined) return;
+                        if (layer.options.aircraftid in event.aircrafts) {
+                            being_tracked.push(layer.options.aircraftid);
+                            const aircraft = event.aircrafts[layer.options.aircraftid]
+                            if (layer.latitude != aircraft.latitude || layer.longitude != aircraft.longitude) {
+                                layer.setLatLng([aircraft.latitude, aircraft.longitude])
+                                var icon;
+                                if (aircraft.on_ground) icon = landedIcon
+                                else icon = flyingIcon;
+                                layer.setIcon(icon)
+                            }
+                        }
+                    });
+                    for (const [id, aircraft] of Object.entries(event.aircrafts)) {
+                        if (!being_tracked.includes(id)) {
+                            L.marker([aircraft.latitude, aircraft.longitude], {
+                                alt: id,
+                                aircraftid: id,
+                                flyingIcon: flyingIcon
+                            }).addTo(map).bindPopup(popupText(aircraft));
+                            console.log(id, 'new', aircraft.on_ground);
+                        }
+                    }
+                    break;
+                default:
+                    console.log('Error: Incorrect event type');
+            }
+        };
+    }
+}
 ```
 
 ##### How to Test:
