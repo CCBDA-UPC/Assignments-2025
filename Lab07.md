@@ -281,15 +281,15 @@ repo https://github.com/CCBDA-UPC/2025-7-xx/settings: section 'Secrets and varia
 Fill the GitHub secrets value corresponding to the previous lab session.
 
 ```python
-AWS_REGION = us - east - 1
-AWS_ACCESS_KEY_ID = < YOUR - AWS_ACCESS_KEY_ID >
-AWS_ACCOUNT_ID = < YOUR - AWS_ACCOUNT_ID >
-AWS_SECRET_ACCESS_KEY = < YOUR - AWS_SECRET_ACCESS_KEY >
-AWS_SESSION_TOKEN = < YOUR - AWS_SESSION_TOKEN >
-CONTAINER_NAME = django - webapp
-ECR_REPOSITORY = django - webapp - docker - repo
-ELASTIC_BEANSTALK_APP_NAME = django - webapp - eb
-ELASTIC_BEANSTALK_ENV_NAME = team<YOUR-TEAM-NUMBER>
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=<YOUR-AWS_ACCESS_KEY_ID>
+AWS_ACCOUNT_ID=<YOUR-AWS_ACCOUNT_ID>
+AWS_SECRET_ACCESS_KEY=<YOUR-AWS_SECRET_ACCESS_KEY>
+AWS_SESSION_TOKEN=<YOUR-AWS_SESSION_TOKEN>
+CONTAINER_NAME=django-webapp
+ECR_REPOSITORY=django-webapp-docker-repo
+ELASTIC_BEANSTALK_APP_NAME=django-webapp-eb
+ELASTIC_BEANSTALK_ENV_NAME=team<YOUR-TEAM-NUMBER>
 ```
 
 Once the credentials are set up in the environment it uses an AWS specific action to log into the AWS Elastic Container
