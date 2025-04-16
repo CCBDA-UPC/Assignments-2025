@@ -1133,7 +1133,7 @@ _$ ./deploy.sh .env
 
 See that the URL of the API Gateway is stored in the `variables.json` that is used by the client-side JavaScript code.
 
-#### Client-Side (Web Browser) using JavaScript :
+### Client-Side (Web Browser) using JavaScript :
 
 The JavaScript below creates a wrapper function with triggers on different websocket events: `onopen`, `onclose`, `onerror` and `onmessage`. When the websocket is stablished with the API Gateway, the browser requests the initial configuration by sending a "hello!" message.
 
@@ -1235,7 +1235,7 @@ The file `index.html` in the directory `websocket` includes the JavaScript code 
 </script>
 ```
 
-#### How to Test:
+### How to Test:
 
 Open your browser with the `index.html` file, open the console and observe the messages appearing.
 
