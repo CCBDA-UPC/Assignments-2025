@@ -225,7 +225,7 @@ _$ git commit -m "This fixes the bug!"
 [cloud 7dfb8dd] This fixes the bug
  1 file changed, 1 insertion(+), 1 deletion(-)
 _$ git tag "v1.0.19"
-_$ git push
+_$ git push origin "v1.0.19"
 Enumerating objects: 9, done.
 Counting objects: 100% (9/9), done.
 Delta compression using up to 8 threads
