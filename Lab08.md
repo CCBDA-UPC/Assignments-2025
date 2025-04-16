@@ -797,9 +797,7 @@ _$ ./deploy.sh .env
 
 **Q8.12: Assess the current version of the web application against each of the twelve factor application.**
 
-**Q8.13: What steps will be necessary to be able to execute the bash shell script?**
-
-**Q8.14: Create a new shell script that removes all the assets that have been created. (Optional)**
+**Q8.13: Create a new shell script that removes all the assets that have been created.**
 
 
 # Task 8.2: Simple serverless using WebSockets
