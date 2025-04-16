@@ -1102,25 +1102,30 @@ echo "URL: ${URL}"
 echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 ```
 
-To execute it is necessary to have a `.env` file. The API Key is from [Geoapify](https://www.geoapify.com/).
+See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages.
+
+To execute the script is necessary to have a `.env` file. The API Key is from [Geoapify](https://www.geoapify.com/).
 
 ```bash
 _$ cat .env
 ACCOUNT_ID=<YOUR-ACCOUNT-ID>
 ROLE=arn:aws:iam::<YOUR-ACCOUNT-ID>:role/LabRole
 REGION=us-east-1
+AWS_ACCESS_KEY_ID=<YOUR-AWS-KEY>
+AWS_SECRET_ACCESS_KEY=<YOUR-AWS-SECRET>
+AWS_SESSION_TOKEN=<YOUR-AWS-TOKEN>
 LAMBDA_WEBSOCKET=WebSocket
 LAMBDA_KINESIS=Kinesis
 DYNAMO_TABLE=flightRadar
 API_KEY=<YOUR-GEOAPIFY-KEY>
+STREAM_NAME=flightRadar
+LOG_LEVEL=INFO
+AIRPORT=BCN
 CENTER=41.29707:2.078463
 TOP_LEFT=41.56630517082504:1.7208344642261142
 BOTTOM_RIGHT=41.02671881757673:2.4390623709499297
-LOG_LEVEL=INFO
 _$ ./deploy.sh .env
 ```
-
-See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages. 
 
 ##### Client-Side Example in JavaScript (Web Browser):
 
