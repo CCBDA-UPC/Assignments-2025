@@ -1266,6 +1266,6 @@ Go to CloudWatch Log groups and observe how many log groups have been created. I
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
 
-Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-8-xx repository.
+Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2025-8-xx repository.
 
 Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
