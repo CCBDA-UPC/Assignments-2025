@@ -821,6 +821,8 @@ So in short:
 - `$disconnect` is the cleanup crew,  
 - `$default` is the "I don't know what this is, but here you go" handler.
 
+### WebSocket implementation
+
 In the zip that you downloaded for the previous section go to the folder `websockets/lambda/websocket` to find three files named `lambda_connect.py`, `lambda_disconnect.py`, and `lambda_default.py`.
 
 The connection handler receives from the API Gateway a `connectionId` that is stored in a DynamoDB table. It also needs the URL to which it belongs.
@@ -986,6 +988,8 @@ All the above functions try to create a simplified version of [FlightRadar24](ht
 
 <img alt="Lab08-flightRadar.png" src="images/Lab08-flightRadar.png"/>
 
+### Deployment automation
+
 Inside the folder `websockets` there is a file named `deploy.sh` that is similar to the one on the previous section.
 
 ```bash
@@ -1127,14 +1131,29 @@ BOTTOM_RIGHT=41.02671881757673:2.4390623709499297
 _$ ./deploy.sh .env
 ```
 
-##### Client-Side Example in JavaScript (Web Browser):
+See that the URL of the API Gateway is stored in the `variables.json` that is used by the client-side JavaScript code.
+
+#### Client-Side (Web Browser) using JavaScript :
 
 The JavaScript below creates a wrapper function with triggers on different websocket events: `onopen`, `onclose`, `onerror` and `onmessage`. When the websocket is stablished with the API Gateway, the browser requests the initial configuration by sending a "hello!" message.
 
-The browser is ready to receive messages that can be of type `init` or `show`. The `init` message initializes the map and receives the Geoapify API Key that won't be wise to store in the browser code. It also receives the center ponint where aircraft are flying around and the bounding box of the area being monitored. The `show` message sends the coordinates and some aircraft data for the airplanes being monitored.
+The browser is ready to receive messages that can be of type `init`, `reset` or `show`. The `init` message initializes the map and receives the Geoapify API Key that won't be wise to store in the browser code. It also receives the center ponint where aircraft are flying around and the bounding box of the area being monitored. The `reset` message, changes the map viewpoint. The `show` message sends the coordinates and some aircraft data for the airplanes being monitored.
 
 ```javascript
-function WrapperWS() {
+function WrapperWS(url) {
+    var flyingIcon = L.icon({
+        iconUrl: 'img/green.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+    });
+    var landedIcon = L.icon({
+        iconUrl: 'img/orange.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -30],
+    });
+
     if ("WebSocket" in window) {
         var ws = new WebSocket(url);
 
@@ -1151,8 +1170,8 @@ function WrapperWS() {
             console.log("Error: " + evt.data);
         };
 
-        ws.onmessage = ({data}) => {
-            const event = JSON.parse(data);
+        ws.onmessage = function (evt) {
+            var event = JSON.parse(evt.data);
             console.log('message received', event);
             if (!event.hasOwnProperty("type")) {
                 console.log('Error: Incorrect event structure');
@@ -1168,6 +1187,10 @@ function WrapperWS() {
                         maxZoom: 15
                     }).addTo(map);
                     break;
+                case 'reset':
+                    map.setView(event.center).fitBounds(event.bounds);
+                    L.rectangle(event.bounds, {color: "#ff7800", opacity: 0.3, weight: 1}).addTo(map);
+                    break;
                 case 'show':
                     if (map === undefined) return; // Ignore message. Can't show anything before the map is initialized
                     map.eachLayer((layer) => {
@@ -1175,23 +1198,21 @@ function WrapperWS() {
                         if (layer.options.aircraftid in event.aircrafts) {
                             being_tracked.push(layer.options.aircraftid);
                             const aircraft = event.aircrafts[layer.options.aircraftid]
-                            if (layer.latitude != aircraft.latitude || layer.longitude != aircraft.longitude) {
-                                layer.setLatLng([aircraft.latitude, aircraft.longitude])
-                                var icon;
-                                if (aircraft.on_ground) icon = landedIcon
-                                else icon = flyingIcon;
-                                layer.setIcon(icon)
+                            if (layer.position != aircraft.position) {
+                                layer.setLatLng(aircraft.position)
+                                layer.setIcon(aircraft.flying ? flyingIcon : landedIcon)
+                                layer.setPopupContent(popupText(aircraft))
                             }
                         }
                     });
                     for (const [id, aircraft] of Object.entries(event.aircrafts)) {
                         if (!being_tracked.includes(id)) {
-                            L.marker([aircraft.latitude, aircraft.longitude], {
+                            L.marker(aircraft.position, {
                                 alt: id,
                                 aircraftid: id,
-                                flyingIcon: flyingIcon
+                                icon: aircraft.flying ? flyingIcon : landedIcon
                             }).addTo(map).bindPopup(popupText(aircraft));
-                            console.log(id, 'new', aircraft.on_ground);
+                            console.log(id, 'new', aircraft.flying);
                         }
                     }
                     break;
@@ -1203,33 +1224,26 @@ function WrapperWS() {
 }
 ```
 
-##### How to Test:
+The file `index.html` in the directory `websocket` includes the JavaScript code above, creates the global variables and reads the `variables.json` configuration file to then launch the wrapper.
 
-- **Run the Python WebSocket Server**:
-   - Save the Python WebSocket server code to a file (e.g., `websocket_server.py`).
-   - Run the server:
-     ```bash
-     python websocket_server.py
-     ```
+```xhtml
+<script src="script.js"></script>
+<script>
+    var apiKey, map;
+    var being_tracked = [];
+    configure();
+</script>
+```
 
-- **Run the JavaScript Client**:
-   - You can open the JavaScript code in the browser by saving it in an HTML file or running it in the browser console.
-   
-   Example HTML file:
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>WebSocket Client</title>
-   </head>
-   <body>
-       <h1>WebSocket Client</h1>
-       <script src="client.js"></script>
-   </body>
-   </html>
-   ```
+#### How to Test:
+
+Open your browser with the `index.html` file, open the console and observe the messages appearing.
+
+Now, you need to provide some data by running the Python application `sendFlights.py` inside the `websocket` folder.
+
+<img alt="Lab08-airport.png" src="images/Lab08-airport.png" width="80%"/>
+
+
 
 
 
