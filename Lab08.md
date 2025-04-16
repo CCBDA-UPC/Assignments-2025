@@ -310,19 +310,6 @@ _$ echo "ENVIRONMENT: ${ENVIRONMENT}"
 ENVIRONMENT: REGION=us-east-1,LOG_LEVEL=INFO
 ```
 
-We'll create the DyanmoDB to store the "things" programmatically.
-
-```bash
-_$ aws dynamodb create-table \
-  --table-name ${TABLE} \
-  --attribute-definitions \
-        AttributeName=thingID,AttributeType=S \
-  --key-schema \
-        AttributeName=thingID,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST \
-  --region ${REGION}
-```
-
 Now, create a zip file with the Python code and its requirements. The command `aws lambda create-function` sends the zip file to AWS. In response, it obtains a JSON record with some values that we'll be needing to use for future steps, i.e. `LAMBDA_ARN` needs to be updated to the value of the response field `FunctionArn`.
 
 ```bash
