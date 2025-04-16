@@ -1133,7 +1133,7 @@ _$ ./deploy.sh .env
 
 See that the URL of the API Gateway is stored in the `variables.json` that is used by the client-side JavaScript code.
 
-### Client-Side (Web Browser) using JavaScript :
+### Client-Side (Web Browser) using JavaScript
 
 The JavaScript below creates a wrapper function with triggers on different websocket events: `onopen`, `onclose`, `onerror` and `onmessage`. When the websocket is stablished with the API Gateway, the browser requests the initial configuration by sending a "hello!" message.
 
@@ -1235,47 +1235,34 @@ The file `index.html` in the directory `websocket` includes the JavaScript code 
 </script>
 ```
 
-### How to Test:
+### Testing
 
 Open your browser with the `index.html` file, open the console and observe the messages appearing.
 
-Now, you need to provide some data by running the Python application `sendFlights.py` inside the `websocket` folder.
+Now, you need to provide some data by running the Python application `sendFlights.py` inside the `websocket` folder. Depending on the value of the variable `AIRPORT` and `RADIUS` it resets the initial airport by sending a `reset` message to all browsers connected.
 
 <img alt="Lab08-airport.png" src="images/Lab08-airport.png" width="80%"/>
 
+Open several browser tabs and see how they are all synchronized.
 
+Go to CloudWatch Log groups and observe how many log groups have been created. If you experience any issue check the logs to understand what is not working as expected.
 
+**Q8-21: Go to one of the lambda functions and change the value of LOG_LEVEL from INFO to DEBUG in the "Configuration" tab "Environment variables" section. Do you need to redeploy the Lambda Function to have more details on the logs? Why?**
 
+<img alt="Lab08-CloudWatch-environment.png" src="images/Lab08-CloudWatch-environment.png" width="50%"/>
 
+**Q8-22: Create GitHub actions to deploy the changes on the Lambda functions.**
 
+**Q8-23: Assess the current version of the web application against each of the twelve factor application.**
 
+**Q8-24: Provide screenshots of the significant Kinesis metrics shown in the "Monitoring" tab.**
 
+**Q8-25: Provide screenshots of the DynamoDB table used.**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Q823: Assess the current version of the web application against each of the twelve factor application.
-
-Q824: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
 
 ## How to submit this assignment:
+
+**Q8-1: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.**
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
 
