@@ -698,7 +698,7 @@ set -e # exit on first error
 source $1
 
 ENVIRONMENT_VARIABLES=()
-for var in  REGION LOG_LEVEL; do
+for var in REGION LOG_LEVEL; do
   ENVIRONMENT_VARIABLES+=($var=${!var})
 done
 ENVIRONMENT=$(IFS=, ; echo "${ENVIRONMENT_VARIABLES[*]}")
@@ -778,7 +778,8 @@ URL="https://${API_ID}.execute-api.${REGION}.amazonaws.com/${STAGE}/?TableName=$
 echo "URL: ${URL}"
 curl $URL
 
-echo -e "var apiUrl = '${URL}';\nvar TableName = '${TABLE}';" > variables.js; cat variables.js
+echo -e "{\"url\":\"${URL}\",\"table\":\"${TABLE}\"}" > variables.json; cat variables.json
+
 ```
 
 To run the script it is necessary to create a configuration file with the names of the variables and make the script executable.
