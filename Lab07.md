@@ -91,7 +91,7 @@ password under the "Actions" blue button.
 * [Task 7.1: CI/CD build using GitHub Actions](#Task71)
 * [Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana](#Task72)
 
-<a name="Task71"/>
+<a id="Task71"/>
 
 ## Task 7.1: CI/CD build using GitHub Actions
 
@@ -508,6 +508,7 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
 
 **Q7-14 What does the above script do and how can you use it?**
 
+<a id="Task72"/>
 ## Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana
 
 **Observability** is a vital component of modern software systems, enabling developers and operations teams to monitor 

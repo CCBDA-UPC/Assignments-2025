@@ -157,9 +157,13 @@ Geoapify provides services that are similar to Google Maps but with more customi
 
 Create an account, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
 
-# Tasks
+# Tasks for Lab session #8
 
-## Task 8.1: Simple serverless web application
+[Task 8.1: Simple serverless web application using REST API](#Task81)
+[Task 8.2: Simple serverless web application using WebSockets](#Task82)
+
+<a id="Task81"/>
+## Task 8.1: Simple serverless web application using REST API
 
 Despite the name, “serverless” doesn’t mean there are no servers, it just means you don’t manage them. The cloud provider handles all the infrastructure, scaling, patching, etc. You just write your code and deploy. We are going to begin with a simple web application that manages a database (CRUD operations) and shows the contents in the browser.
 
@@ -799,8 +803,8 @@ _$ ./deploy.sh .env
 
 **Q8.13: Create a new shell script that removes all the assets that have been created.**
 
-
-# Task 8.2: Simple serverless using WebSockets
+<a id="Task82"/>
+# Task 8.2: Simple serverless web application using WebSockets
 
 Think of it like checking your mailbox every 5 minutes to see if there’s a letter. Even if there’s nothing new, you keep walking out to check. That’s what polling does—your app keeps asking the server, “Anything new yet?” over and over.
 
