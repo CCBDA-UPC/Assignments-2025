@@ -509,6 +509,7 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
 **Q7-14 What does the above script do and how can you use it?**
 
 <a id="Task72"/>
+
 ## Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana
 
 **Observability** is a vital component of modern software systems, enabling developers and operations teams to monitor 
