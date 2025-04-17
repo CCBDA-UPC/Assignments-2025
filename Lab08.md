@@ -159,9 +159,9 @@ Create an account, and then create a project and get an API key. The Free plan a
 
 # Tasks for Lab session #8
 
-[Task 8.1: Simple serverless web application using REST API](#Task81)
+- [Task 8.1: Simple serverless web application using REST API](#Task81)
 
-[Task 8.2: Simple serverless web application using WebSockets](#Task82)
+- [Task 8.2: Simple serverless web application using WebSockets](#Task82)
 
 <a id="Task81"/>
 
