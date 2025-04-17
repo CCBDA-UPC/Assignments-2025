@@ -806,6 +806,7 @@ _$ ./deploy.sh .env
 **Q8.13: Create a new shell script that removes all the assets that have been created.**
 
 <a id="Task82"/>
+
 # Task 8.2: Simple serverless web application using WebSockets
 
 Think of it like checking your mailbox every 5 minutes to see if there’s a letter. Even if there’s nothing new, you keep walking out to check. That’s what polling does—your app keeps asking the server, “Anything new yet?” over and over.
