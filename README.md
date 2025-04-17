@@ -16,7 +16,7 @@ Students will begin by creating an essential toolbox to get them started in the 
 - Lab 5: [Deployment of a custom web app using additional cloud services][Lab5]   
 - Lab 6: [Running a custom web app in the cloud][Lab6]
 - Lab 7: [Continuous Integration, Continuous Delivery, and Observability][Lab7]    
-- Lab 8: [Advanced Analytics as a Service in the Cloud][Lab8]
+- Lab 8: [Serverless applications][Lab8]
 
 [Lab1]: ./Lab01.md
 [Lab2]: ./Lab02.md
