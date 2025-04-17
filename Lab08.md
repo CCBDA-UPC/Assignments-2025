@@ -160,9 +160,11 @@ Create an account, and then create a project and get an API key. The Free plan a
 # Tasks for Lab session #8
 
 [Task 8.1: Simple serverless web application using REST API](#Task81)
+
 [Task 8.2: Simple serverless web application using WebSockets](#Task82)
 
 <a id="Task81"/>
+
 ## Task 8.1: Simple serverless web application using REST API
 
 Despite the name, “serverless” doesn’t mean there are no servers, it just means you don’t manage them. The cloud provider handles all the infrastructure, scaling, patching, etc. You just write your code and deploy. We are going to begin with a simple web application that manages a database (CRUD operations) and shows the contents in the browser.
