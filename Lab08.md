@@ -8,6 +8,49 @@
 - **Scalability**: The cloud provider automatically scales resources based on demand.
 - **Cost-efficient**: You pay only for the execution time of the functions, not for idle server resources.
 
+## Background information index
+
+- [AWS Lambda](#aws-lambda)
+- [AWS API Gateway](#aws-api-gateway)
+- [WebSockets](#websockets)
+- [AWS Kinesis](#aws-kinesis)
+
+## Pre-lab homework
+
+### **Understanding `kwargs` in Python:**
+
+In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
+
+##### **Example:**
+```python
+def greet_user(**kwargs):
+    print(kwargs)
+
+greet_user(name="Alice", age=30)
+
+params = {'name': 'Alice', 'age': 30}
+greet_user(**params)
+```
+In both cases the output is
+```python
+{'name': 'Alice', 'age': 30}
+```
+### Geoapify
+
+[Geoapify](https://www.geoapify.com/) is a geolocation and mapping service that provides APIs and tools for location-based applications. It allows developers to integrate various location-related functionalities into their applications, such as geocoding, reverse geocoding, route planning, map rendering, and place search. Geoapify offers a wide range of services and is known for its user-friendly APIs and the ability to scale based on user needs.
+
+Geoapify provides services that are similar to Google Maps but with more customizable options, and often appeals to developers due to its more flexible and developer-friendly pricing model.
+
+Create an account, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
+
+## Tasks for Lab session #8
+
+- [Task 8.1: Simple serverless web application using REST API](#Task81)
+
+- [Task 8.2: Simple serverless web application using WebSockets](#Task82)
+
+## Background information
+
 ### AWS Lambda
 
 **AWS Lambda** is a fully managed **serverless computing service** provided by AWS. It allows developers to run code in response to events without provisioning or managing servers.
@@ -129,39 +172,6 @@ Some common use cases for Kinesis include:
 - Data processing pipelines.
 - Machine learning applications (e.g., predictive analytics based on streaming data).
 
-# Pre-lab homework
-
-### **Understanding `kwargs` in Python:**
-
-In Python, **`kwargs`** (short for **keyword arguments**) allows you to pass a variable number of named arguments to a function, which are then collected into a dictionary.
-
-##### **Example:**
-```python
-def greet_user(**kwargs):
-    print(kwargs)
-
-greet_user(name="Alice", age=30)
-
-params = {'name': 'Alice', 'age': 30}
-greet_user(**params)
-```
-In both cases the output is
-```python
-{'name': 'Alice', 'age': 30}
-```
-### Geoapify
-
-[Geoapify](https://www.geoapify.com/) is a geolocation and mapping service that provides APIs and tools for location-based applications. It allows developers to integrate various location-related functionalities into their applications, such as geocoding, reverse geocoding, route planning, map rendering, and place search. Geoapify offers a wide range of services and is known for its user-friendly APIs and the ability to scale based on user needs.
-
-Geoapify provides services that are similar to Google Maps but with more customizable options, and often appeals to developers due to its more flexible and developer-friendly pricing model.
-
-Create an account, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
-
-# Tasks for Lab session #8
-
-- [Task 8.1: Simple serverless web application using REST API](#Task81)
-
-- [Task 8.2: Simple serverless web application using WebSockets](#Task82)
 
 <a id="Task81"/>
 
