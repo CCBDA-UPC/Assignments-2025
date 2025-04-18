@@ -571,7 +571,7 @@ Once Elasticsearch and Kibana are running, the next step is to configure your ap
 ##### Install Required Libraries:
 
 ```bash
-pip install watchtower elasticsearch logging
+_$ pip install watchtower elasticsearch logging
 ```
 
 #### Adding new log handleres
@@ -660,6 +660,9 @@ LOGGING = {
 It will also be necessary to include at the bottom of `settings.py` a list of RSS feed URLs and the credentials to use
 ELK.
 
+> [IMPORTANT]
+> Make sure to set the variable `AWS_DEFAULT_REGION` to `us-east-1` for the Learning Lab environment to work properly.
+
 ```python
 RSS_URLS = [
     'https://www.cloudcomputing-news.net/feed/',
@@ -671,6 +674,7 @@ RSS_URLS = [
 
 ELK_PASSWORD = os.environ.get('ELK_PASSWORD')
 ELK_CLOUD_ID = os.environ.get('ELK_CLOUD_ID')
+AWS_DEFAULT_REGION=os.environ.get('AWS_DEFAULT_REGION')
 ```
 
 Modify the file `ccbda/__init__.py` file including the code below. The class `ElasticsearchHandler` rewrites some of the
