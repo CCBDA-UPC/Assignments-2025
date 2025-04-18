@@ -821,6 +821,8 @@ _$ ./deploy.sh .env
 
 > :question: **Question 8.14**: Create a GitHub Action to deploy the changes in the Lambda function.
 
+> :question: **Question 8.15**: Share your thoughts about the web application.
+
 <a id="Task82"/>
 
 # Task 8.2: Simple serverless web application using WebSockets
@@ -1131,12 +1133,12 @@ echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 
 > :bangbang: See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages.
 
-To execute the script is necessary to have a `.env` file. The API Key is from [Geoapify](https://www.geoapify.com/).
+To execute the script is necessary to have a `.env` file. The API Key is the one you've obtained from [Geoapify](https://www.geoapify.com/).
 
 ```bash
 _$ cat .env
-ACCOUNT_ID=YOUR-AWS-ACCOUNT-ID
-ROLE=arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/LabRole
+ACCOUNT_ID=<YOUR-AWS-ACCOUNT-ID>
+ROLE=arn:aws:iam::<YOUR-AWS-ACCOUNT-ID>:role/LabRole
 REGION=us-east-1
 AWS_ACCESS_KEY_ID=<YOUR-AWS-KEY>
 AWS_SECRET_ACCESS_KEY=<YOUR-AWS-SECRET>
@@ -1283,6 +1285,8 @@ Go to CloudWatch Log groups and observe how many log groups have been created. I
 > :question: **Question 8.24**: Provide screenshots of the significant Kinesis metrics shown in the "Monitoring" tab.
 
 > :question: **Question 8.25**: Provide screenshots of the DynamoDB table used.
+ 
+> :question: **Question 8.26**: Share your thoughts about the web application.
 
 
 ## How to submit this assignment:
