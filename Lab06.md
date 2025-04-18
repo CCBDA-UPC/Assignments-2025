@@ -153,8 +153,8 @@ DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL="INFO"
 CCBDA_SIGNUP_TABLE="ccbda-signup-table"
 AWS_REGION="us-east-1"
-AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
-AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_ACCESS_KEY_ID="<YOUR-AWS-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-AWS-SECRET-ACCESS-KEY>"
 AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
 DB_NAME="ccbdadb"
 DB_USER="ccbdauser"
@@ -243,11 +243,11 @@ You can also go to the upper-right corner of the AWS Management Console, click o
 
 <img alt="Lab05-aws-account.png" src="images/Lab05-aws-account.png" height="400px"/>
 
-To authorize your Docker command line client, run the following command replacing `<account-id>` with the 
+To authorize your Docker command line client, run the following command replacing `<aws-account-id>` with the 
 actual account ID that you just found:
 
 ```bash
-_$ aws ecr get-login-password | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
+_$ aws ecr get-login-password | docker login --username AWS --password-stdin <aws-account-id>.dkr.ecr.us-east-1.amazonaws.com
 Login Succeeded
 ```
 
@@ -261,10 +261,10 @@ To create the repository, run the following command:
 _$ aws ecr create-repository --repository-name django-webapp-docker-repo
 {
     "repository": {
-        "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-docker-repo",
-        "registryId": "<registry-id>",
+        "repositoryArn": "arn:aws:ecr:us-east-1:<aws-registry-id>:repository/django-webapp-docker-repo",
+        "registryId": "<aws-registry-id>",
         "repositoryName": "django-webapp-docker-repo",
-        "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
+        "repositoryUri": "<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
         "createdAt": "2025-03-15T16:44:17.171000+01:00",
         "imageTagMutability": "MUTABLE",
         "imageScanningConfiguration": {
@@ -279,12 +279,12 @@ The response data is in JSON format and includes a repository Arn value. This is
 ### Tag the Docker image.
 
 In this step, you will tag the image with your unique registryId value to make it easier to manage and keep track of
-this image. Run the following command. Replace <registry-id> with your actual registry ID number.
+this image. Run the following command. Replace <aws-registry-id> with your actual registry ID number.
 
 ```
-_$ docker tag django-docker:v1.0.0 <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
+_$ docker tag django-docker:v1.0.0 <aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
 _$ docker image list
-<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo   v1.0.0    1cb356277c4a   42 hours ago   433MB
+<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo   v1.0.0    1cb356277c4a   42 hours ago   433MB
 django-docker                                                             v1.0.0    1cb356277c4a   42 hours ago   433MB
 postgres                                                                  17        81f32a88ec56   2 weeks ago    621MB
 ```
@@ -293,11 +293,11 @@ The command `docker tag` does not provide a response. To verify that the tag was
 
 ### Push the Docker image to the AWS ECR repository.
 
-To push your image to AWS ECR, run the following command. Replace <registry-id> with your actual registry ID number:
+To push your image to AWS ECR, run the following command. Replace <aws-registry-id> with your actual registry ID number:
 
 ```bash
-_$ docker push <registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
-The push refers to repository [<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo]
+_$ docker push <aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0
+The push refers to repository [<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo]
 4b785e93aa71: Pushed 
 be1449717b1e: Pushed 
 ff1399ac0930: Pushed 
@@ -337,10 +337,10 @@ _$ aws ecr describe-repositories
 {
     "repositories": [
         {
-            "repositoryArn": "arn:aws:ecr:us-east-1:<registry-id>:repository/django-webapp-docker-repo",
-            "registryId": "<registry-id>",
+            "repositoryArn": "arn:aws:ecr:us-east-1:<aws-registry-id>:repository/django-webapp-docker-repo",
+            "registryId": "<aws-registry-id>",
             "repositoryName": "django-webapp-docker-repo",
-            "repositoryUri": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
+            "repositoryUri": "<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo",
             "createdAt": "2025-03-15T16:44:17.171000+01:00",
             "imageTagMutability": "MUTABLE",
             "imageScanningConfiguration": {
@@ -358,21 +358,21 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 {
     "imageDetails": [
         {
-            "registryId": "<registry-id>",
+            "registryId": "<aws-registry-id>",
             "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:e33b3087f42f9b5b23ee5ce33a8a279fc1c2a2d1070a9eaae3c298cd8d3c803f",
             "imageSizeInBytes": 1348,
             "imagePushedAt": "2025-03-15T16:47:53.153000+01:00"
         },
         {
-            "registryId": "<registry-id>",
+            "registryId": "<aws-registry-id>",
             "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:8f1ee7414d796b6ed70dcfa9facff56438bba6b2665066362eea9b5dca2c667d",
             "imageSizeInBytes": 75387102,
             "imagePushedAt": "2025-03-15T16:47:53.161000+01:00"
         },
         {
-            "registryId": "<registry-id>",
+            "registryId": "<aws-registry-id>",
             "repositoryName": "django-webapp-docker-repo",
             "imageDigest": "sha256:79e93509f63df0e0808ba8780fdd08bb5dc597b400807637c77044c04f361125",
             "imageTags": [
@@ -565,13 +565,13 @@ _$ python ../scripts/ebcreate.py ../../aws.env team<YOUR-TEAM-NUMBER>
 eb create team<YOUR-TEAM-NUMBER> --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --cname team<YOUR-TEAM-NUMBER> --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
 ```
 
-There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `elasticbeanstalk` folder. Make sure you change `<registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
+There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `elasticbeanstalk` folder. Make sure you change `<aws-registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
 
 ```json
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "<registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0"
+    "Name": "<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com/django-webapp-docker-repo:v1.0.0"
   },
   "Ports": [
     {
@@ -599,9 +599,9 @@ Environment details for: team<YOUR-TEAM-NUMBER>
   Updated: 2025-03-19 14:50:28.780000+00:00
 Printing Status:
 2025-03-19 14:50:27    INFO    createEnvironment is starting.
-2025-03-19 14:50:28    INFO    Using elasticbeanstalk-us-east-1-<registry-id> as Amazon S3 storage bucket for environment data.
+2025-03-19 14:50:28    INFO    Using elasticbeanstalk-us-east-1-<aws-registry-id> as Amazon S3 storage bucket for environment data.
 2025-03-19 14:50:49    INFO    Created security group named: sg-0b7beef319967146f
-2025-03-19 14:51:05    INFO    Created target group named: arn:aws:elasticloadbalancing:us-east-1:<registry-id>:targetgroup/awseb-AWSEB-BZUZMCTWTRWQ/9862edfd7688018f
+2025-03-19 14:51:05    INFO    Created target group named: arn:aws:elasticloadbalancing:us-east-1:<aws-registry-id>:targetgroup/awseb-AWSEB-BZUZMCTWTRWQ/9862edfd7688018f
 ......
 2025-03-19 14:54:30    INFO    Application available at team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com.
 2025-03-19 14:54:31    INFO    Successfully launched environment: team<YOUR-TEAM-NUMBER>
@@ -700,7 +700,7 @@ Type "help" for help.
 ccbdadb=> 
 ```
 
-Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
+Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<aws-account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
 > :question: **Question 6.31. What have you found on the zip file? Why do you think it is like that?.
 

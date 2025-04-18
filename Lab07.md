@@ -303,7 +303,7 @@ Repository.
 
 Since the code has changed and Docker images are immutable it is necessary to build a new one. The variable
 `github.ref_name` contains the value of the git tag: the version. The variable `steps.login-ecr.outputs.registry`
-contains the `<registry-id>.dkr.ecr.us-east-1.amazonaws.com` value and `secrets.ECR_REPOSITORY`, following the previous
+contains the `<aws-registry-id>.dkr.ecr.us-east-1.amazonaws.com` value and `secrets.ECR_REPOSITORY`, following the previous
 lab session, is instatiated to `django-webapp-docker-repo`.
 
 The Docker commands that you see are the ones that you manually issued in the previous lab session.

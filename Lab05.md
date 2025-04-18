@@ -132,8 +132,8 @@ _$ cat $HOME/.aws/config
 [default]
 output = json
 region = us-east-1
-aws_access_key_id = <YOUR-ACCESS-KEY-ID>
-aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
+aws_access_key_id = <YOUR-AWS-ACCESS-KEY-ID>
+aws_secret_access_key = <YOUR-AWS-SECRET-ACCESS-KEY>
 aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 _$  aws --version
 aws-cli/2.0.16 Python/3.7.4 Darwin/24.3.0 botocore/2.0.0dev20
@@ -220,8 +220,8 @@ DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL="INFO"
 CCBDA_SIGNUP_TABLE="ccbda-signup-table"
 AWS_REGION="us-east-1"
-AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
-AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_ACCESS_KEY_ID="<YOUR-AWS-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-AWS-SECRET-ACCESS-KEY>"
 AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
 ```
 
@@ -797,8 +797,8 @@ DJANGO_SECRET_KEY="-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh"
 DJANGO_LOGLEVEL="INFO"
 CCBDA_SIGNUP_TABLE="ccbda-signup-table"
 AWS_REGION="us-east-1"
-AWS_ACCESS_KEY_ID="<YOUR-ACCESS-KEY-ID>"
-AWS_SECRET_ACCESS_KEY="<YOUR-SECRET-ACCESS-KEY>"
+AWS_ACCESS_KEY_ID="<YOUR-AWS-ACCESS-KEY-ID>"
+AWS_SECRET_ACCESS_KEY="<YOUR-AWS-SECRET-ACCESS-KEY>"
 AWS_SESSION_TOKEN="<YOUR-AWS-SESSION-TOKEN>"
 DB_NAME="ccbdadb"
 DB_USER="ccbdauser"

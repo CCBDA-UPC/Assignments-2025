@@ -277,8 +277,8 @@ At your CLI type the following command that will provide the necessary values
 ````bash
 ddd_v1_w_3cWf_628331@runweb75472:~$ cat $HOME/.aws/credentials
 [default]
-aws_access_key_id = <YOUR-ACCESS-KEY-ID>
-aws_secret_access_key = <YOUR-SECRET-ACCESS-KEY>
+aws_access_key_id = <YOUR-AWS-ACCESS-KEY-ID>
+aws_secret_access_key = <YOUR-AWS-SECRET-ACCESS-KEY>
 aws_session_token = <YOUR-AWS-SESSION-TOKEN>
 ````
 
