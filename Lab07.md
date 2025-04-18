@@ -660,7 +660,7 @@ LOGGING = {
 It will also be necessary to include at the bottom of `settings.py` a list of RSS feed URLs and the credentials to use
 ELK.
 
-> [IMPORTANT]
+> [!important]
 > Make sure to set the variable `AWS_DEFAULT_REGION` to `us-east-1` for the Learning Lab environment to work properly.
 
 ```python
