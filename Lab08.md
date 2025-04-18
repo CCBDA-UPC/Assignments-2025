@@ -1262,7 +1262,7 @@ Go to CloudWatch Log groups and observe how many log groups have been created. I
 
 <img alt="Lab08-CloudWatch-environment.png" src="images/Lab08-CloudWatch-environment.png" width="50%"/>
 
-**Q8-22: Create GitHub actions to deploy the changes on the Lambda functions.**
+> :question: Q8-22: Create GitHub actions to deploy the changes on the Lambda functions.
 
 **Q8-23: Assess the current version of the web application against each of the twelve factor application.**
 
@@ -1273,7 +1273,8 @@ Go to CloudWatch Log groups and observe how many log groups have been created. I
 
 ## How to submit this assignment:
 
-**Q8-1: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.**
+> [IMPORTANT]
+> Q8-1: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
 
