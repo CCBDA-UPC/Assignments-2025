@@ -74,8 +74,6 @@ Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon E
 
 Add your answers to README.md.
 
-Use the **private** repo named *https://github.com/CCBDA-UPC/2025-3-xx*. It needs to have the `README.md` file with your responses to the above questions.
-
 Make sure that you have updated your local GitHub repository (using the `git`commands `add`, `commit` and `push`) with all the files generated during this session. 
 
 **Before the deadline**, all team members shall push their responses to their private *https://github.com/CCBDA-UPC/2025-3-xx* repository.
