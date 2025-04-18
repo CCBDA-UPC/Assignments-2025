@@ -612,7 +612,7 @@ _$ curl "${URL}?TableName=${TABLE}"
   }
 }
 ```
-Go to the AWS API Gateway console and see the outcome of the above commands.
+> :bangbang: Go to the AWS API Gateway console and see the outcome of the above commands.
 
 <img alt="Lab08-APIGateway.png" src="images/Lab08-APIGateway.png" width="100%"/>
 
