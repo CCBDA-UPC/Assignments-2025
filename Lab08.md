@@ -42,7 +42,7 @@ In both cases the output is
 
 Geoapify provides services that are similar to Google Maps but with more customizable options, and often appeals to developers due to its more flexible and developer-friendly pricing model.
 
-Create an account, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
+> :bangbang: **Create an account**, and then create a project and get an API key. The Free plan allows 3.000 daily credits which shall be enough for this lab session.
 
 ## Tasks for Lab session #8
 
