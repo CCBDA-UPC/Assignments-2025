@@ -692,7 +692,7 @@ _$ echo -e "{\"url\":\"${URL}\",\"table\":\"${TABLE}\"}" > variables.json; cat v
 }
 ```
 
-Open the "index.html" file using your browser and start to create items in the list.
+> :bangbang: Open the `index.html` file using your browser and start to create items in the list.
 
 <img alt="Lab08-webpage.png" src="images/Lab08-webpage.png" width="80%"/>
 
