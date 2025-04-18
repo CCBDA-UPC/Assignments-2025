@@ -819,6 +819,8 @@ _$ ./deploy.sh .env
 
 > :question: **Question 8.13**: Create a new shell script that removes all the assets that have been created.
 
+> :question: **Question 8.14**: Create a GitHub Action to deploy the changes in the Lambda function.
+
 <a id="Task82"/>
 
 # Task 8.2: Simple serverless web application using WebSockets
