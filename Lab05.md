@@ -343,7 +343,7 @@ Add the *unique identifier* for the AWS SNS topic to the configuration environme
 be instantiated in the  `settings.py` and `.env` files.
 
 ```bash
-NEW_SIGNUP_TOPIC="arn:aws:sns:us-east-1:<YOUR-ACCOUNT-ID>:ccbda-signup-notifications"
+NEW_SIGNUP_TOPIC="arn:aws:sns:us-east-1:YOUR-AWS-ACCOUNT-ID:ccbda-signup-notifications"
 ```
 
 Open the files *form/models.py* and *form/views.py* read and understand what the code does.
