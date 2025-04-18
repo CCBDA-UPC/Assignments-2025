@@ -66,7 +66,7 @@ Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon E
 
 > :question: **Question 3.9**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-# How to submit this assignment**:
+# How to submit this assignment:
 
 > :question: **Question 3.10**: How long have you been working on this session?
 
