@@ -148,7 +148,7 @@ if __name__ == "__main__":
 ### Task 2.1.1: Word Count 1
 Obtain from this repository the file named [`WordCountTensorFlow_1.py`](WordCountTensorFlow_1.py), that computes and prints the 10 most common words in the book. Add one more line to print the total number of words of the book.
 
-**Q211: Copy and paste the output to `README.md`, a file that you will add to your repository.**
+> :question: **Question 2.11**: Copy and paste the output to `README.md`, a file that you will add to your repository.
 
 ### Task 2.1.2: Remove punctuation
 We can remove the punctuation, inside get_tokens(), by applying a regular expression:
@@ -160,11 +160,11 @@ We can remove the punctuation, inside get_tokens(), by applying a regular expres
 ```
 Create a new file named `WordCountTensorFlow_2.py` that computes and prints the 10 most common words without punctuation characters as well as the total number of words remaining.
 
-**Q212: Copy and paste the output to `README.md`, a file that you will add to your repository.**
+> :question: **Question 2.12**: Copy and paste the output to `README.md`, a file that you will add to your repository.
     
 ### Task 2.1.3: Stop Words
 
-**Q213a: Why "Tensorflow" is not the most frequent word? Which are the Stop Words?** Include your answers in `README.md`.
+> :question: **Question 2.13a**: Why "Tensorflow" is not the most frequent word? Which are the Stop Words? Include your answers in `README.md`.
 
 When we work with text mining applications, we often hear of the term “Stop Word Removal." We can do it using the same `nltk` package: 
 
@@ -183,7 +183,7 @@ count = Counter(filtered)
 
 Create a new file named `WordCountTensorFlow_3.py` holding the code (and the comments) that computes and prints the total number of words remaining and the ten most common words after removing the stop words.
 
-**Q213b: Copy and paste the output to `README.md`.**
+> :question: **Question 2.13b**: Copy and paste the output to `README.md`.
 
 Now, it makes more sense, right? "TensorFlow" is the most common word!
 
@@ -309,7 +309,7 @@ On the other hand, the **Streaming API** looks into the future: we can retrieve 
 Get the file named [`BlueSky_1.py`](BlueSky_1.py) from this repository and execute it. 
 
 
-**Q221: Is the data printed correctly?** Add your answers to `README.md`.
+> :question: **Question 2.21**: Is the data printed correctly? Add your answers to `README.md`.
 
 
 ### Task 2.2.2: Accessing Posts
@@ -363,7 +363,7 @@ if __name__ == "__main__":
 
 Create a file named `BlueSky_2.py` and use the previous API presented to obtain information about the posts of a given handle (i.e. for https://bsky.app/profile/upc.edu the handle is **upc.edu**)
 
-**Q22: Keep track of your executions and comments at   `README.md`.**
+> :question: **Question 2.2**: Keep track of your executions and comments at   `README.md`.
 
 <a name="preproc"/>
 
@@ -432,13 +432,13 @@ In this example, regular expressions are compiled with the flags re.VERBOSE, to 
 
 Keep track of the execution examining ten different posts extracted using the API, as shown above. In this initial exercise using BlueSky, if you don't want to have extra problems with *special characters* filter posts *in the English language*.
 
-**Q23: Add the code to `BlueSky_3.py` and your comments to `README.md`.**
+> :question: **Question 2.3**: Add the code to `BlueSky_3.py` and your comments to `README.md`.
 
 We are now ready for next Lab session where we will be mining streaming BlueSky data.
 
 
 
-**Q24: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them?** Add your answers to `README.md`.
+> :question: **Question 2.4**: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them? Add your answers to `README.md`.
 
 
 

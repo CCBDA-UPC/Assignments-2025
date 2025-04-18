@@ -238,12 +238,12 @@ cmdline.execute("scrapy crawl images -o images.json".split())
 
 Add all the files that you have created to your private .*https://github.com/CCBDA-UPC/2024-4-xx* repository.
 
-**Q41 Add your thoughts about the above tasks.**
+> :question: **Question 4.1**: Add your thoughts about the above tasks.
 
 
 <a name="Tasks42"/>
 
-## Task 4.2: Obtain insights about an image using AWS Rekognition
+## Task 4.2**: Obtain insights about an image using AWS Rekognition
 
 Open the modules and open the "Learner Lab". Click the button "Start Lab", wait until the environment is up, and then
 click "AWS" at the top of the window and open the AWS Console.
@@ -258,7 +258,7 @@ Play with the demo using the provided image some of the images obtained in the p
 
 ![Lab04-RekognitionDemo.png](images/Lab04-RekognitionDemo.png)
 
-**Q421 Add your thoughts about the above tasks.**
+> :question: **Question 4.21**: Add your thoughts about the above tasks.
 
 ### Create a Python script that sends an image to AWS Rekognition and retrieves the analysis
 
@@ -268,7 +268,7 @@ All service access to the *AWS Learner Lab account* is limited to the **us-east-
 mentioned otherwise in the service details that appear in the Learner Lab service description. If you load a service
 console page in another AWS Region you will see access error messages.
 
-**Caveat:** the credentials value change every time that you initiate a new *AWS Learner Lab session*.
+**Caveat**:** the credentials value change every time that you initiate a new *AWS Learner Lab session*.
 
 ##### List the contents of the configuration file
 
@@ -878,11 +878,11 @@ print(json.dumps(labels_list, indent=4))
 
 Compare the JSON output with the result of the console demo, in particular the values of "BoundingBox" and "Confidence".
 
-**Q422 Share your thoughts about what you have found out.**
+> :question: **Question 4.22**: Share your thoughts about what you have found out.
 
 <a name="Tasks43"/>
 
-## Task 4.3: Get insights of website images using AWS Rekognition
+## Task 4.3**: Get insights of website images using AWS Rekognition
 
 Using the code in the prevous sections build a Python application that obtains some insights out of website images. You
 are free to use any AWS Rekognition functionality.
@@ -930,11 +930,11 @@ with open('./downloaded.jpeg', 'wb') as fd:
     fd.write(response['Body'].read())
 ```
 
-**Q431 What is the goal of your application?**
+> :question: **Question 4.31**: What is the goal of your application?
 
 Include the code modifications and eventual new files in the repo.
 
-**Q432 Add your thoughts about the application developed and the results that you have obtained.**
+> **:question: Question 4.32**: Add your thoughts about the application developed and the results that you have obtained.
 
 Make sure that you have updated your local GitHub repository (using the `git` commands `add`, `commit`, and `push`) with
 all the files generated during this session.

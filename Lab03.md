@@ -12,65 +12,65 @@ Provide screeenshots of the major milestones and your explanation about what you
 
 Follow the lab session: **Module 4 - AWS Cloud Security** *Lab 1 - Introduction to AWS IAM*
 
-**Q31 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.1**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.2: Build your VPC and Launch a Web Server
+## Task 3.2**: Build your VPC and Launch a Web Server
 
 Follow the lab session: **Module 5 - Networking and Content Delivery** *Lab 2 - Build your VPC and Launch a Web Server*
 
-**Q32 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.2**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.3: Introduction to Amazon EC2
+## Task 3.3**: Introduction to Amazon EC2
 
 Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon EC2*
 
-**Q33 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.3**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.4: Networking and Content Delivery
+## Task 3.4**: Networking and Content Delivery
 
 - Follow the training provided at **Module 5 - Networking and Content Delivery** and answer the Knowledge Check. 
 
-**Q34 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.4**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.5: AWS Lambda
+## Task 3.5**: AWS Lambda
 
 - Follow the lab session:  **Module 6 - Compute** *Activity - AWS Lambda*
 
-**Q35 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.5**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.6: AWS Elastic Beanstalk
+## Task 3.6**: AWS Elastic Beanstalk
 
 - Follow the lab session: **Module 6 - Compute** *Activity - AWS Elastic Beanstalk*
 
-**Q36 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.6**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.7: Databases
+## Task 3.7**: Databases
 
 - Follow the training provided at **Module 8 - Databases** and answer the Knowledge Check. 
 
 - Follow the lab session: **Module 8 - Databases** *Lab 5 - Build a Database Server*
 
-**Q37 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.7**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.8: Cloud Architecture
+## Task 3.8**: Cloud Architecture
 
 - Follow the training provided at **Module 9 - Cloud Architecture** and answer the Knowledge Check. 
 
-**Q38 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.8**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.9:  Auto Scaling and Monitoring
+## Task 3.9**:  Auto Scaling and Monitoring
 
 - Follow the training provided at **Module 10 - Auto Scaling and Monitoring** and answer the Knowledge Check. 
 
 - Follow the lab session: **Module 10 -  Auto Scaling and Monitoring** *Lab 6 - Scale & Load Balance your Architecture*
 
-**Q39 Provide screeenshots of the major milestones and your explanation about what you have learned or observed.** 
+> :question: **Question 3.9**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-# How to submit this assignment:
+# How to submit this assignment**:
 
-**Q310 How long have you been working on this session?**
+> :question: **Question 3.10**: How long have you been working on this session?
 
-**Q311 What have been the main difficulties you have faced and how have you solved them?** 
+> **:question: Question 3.11**: What have been the main difficulties you have faced and how have you solved them? 
 
 Add your answers to README.md.
 

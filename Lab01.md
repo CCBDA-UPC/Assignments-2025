@@ -69,7 +69,7 @@ Update the `README.md` file including all the information about your group (memb
 ## Task 1.5:
 Don't forget to **individually** submit the knowledge check of the AWS Academy course.
 
-**Questions: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them?** Add your answers to `README.md`.
+> :question: **Question 1**: How long have you been working on this session? What have been the main difficulties you have faced and how have you solved them? Add your answers to `README.md`.
 
 
 # How to submit this assignment:
