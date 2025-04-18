@@ -673,9 +673,11 @@ The JavaScript code uses jQuery to create a "GET" request as soon as the web pag
 To always update the values of the variables that the script uses we can add the command:
 
 ```bash
-_$ echo -e "var apiUrl = '${URL}';\nvar TableName = '${TABLE}';" > variables.js; cat variables.js
-var apiUrl = 'https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/production/';
-var TableName = 'ccbda-lambda-first';
+_$ echo -e "{\"url\":\"${URL}\",\"table\":\"${TABLE}\"}" > variables.json; cat variables.json
+{
+  "url": "https://mahz4x3bjf.execute-api.us-east-1.amazonaws.com/production/",
+  "table": "ccbda-lambda-first"
+}
 ```
 
 Open the "index.html" file using your browser and start to create items in the list.
