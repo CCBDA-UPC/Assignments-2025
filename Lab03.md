@@ -14,37 +14,37 @@ Follow the lab session: **Module 4 - AWS Cloud Security** *Lab 1 - Introduction 
 
 > :question: **Question 3.1**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.2**: Build your VPC and Launch a Web Server
+## Task 3.2: Build your VPC and Launch a Web Server
 
 Follow the lab session: **Module 5 - Networking and Content Delivery** *Lab 2 - Build your VPC and Launch a Web Server*
 
 > :question: **Question 3.2**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.3**: Introduction to Amazon EC2
+## Task 3.3: Introduction to Amazon EC2
 
 Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon EC2*
 
 > :question: **Question 3.3**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.4**: Networking and Content Delivery
+## Task 3.4: Networking and Content Delivery
 
 - Follow the training provided at **Module 5 - Networking and Content Delivery** and answer the Knowledge Check. 
 
 > :question: **Question 3.4**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.5**: AWS Lambda
+## Task 3.5: AWS Lambda
 
 - Follow the lab session:  **Module 6 - Compute** *Activity - AWS Lambda*
 
 > :question: **Question 3.5**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.6**: AWS Elastic Beanstalk
+## Task 3.6: AWS Elastic Beanstalk
 
 - Follow the lab session: **Module 6 - Compute** *Activity - AWS Elastic Beanstalk*
 
 > :question: **Question 3.6**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.7**: Databases
+## Task 3.7: Databases
 
 - Follow the training provided at **Module 8 - Databases** and answer the Knowledge Check. 
 
@@ -52,13 +52,13 @@ Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon E
 
 > :question: **Question 3.7**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.8**: Cloud Architecture
+## Task 3.8: Cloud Architecture
 
 - Follow the training provided at **Module 9 - Cloud Architecture** and answer the Knowledge Check. 
 
 > :question: **Question 3.8**: Provide screeenshots of the major milestones and your explanation about what you have learned or observed. 
 
-## Task 3.9**:  Auto Scaling and Monitoring
+## Task 3.9:  Auto Scaling and Monitoring
 
 - Follow the training provided at **Module 10 - Auto Scaling and Monitoring** and answer the Knowledge Check. 
 
@@ -70,7 +70,7 @@ Follow the lab session: **Module 6 - Compute** *Lab 3 - Introduction to Amazon E
 
 > :question: **Question 3.10**: How long have you been working on this session?
 
-> **:question: Question 3.11**: What have been the main difficulties you have faced and how have you solved them? 
+> :question: **Question 3.11**: What have been the main difficulties you have faced and how have you solved them? 
 
 Add your answers to README.md.
 
