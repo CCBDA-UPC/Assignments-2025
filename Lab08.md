@@ -612,7 +612,7 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 
 <img alt="Lab08-APIGateway.png" src="images/Lab08-APIGateway.png" width="100%"/>
 
-### Test the REST API
+### **Testing the REST API**
 
 [**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
 
@@ -626,7 +626,7 @@ The variable in the Postman environment named "CRUD".
 
 <img alt="Lab08-Postman-environments.png" src="images/Lab08-Postman-environments.png" width="100%"/>
 
-### Use the REST API
+### Using the REST API
 
 Once the API is tested, you can see it working inside a web page. The files in the `crud` folder of the zip file that you downloaded, are a mininmal web page using the REST API built above. But before opening in your browser the file "index.html", you need to change the value of the variable `apiUrl` to the current value of the "**CrudHttpAPI**" API Gateway.
 
