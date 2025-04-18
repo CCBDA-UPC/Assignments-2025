@@ -1148,6 +1148,8 @@ The JavaScript below creates a wrapper function with triggers on different webso
 
 The browser is ready to receive messages that can be of type `init`, `reset` or `show`. The `init` message initializes the map and receives the Geoapify API Key that won't be wise to store in the browser code. It also receives the center ponint where aircraft are flying around and the bounding box of the area being monitored. The `reset` message, changes the map viewpoint. The `show` message sends the coordinates and some aircraft data for the airplanes being monitored.
 
+The script uses the [Leaflet library](https://leafletjs.com/) to interact with the map. The class "**L**" is provided by that library. 
+
 ```javascript
 function WrapperWS(url) {
     var flyingIcon = L.icon({
