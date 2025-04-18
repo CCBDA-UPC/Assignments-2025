@@ -14,6 +14,7 @@
 - [AWS API Gateway](#aws-api-gateway)
 - [WebSockets](#websockets)
 - [AWS Kinesis](#aws-kinesis)
+- [Postman](#postman)
 
 ## Pre-lab homework
 
@@ -172,6 +173,9 @@ Some common use cases for Kinesis include:
 - Data processing pipelines.
 - Machine learning applications (e.g., predictive analytics based on streaming data).
 
+### Postman
+
+[**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
 
 <a id="Task81"/>
 
@@ -613,8 +617,6 @@ Go to the AWS API Gateway console and see the outcome of the above commands.
 <img alt="Lab08-APIGateway.png" src="images/Lab08-APIGateway.png" width="100%"/>
 
 ### **Testing the REST API**
-
-[**Postman**](https://www.postman.com) is a popular API development and testing tool that allows developers to send HTTP requests to web servers and view responses. It provides an easy-to-use interface for testing RESTful APIs, making it simple to construct and send requests, view responses, and automate tests. Postman supports features like request chaining, environment variables, collections, and collaboration, making it a powerful tool for API development and debugging.
 
 Use this [URL](https://www.postman.com/ccbda-upc-edu/serverless/request/ck4fxrd/testing?action=share&creator=43659146&ctx=documentation&active-environment=43659146-8433b233-679d-4f13-a332-b972334ca409) to access the Postman web interface where there are some REST API calls to test the above deployed CRUD API Gateway. You can also download the Postman desktop app and import the testing collection of operations into your laptop. 
 
