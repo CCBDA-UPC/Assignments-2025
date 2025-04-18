@@ -1129,7 +1129,7 @@ echo "URL: ${URL}"
 echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 ```
 
-See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages.
+> :bangbang: See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages.
 
 To execute the script is necessary to have a `.env` file. The API Key is from [Geoapify](https://www.geoapify.com/).
 
