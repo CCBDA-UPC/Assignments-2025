@@ -819,7 +819,7 @@ _$ ./deploy.sh .env
 
 > :question: **Question 3**: Create a new administrative shell script that removes all the AWS  assets that have been created (tables, functions, API Gateway,...).
 
-> :question: **Question 4**: Create a GitHub Action to deploy the changes in the Lambda function code.
+> :question: **Question 4**: Create a GitHub Action to deploy the code changes in the Lambda function.
 
 > :question: **Question 5**: Share your thoughts about the above web application.
 
