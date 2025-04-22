@@ -349,16 +349,19 @@ writing the new content in the ubuntu server's file system.
         with:
           result-encoding: string
           script: |
+            const fs = require('fs');
+            const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json';
+
             try {
-              const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json'
-              const fs = require('fs')
-              const jsonString = fs.readFileSync(fpath)
-              var apps = JSON.parse(jsonString)
-              apps["Image"]["Name"] = process.env.IMAGE_ADDR
-              fs.writeFileSync(fpath,JSON.stringify(apps))
-            } catch(err) {
-              core.error("Error while reading or parsing the JSON")
-              core.setFailed(err)
+              const jsonString = fs.readFileSync(fpath,'utf8')
+              var dockerRun = JSON.parse(jsonString)
+              dockerRun.Image.Name = process.env.IMAGE_ADDR
+              
+              fs.writeFileSync(fpath,JSON.stringify(dockerRun))
+              console.log("✅ Updated Dockerrun.aws.json with new image tag:");
+              console.log(JSON.stringify(dockerRun, null, 2));              
+            } catch (err) {
+              core.setFailed("❌ Failed to update Dockerrun.aws.json: " + err.message)
             }
 ```
 
