@@ -222,10 +222,8 @@ The code below specifies that the GitHub Action will run only when a **push** is
 These tags must follow the version format:  
 **`v1.0.0`, `v1.0.1`, `v1.0.2`, ..., `v1.0.99`**, etc.
 
-To trigger the GitHub Action, **you need to push a new tag** with an updated version number (i.e., change the last part of the tag).
-
 > [!Warning]
-> The GitHub Action is only triggered when a new tag is detected. Any push without a tag will be ignored.
+> This GitHub Action is only triggered when a new tag is detected. Any push without a tag will be ignored and no GitHub Action will run.
 
 ```yaml
 on:
