@@ -703,7 +703,7 @@ You may have noticed that the Lambda function includes some logging calls. Open 
 
 <img alt="Lab08-CloudWatch.png" src="images/Lab08-CloudWatch.png" width="100%"/>
 
-> :question: **Question 8.11**: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.
+> :question: **Question 1**: Play with the application and with AWS CloudWatch logs that you have obtained. Share your insights.
 
 ### Automatic deployment
 
@@ -815,13 +815,13 @@ LOG_LEVEL=INFO
 _$ ./deploy.sh .env
 ```
 
-> :question: **Question 8.12**: Assess the current version of the web application against each of the twelve factor application.
+> :question: **Question 2**: Assess the current version of the web application against each of the twelve factor application.
 
-> :question: **Question 8.13**: Create a new shell script that removes all the assets that have been created.
+> :question: **Question 3**: Create a new shell script that removes all the assets that have been created.
 
-> :question: **Question 8.14**: Create a GitHub Action to deploy the changes in the Lambda function.
+> :question: **Question 4**: Create a GitHub Action to deploy the changes in the Lambda function.
 
-> :question: **Question 8.15**: Share your thoughts about the web application.
+> :question: **Question 5**: Share your thoughts about the web application.
 
 <a id="Task82"/>
 
@@ -1274,24 +1274,24 @@ Open several browser tabs and see how they are all synchronized.
 
 Go to CloudWatch Log groups and observe how many log groups have been created. If you experience any issue check the logs to understand what is not working as expected.
 
-> :question: **Question 8.21**: Go to one of the lambda functions and change the value of LOG_LEVEL from INFO to DEBUG in the "Configuration" tab "Environment variables" section. Do you need to redeploy the Lambda Function to have more details on the logs? Why?
+> :question: **Question 6**: Go to one of the lambda functions and change the value of LOG_LEVEL from INFO to DEBUG in the "Configuration" tab "Environment variables" section. Do you need to redeploy the Lambda Function to have more details on the logs? Why?
 
 <img alt="Lab08-CloudWatch-environment.png" src="images/Lab08-CloudWatch-environment.png" width="50%"/>
 
-> :question: **Question 8.22**: Create GitHub actions to deploy the changes on the Lambda functions.
+> :question: **Question 7**: Create GitHub actions to deploy the changes on the Lambda functions.
 
-> :question: **Question 8.23**: Assess the current version of the web application against each of the twelve factor application.
+> :question: **Question 8**: Assess the current version of the web application against each of the twelve factor application.
 
-> :question: **Question 8.24**: Provide screenshots of the significant Kinesis metrics shown in the "Monitoring" tab.
+> :question: **Question 9**: Provide screenshots of the significant Kinesis metrics shown in the "Monitoring" tab.
 
-> :question: **Question 8.25**: Provide screenshots of the DynamoDB table used.
+> :question: **Question 10**: Provide screenshots of the DynamoDB table used.
  
-> :question: **Question 8.26**: Share your thoughts about the web application.
+> :question: **Question 11**: Share your thoughts about the web application.
 
 
 ## How to submit this assignment:
 
-> :question: **Question 8.1**: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
+> :question: **Question 12**: How long have you been working on this session? What have been the main difficulties that you have faced and how have you solved them? Add your answers to README.md.
 
 Make sure that you have updated your local GitHub repository (using the git commands add, commit, and push) with all the files generated during this session.
 
