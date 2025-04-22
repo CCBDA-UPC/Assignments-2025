@@ -99,7 +99,7 @@ In this section, you will learn how to create CI/CD pipelines using GitHub Actio
 with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
 and deploying the application to AWS Elastic Beanstalk.
 
-But before staring you need to be aware of the new Django model added to the application.
+Before staring you need to be aware of the new Django model added to the application.
 
 ```python
 class Feeds(models.Model):
@@ -134,14 +134,11 @@ class Feeds(models.Model):
                 logger.error(f'Feed reading error: {e}')
 ```
 
-Django needs to be aware of the data models deployed that require storage in the application's database.
-You need to execute the Django "makemigrations" command, to read the new data model. It will create a new file  `form/migrations/0001_initial.py`. After that, please execute the "migrate" Django command as done in the previous session. 
+Django needs to be informed about any new data models that require database storage. To do this, it is necessary to run the `makemigrations` command. This will detect the new model and generate a migration file—typically something like `form/migrations/0001_initial.py`. The file is already included in the new repo, therefore you only need to apply the new migration by running the `migrate` command, just like you did in the previous session.
 
 ```bash
-_$ python manage.py makemigrations
 _$ python manage.py migrate
 ```
-
 
 > [!tip]  
 > The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
