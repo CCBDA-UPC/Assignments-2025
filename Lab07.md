@@ -100,7 +100,7 @@ with the previous session using the created Docker image, pushing it to AWS Elas
 and deploying the application to AWS Elastic Beanstalk.
 
 > [!tip]  
-> The instructions in this section assume that you've unzipped the code **at the root** of your responses repository.  
+> The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
 > 
 > When GitHub Actions runs, it starts with a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. 
 > 
