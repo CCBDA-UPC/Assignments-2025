@@ -99,7 +99,7 @@ In this section, you will learn how to create CI/CD pipelines using GitHub Actio
 with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
 and deploying the application to AWS Elastic Beanstalk.
 
-Before staring you need to be aware of the new Django model added to the application.
+Before staring you need to be aware of a new Django model added to the application.
 
 ```python
 class Feeds(models.Model):
@@ -473,10 +473,10 @@ In parallel, go to the AWS console and open two tabs to witness what happens:
 - AWS Elasticbeanstalk environment.
 - AWS EC2 instances
 
-> :question: **Question 7.12 Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles**: logs, number of instances running,etc.
+> :question: **Question 7.12**: Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc.
 Anything that you consider meaningful and provide your explanation and thoughts.
 
-> :question: **Question 7.13 Have you been able to execute the action? Share your thoughts about the complete action.
+> :question: **Question 7.13**: Have you been able to execute the action? Share your thoughts about the complete action.
 
 ### Yet a new administrative script
 
@@ -895,39 +895,6 @@ def hit(request, id):
 
 The `Feeds` model is implemented in `form/models.py`. It defines the fields that will be stored in the database and a
 function `refresh_data` to fill the database table with the RSS feed information.
-
-```python
-class Feeds(models.Model):
-    title = models.CharField(max_length=200)
-    link = models.URLField()
-    summary = models.TextField()
-    author = models.CharField(max_length=120)
-    hits = models.BigIntegerField(default=0)
-
-    def refresh_data(self):
-        for u in settings.RSS_URLS:
-            response = requests.get(u)
-            try:
-                feed = feedparser.parse(response.content)
-                for entry in feed.entries:
-                    article = Feeds.objects.create(
-                        title=entry.title,
-                        link='',
-                        summary='',
-                        author=entry.author
-                    )
-                    base_link = reverse('form:hit', kwargs={'id': article.id})
-                    article.link = urljoin(base_link, '?' + urlencode({'url': entry.link}))
-                    summary = BeautifulSoup(entry.summary, 'html.parser')
-                    for anchor in summary.find_all('a'):
-                        anchor['href'] = urljoin(base_link, '?' + urlencode({'url': anchor['href']}))
-                        anchor['target'] = '_blank'
-                    article.summary = str(summary)
-                    article.save()
-                    logger.info(f'Create article "{entry.title}"')
-            except Exception as e:
-                logger.error(f'Feed reading error: {e}')
-```
 
 ### Using AWS CloudWatch for Observability
 
