@@ -568,7 +568,7 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
 
 <a id="Task72"/>
 
-## Task 7.2**: Observability using AWS CloudWatch, Elastic and Kibana
+## Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana
 
 **Observability** is a vital component of modern software systems, enabling developers and operations teams to monitor 
 performance, diagnose issues, and ensure that applications function as expected. In this section, we’ll explore how to 
