@@ -256,7 +256,7 @@ _$ aws dynamodb create-table \
 
 ### Deploying the CRUD Lambda function
 
-Download the [serverless-app repository](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to your project repository. 
+Download the [serverless-app repository](https://github.com/CCBDA-UPC/serverless-app) as a ZIP file and add it to the root of your responses repository. 
 
 Inside the `crud/lambda/` folder, you'll find an AWS Lambda function written in Python. This function establishes a connection to DynamoDB and waits to be invoked by the AWS API Gateway. Depending on the HTTP method (GET, POST, etc.) received, it will perform different operations on the database.
 
