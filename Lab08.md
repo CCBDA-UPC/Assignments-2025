@@ -1278,13 +1278,13 @@ Go to CloudWatch Log groups and observe how many log groups have been created. I
 
 <img alt="Lab08-CloudWatch-environment.png" src="images/Lab08-CloudWatch-environment.png" width="50%"/>
 
-> :question: **Question 7**: Create GitHub actions to deploy the changes on the Lambda functions.
+> :question: **Question 7**: Create GitHub actions to deploy the code changes on the Lambda functions.
 
 > :question: **Question 8**: Assess the current version of the web application against each of the twelve factor application.
 
 > :question: **Question 9**: Provide screenshots of the significant Kinesis metrics shown in the "Monitoring" tab.
 
-> :question: **Question 10**: Provide screenshots of the DynamoDB table used.
+> :question: **Question 10**: Provide screenshots of the DynamoDB table used, showing the different open connections.
  
 > :question: **Question 11**: Share your thoughts about the web application.
 
