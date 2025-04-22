@@ -651,13 +651,15 @@ string-based logs. This formatter is used by the "elk" log handler, which integr
 Logstash, Kibana) stack for log management. Please open the `settings.py` and add the formatter, hander and restructure
 the log ingestion sending `django.server` messages to "cloudwatch" and `django` to "elk" handler.
 
-Modify your `settings.py` configuration using the changes shown below.
+### Modify your `settings.py` configuration. 
+
+1. Locate the variable `LOGGING` and under `formatters` add two new formatters after "simple", as shown below.
 
 ```python
-LOGGING = {
-    ...
-    "formatters": {
-    ...
+        "simple": {
+            "format": "{asctime} {levelname} {message}",
+            "style": "{",
+        },
         "simple_nots": {
             "format": "{levelname} {message}",
             "style": "{",
@@ -676,11 +678,22 @@ LOGGING = {
             "extra": {
                 "instance": AWS_EC2_INSTANCE_ID,
             }
-        }
-    }
-...
-    "handlers": {
-    ...
+        },
+```
+
+2. For the same variable `LOGGING` under `handlers` and after "s3" add two new handlers, as shown below.
+
+```python
+        "s3": {
+            "level": "INFO",
+            "formatter": "verbose",
+            "class": "ccbda.S3RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "s3.log"),
+            "maxBytes": 5 * 1024,  # 5 K
+            "backupCount": 1,
+            "encoding": None,
+            "delay": 0,
+        },
         "elk": {
             "level": "DEBUG",
             "formatter": "json-record-format",
@@ -694,8 +707,12 @@ LOGGING = {
             "log_group": "django-webapp",
             "log_stream_name":AWS_EC2_INSTANCE_ID+"/{logger_name}/{process_id}"
         }
-    },
-...
+```
+
+3. Change the values of "root" and "loggers" as shown below.
+
+```python
+
     "root": {
         "handlers": ["console", "cloudwatch"],
         "level": "INFO",
@@ -712,10 +729,9 @@ LOGGING = {
             "propagate": False,
         },
     },
-}
 ```
 
-It will also be necessary to include at the bottom of `settings.py` a list of RSS feed URLs and the credentials to use
+4. It will also be necessary to include at the bottom of `settings.py` a list of RSS feed URLs and the credentials to use
 ELK.
 
 > [!important]
