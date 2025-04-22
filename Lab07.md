@@ -99,6 +99,50 @@ In this section, you will learn how to create CI/CD pipelines using GitHub Actio
 with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
 and deploying the application to AWS Elastic Beanstalk.
 
+But before staring you need to be aware of the new Django model added to the application.
+
+```python
+class Feeds(models.Model):
+    title = models.CharField(max_length=200)
+    link = models.URLField()
+    summary = models.TextField()
+    author = models.CharField(max_length=120)
+    hits = models.BigIntegerField(default=0)
+
+    def refresh_data(self):
+        for u in settings.RSS_URLS:
+            response = requests.get(u)
+            try:
+                feed = feedparser.parse(response.content)
+                for entry in feed.entries:
+                    article = Feeds.objects.create(
+                        title=entry.title,
+                        link='',
+                        summary='',
+                        author=entry.author
+                    )
+                    base_link = reverse('form:hit', kwargs={'id': article.id})
+                    article.link = urljoin(base_link,'?'+urlencode({'url':entry.link}))
+                    summary = BeautifulSoup(entry.summary, 'html.parser')
+                    for anchor in summary.find_all('a'):
+                        anchor['href'] = urljoin(base_link,'?'+urlencode({'url':anchor['href']}))
+                        anchor['target'] = '_blank'
+                    article.summary = str(summary)
+                    article.save()
+                    logger.info(f'Create article "{entry.title}"')
+            except Exception as e:
+                logger.error(f'Feed reading error: {e}')
+```
+
+Django needs to be aware of the data models deployed that require storage in the application's database.
+You need to execute the Django "makemigrations" command, to read the new data model. It will create a new file  `form/migrations/0001_initial.py`. After that, please execute the "migrate" Django command as done in the previous session. 
+
+```bash
+_$ python manage.py makemigrations
+_$ python manage.py migrate
+```
+
+
 > [!tip]  
 > The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
 > 
