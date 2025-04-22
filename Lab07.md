@@ -99,6 +99,13 @@ In this section, you will learn how to create CI/CD pipelines using GitHub Actio
 with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
 and deploying the application to AWS Elastic Beanstalk.
 
+> [!tip]  
+> The instructions in this section assume that you've unzipped the code **at the root** of your responses repository.  
+> 
+> When GitHub Actions runs, it starts with a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. 
+> 
+> Keep this in mind when setting **relative paths** in your scripts—everything should be relative to the repo’s root folder.
+
 A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
 which each action in the pipeline is defined. These are:
 
@@ -156,7 +163,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
 
-
       - name: Login to AWS ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -164,32 +170,35 @@ jobs:
       - name: Build, tag, and push image to AWS ECR
         id: build-image
         env:
-          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{  github.ref_name }}
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.ref_name }}
         run: |
           # Build a docker container and push it to ECR so that it can be deployed to Elastic Beanstalk.
           echo "image=$IMAGE_ADDR" >> $GITHUB_OUTPUT          
-          docker build -t django-docker:${{  github.ref_name }} .
-          docker tag django-docker:${{  github.ref_name }} $IMAGE_ADDR
+          docker build -t django-docker:${{ github.ref_name }} .
+          docker tag django-docker:${{ github.ref_name }} $IMAGE_ADDR
           docker push $IMAGE_ADDR
 
       - name: Update Dockerrun
         uses: actions/github-script@v7
         id: update-dockerrun
         env:
-          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{  github.ref_name }}
+          IMAGE_ADDR: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}:${{ github.ref_name }}
         with:
           result-encoding: string
           script: |
+            const fs = require('fs');
+            const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json';
+
             try {
-              const fpath = '.housekeeping/elasticbeanstalk/Dockerrun.aws.json'
-              const fs = require('fs')
-              const jsonString = fs.readFileSync(fpath)
-              var apps = JSON.parse(jsonString)
-              apps["Image"]["Name"] = process.env.IMAGE_ADDR
-              fs.writeFileSync(fpath,JSON.stringify(apps))
-            } catch(err) {
-              core.error("Error while reading or parsing the JSON")
-              core.setFailed(err)
+              const jsonString = fs.readFileSync(fpath,'utf8')
+              var dockerRun = JSON.parse(jsonString)
+              dockerRun.Image.Name = process.env.IMAGE_ADDR
+              
+              fs.writeFileSync(fpath,JSON.stringify(dockerRun))
+              console.log("✅ Updated Dockerrun.aws.json with new image tag:");
+              console.log(JSON.stringify(dockerRun, null, 2));              
+            } catch (err) {
+              core.setFailed("❌ Failed to update Dockerrun.aws.json: " + err.message)
             }
 
       - name: AWS Elastic Beanstalk environment
@@ -197,10 +206,10 @@ jobs:
         run: |
           # Update  Dockerrun.aws.json
           cd .housekeeping/elasticbeanstalk
-          zip -r ../${{github.ref_name}}.zip Dockerrun.aws.json
-          aws s3 cp "../${{github.ref_name}}.zip" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/
-          aws elasticbeanstalk create-application-version --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --version-label ${{github.sha}} --description ${{github.ref_name}} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/${{github.ref_name}}.zip"
-          aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{github.sha}}
+          zip -r ../${{ github.ref_name }}.zip Dockerrun.aws.json
+          aws s3 cp "../${{ github.ref_name }}.zip" s3://elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}/${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --version-label ${{ github.sha }} --description ${{ github.ref_name }} --source-bundle S3Bucket="elasticbeanstalk-us-east-1-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="${{ secrets.ELASTIC_BEANSTALK_APP_NAME }}/${{ github.ref_name }}.zip"
+          aws elasticbeanstalk update-environment --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }} --version-label ${{ github.sha }}
           aws elasticbeanstalk wait environment-updated --application-name ${{ secrets.ELASTIC_BEANSTALK_APP_NAME }} --environment-name ${{ secrets.ELASTIC_BEANSTALK_ENV_NAME }}
 ```
 
@@ -208,8 +217,15 @@ Let's go through it section by section.
 
 #### on: action trigger
 
-The code below states that the action shall be executed when there is a push on the GitHub repo that has a tag matching
-the regular expression.
+The code below specifies that the GitHub Action will run only when a **push** is made to the repository **with a tag** that matches a specific pattern.  
+
+These tags must follow the version format:  
+**`v1.0.0`, `v1.0.1`, `v1.0.2`, ..., `v1.0.99`**, etc.
+
+To trigger the GitHub Action, **you need to push a new tag** with an updated version number (i.e., change the last part of the tag).
+
+> [!Warning]
+> The GitHub Action is only triggered when a new tag is detected. Any push without a tag will be ignored.
 
 ```yaml
 on:
@@ -218,7 +234,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
 ```
 
-To achieve that, it is necessary to issue
+The code below pushes changes to the repository and creates a new tag following the required version format (e.g., v1.0.19).
 
 ```bash
 _$ git commit -m "This fixes the bug!"
