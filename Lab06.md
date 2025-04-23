@@ -82,10 +82,10 @@ _$ brew install awsebcli
 * [Task 6.5: Deliver static content using a Content Delivery Network](#Task65)
 * [Task 6.6: Create a new option to retrieve the list of leads](#Task66)
 
-> [!important]
+> [!warning]
 > Once you close your Learner Lab session, some services continue alive.
 > The aprox. cost for AWS RDS is 50 cents per day.
-> Consider how that affects your budget and check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details.
+> Consider how that affects your budget and check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details on your expenditure.
 
 <a name="Task61"/>
 
