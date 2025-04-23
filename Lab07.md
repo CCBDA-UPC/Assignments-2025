@@ -91,13 +91,6 @@ password under the "Actions" blue button.
 * [Task 7.1: CI/CD build using GitHub Actions](#Task71)
 * [Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana](#Task72)
 
-> [!warning]
-> Once you close your Learner Lab session, some services continue alive.
->   The aprox. cost for AWS RDS is 50 cents per day.
->   AWS ElasticBeanstalk costs more than 1 USD per day.
-> Consider how that affects your budget and check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details on your expenditure.
-> 
-
 <a id="Task71"/>
 
 ## Task 7.1: CI/CD build using GitHub Actions
@@ -964,6 +957,13 @@ files generated during this session.
 
 Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-7-xx
 repository.
+
+> [!warning]
+> Once you close your Learner Lab session, some services continue alive.
+>   The aprox. cost for AWS RDS is 50 cents per day.
+>   AWS ElasticBeanstalk costs more than 1 USD per day.
+> Consider how that affects your budget and check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details on your expenditure.
+> 
 
 
 
