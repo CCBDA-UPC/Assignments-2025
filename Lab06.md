@@ -139,7 +139,7 @@ If you have followed the above steps correctly, using the PyCharm database wizar
 Let's now build a new Docker image, tagging it with a version number. Next test the web application running in Docker in your laptop and connect it to the AWS RDS database. Now, copy the production environment to a new file named `aws.env` and replace the PostGreSQL variable `DB_HOST` and adding `PGPASSWORD` with the master password as shown below.
 
 > [!Warning]
-> Since AWS EC2 by default provides instances based on Intel x86 architecture, if your laptop is **using a different architecture** (i.e. Apple M4) you need to create Docker images that use Intel x86 in order to deploy then on AWS EC2 instances by adding to `docker create` the parameter `--platform`. Please check "[Set the target platforms for the build](https://docs.docker.com/reference/cli/docker/buildx/build/#platform)".
+> Since AWS EC2, by default, provides instances based on Intel x86 architecture, if your laptop is **using a different architecture** (i.e. Apple M4) you need to create Docker images that use Intel x86 in order to deploy then on AWS EC2 instances by adding to `docker create` the parameter `--platform`. Please check "[Set the target platforms for the build](https://docs.docker.com/reference/cli/docker/buildx/build/#platform)".
 
 ```bash
 _$ docker build -t django-docker:v1.0.0 .
