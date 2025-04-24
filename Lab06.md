@@ -719,18 +719,6 @@ Type "help" for help.
 ccbdadb=> 
 ```
 
-Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<aws-account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
-
-> :question: **Question 6.31**: What have you found on the zip file? Why do you think it is like that?.
-
-> :question: **Question 6.32**: Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.
-
-> :question: **Question 6.33**: Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?
-
-> :question: **Question 6.34**: Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?
-
-Finish the execution of the AWS Elastic Beanstalk environment.
-
 ```bash
 _$ cd .housekeeping/elasticbeanstalk
 _$ eb terminate
@@ -745,6 +733,120 @@ To confirm, type the environment name: team<YOUR-TEAM-NUMBER>
 2025-03-24 18:25:45    INFO    Deleting SNS topic for environment team<YOUR-TEAM-NUMBER>.
 2025-03-24 18:25:46    INFO    terminateEnvironment completed successfully.
 ```
+### Debuggin AWS Elastic Beanstalk issues
+
+You’ve got several tools and techniques at your disposal depending on where the problem lies — whether it's deployment failures, runtime errors, configuration issues, or Docker/container problems.
+
+
+
+#### Check EB Logs
+Elastic Beanstalk offers a few ways to view logs from your environment:
+
+##### Using the AWS Console
+- Go to **Elastic Beanstalk > Your Environment**.
+- Click **Logs > Request Logs**.
+- Choose "Last 100 lines" or "Full logs".
+- Look for:
+  - `eb-engine.log` (deployment-related)
+  - `web.stdout.log` / `web.error.log` (web server logs)
+  - `docker logs` (for container output)
+  - `nginx/access.log` or `nginx/error.log`
+
+##### Using the EB CLI
+```bash
+_$ eb logs
+_$ eb logs --all
+_$ eb logs --zip  # Downloads all logs as a zip
+```
+
+#### SSH Into the Instance
+To get real-time logs or debug deeply:
+
+```bash
+_$ eb ssh
+```
+
+Once inside view your app logs (example for Docker)
+```bash
+_$ docker ps  # get container ID
+_$ docker logs <container_id>
+```
+Or look into specific log files
+
+```bash
+_$ cd /var/log
+_$ ls -lh  # check logs like nginx, eb-engine, etc.
+```
+
+Files to check:
+
+- `/var/log/nginx/access.log`
+- `/var/log/nginx/error.log`
+- `/var/log/eb-docker-process.log`
+- `/var/log/eb-engine.log`
+- `/var/log/docker.log`
+
+#### Use `eb events` to Check Deployment Errors
+
+This shows recent event logs from the environment:
+
+```bash
+_$ eb events
+```
+
+It’s helpful for messages like “health degraded,” failed config/app deployments, etc.
+
+####  Enable Enhanced Health Reporting
+In the EB console:
+- Environment > Configuration > Monitoring
+- Enable **Enhanced Health Reporting** (provides detailed diagnostics)
+
+You’ll get real-time health dashboards, metrics, and root causes.
+
+####  Check Environment Variables
+
+Ensure environment variables are set properly (via Console or `eb setenv`)
+
+```bash
+_$ eb setenv VAR1=value1 VAR2=value2
+```
+
+
+####  Use Platform Hooks or `.platform` Folder
+If you're on a custom platform (e.g., Docker), you can add **custom scripts** for deeper debugging:
+- Add to `.platform/hooks/postdeploy/`
+- Log output or debugging info from those scripts
+
+
+
+####  Rebuild Environment (last resort)**
+If the environment is too broken or stale:
+
+```bash
+eb rebuild
+```
+Or terminate and create a fresh environment.
+
+
+#### Bonus: Docker-Specific Debug Tips
+As you're deploying with a Dockerfile or `Dockerrun.aws.json`:
+- Confirm your Dockerfile builds locally
+- Check `web.stdout.log` or container logs via `docker logs`
+- Beanstalk expects your container to expose on **port 5000**, unless otherwise configured
+
+### Take aways
+
+Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<aws-account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
+
+> :question: **Question 6.31**: What have you found on the zip file? Why do you think it is like that?.
+
+> :question: **Question 6.32**: Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.
+
+> :question: **Question 6.33**: Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?
+
+> :question: **Question 6.34**: Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?
+
+Finish the execution of the AWS Elastic Beanstalk environment.
 
 <a name="Task64" />
 
