@@ -961,7 +961,7 @@ repository.
 
 > [!caution]
 > Once you close your Learner Lab session, some services continue executing and affecting your budget.
->   The aprox. cost for AWS RDS is 50 cents per day.
+>   The aproximate cost for AWS RDS is 50 cents per day.
 >   AWS ElasticBeanstalk costs more than 1 USD per day.
 > Check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details on your expenditure.
 > 
