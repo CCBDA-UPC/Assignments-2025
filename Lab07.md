@@ -141,6 +141,10 @@ _$ python manage.py migrate
 
 > :question: **Question 1**: Create an administrative AWS CLI script to have the AWS Elasticbeanstalk environment of the previous session up and running.
 
+We will be using GitHub Secrets as a new placeholder to keep configuration information.
+
+<img alt="Lab07-configuration.png" src="images/Lab07-configuration.png"/>
+
 
 ## Task 7.2: CI/CD build using GitHub Actions
 
