@@ -387,7 +387,13 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 
 ## Task 6.3: Running Docker Container images on AWS Elastic Beanstalk
 
-### Managing the environment variables correctly
+### Managing the configuration and the environment variables correctly
+
+The Learner Lab creates a new set of credentials for every session. It is **mandatory** that you get every new set of credentials and **immediately**  update the contents of `$HOME/.aws/config`. Such credentials will be used for every AWS CLI command that you type in your **local computer**.
+
+The Django web app, on his side, uses a `.env` file to define the configuration values for a set of variables **including** the ones defined in `$HOME/.aws/config`. That means, you'd need to **also** update every `.env` file with the new AWS set of credentials. For that matter, an administrative script named `.housekeeping\scripts\updateAWS.py` is provided in the Django web app repository. You **must** run the script right after updating `$HOME/.aws/config` for each and every `.env` file that you are using.
+
+<img alt="Lab06-configuration.png" src="images/Lab06-configuration.png"/>
 
 
 ### Identification of the current EC2 instance
