@@ -96,11 +96,14 @@ password under the "Actions" blue button.
 
 ## Task 7.1: CI/CD build using GitHub Actions
 
-In this section, you will learn how to create CI/CD pipelines using GitHub Actions. This process continues
-with the previous session using the created Docker image, pushing it to AWS Elastic Container Registry (AWS ECR) ,
-and deploying the application to AWS Elastic Beanstalk.
+In this section, you will learn how to create CI/CD pipelines using GitHub Actions.
 
-Before staring you need to be aware of a new Django model added to the application.
+### Before you begin
+
+> [!Caution]
+> You need to have the AWS Elasticbeanstalk environment sucessfully running as it was at the end of the previous lab session.
+
+You need to be aware of a new Django model added to the application.
 
 ```python
 class Feeds(models.Model):
@@ -140,16 +143,16 @@ Django needs to be informed about any new data models that require database stor
 ```bash
 _$ python manage.py migrate
 ```
+### Workflows 
 
-> [!tip]  
+> [!caution]  
 > The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
 > 
-> When GitHub Actions runs, it starts with a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. 
+> When a GitHub Action runs, it starts with a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. 
 > 
 > Keep this in mind when setting **relative paths** in your scripts—everything should be relative to the repo’s root folder.
 
-A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within
-which each action in the pipeline is defined. These are:
+A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within which each action in the pipeline is defined. These are:
 
 - **name**: This is the workflow's name as will appear on your repository's ‘Actions’ section.
 - **on**: This section specifies the workflow trigger. Here, you can have successful merges to the repository and pushes
@@ -437,9 +440,6 @@ previous version.
 <img alt="Lab07-Elasticbeanstalk-versions.png" src="images/Lab07-Elasticbeanstalk-versions.png" width="50%"/>
 
 ### Install and run
-
-> [!Caution]
-> You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab session. The above explained action assumes that the web application is sucessfully executing.
 
 The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can
 execute the code in your laptop and type:
