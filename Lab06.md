@@ -816,8 +816,7 @@ If you're on a custom platform (e.g., Docker), you can add **custom scripts** fo
 - Log output or debugging info from those scripts
 
 
-
-####  Rebuild Environment (last resort)**
+####  Rebuild Environment (last resort)
 If the environment is too broken or stale:
 
 ```bash
@@ -1322,7 +1321,7 @@ Before the deadline, all team members shall push their responses to their privat
 
 Add all the web application files to your repository and comment what you think is relevant in your session's *README.md*.
 
-> [!warning]
+> [!caution]
 > Once you close your Learner Lab session, some services continue alive.
 > The aprox. cost for AWS RDS is 50 cents per day.
 > Consider how that affects your budget and check [AWS Billing and Cost Management ](https://us-east-1.console.aws.amazon.com/costmanagement) to know more details on your expenditure.

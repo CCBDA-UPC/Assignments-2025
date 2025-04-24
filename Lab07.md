@@ -959,7 +959,7 @@ files generated during this session.
 Before the deadline, all team members shall push their responses to their private https://github.com/CCBDA-UPC/2024-7-xx
 repository.
 
-> [!warning]
+> [!caution]
 > Once you close your Learner Lab session, some services continue alive.
 >   The aprox. cost for AWS RDS is 50 cents per day.
 >   AWS ElasticBeanstalk costs more than 1 USD per day.
