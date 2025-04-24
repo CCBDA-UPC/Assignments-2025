@@ -566,7 +566,7 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
     f.write(dockerrun_content)
 ```
 
-> :question: **Question 4 What does the above script do and how can you use it?
+> :question: **Question 4**: What does the above script do and how can you use it?
 
 
 ## Task 7.3: Observability using AWS CloudWatch, Elastic and Kibana
