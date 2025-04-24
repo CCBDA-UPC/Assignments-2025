@@ -453,7 +453,7 @@ Running migrations:
   Applying form.0001_initial... OK
 ```
 
-> :question: **Question 7.11**: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up
+> :question: **Question 1**: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up
 and running.
 
 To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow
@@ -474,10 +474,10 @@ In parallel, go to the AWS console and open two tabs to witness what happens:
 - AWS Elasticbeanstalk environment.
 - AWS EC2 instances
 
-> :question: **Question 7.12**: Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc.
+> :question: **Question 2**: Describe what you've seen in the AWS Elasticbeanstalk and EC2 consoles: logs, number of instances running,etc.
 Anything that you consider meaningful and provide your explanation and thoughts.
 
-> :question: **Question 7.13**: Have you been able to execute the action? Share your thoughts about the complete action.
+> :question: **Question 3**: Have you been able to execute the action? Share your thoughts about the complete action.
 
 ### Yet a new administrative script
 
@@ -565,7 +565,7 @@ with open('.housekeeping/elasticbeanstalk/Dockerrun.aws.json', 'w') as f:
     f.write(dockerrun_content)
 ```
 
-> :question: **Question 7.14 What does the above script do and how can you use it?
+> :question: **Question 4 What does the above script do and how can you use it?
 
 <a id="Task72"/>
 
@@ -912,7 +912,7 @@ You can create custom queries on the log records.
 
 <img alt="Lab07-CloudWatch_LogInsights.png" src="images/Lab07-CloudWatch_LogInsights.png" width="100%"/>
 
-> :question: **Question 7.21**: Play with AWS CloudWatch and the logs that you have obtained. Share your insights.
+> :question: **Question 5**: Play with AWS CloudWatch and the logs that you have obtained. Share your insights.
 
 ### Using Kibana's Features for Observability
 
@@ -931,7 +931,7 @@ Once the index is selected drag and drop fields appearing in the grey column to 
 
 <img alt="Lab07-logRecords.png" src="images/Lab07-logRecords.png" width="80%"/>
 
-> :question: **Question 7.22**: Play with Kibana and the logs that you have obtained. Share your insights.
+> :question: **Question 6**: Play with Kibana and the logs that you have obtained. Share your insights.
 
 
 ### Conclusion
@@ -945,9 +945,9 @@ into your stack to build a more complete monitoring solution.
 
 ## How to submit this assignment:
 
-> :question: **Question 7.1**: Assess the current version of the web application against each of the twelve factor application.
+> :question: **Question 7**: Assess the current version of the web application against each of the twelve factor application.
 
-> :question: **Question 7.2**: How long have you been working on this session? What have been the main difficulties that you have faced and how
+> :question: **Question 8**: How long have you been working on this session? What have been the main difficulties that you have faced and how
 have you solved them? Add your answers to README.md.
 
 Add all the web application files to your repository and comment what you think is relevant in your session's
