@@ -438,8 +438,8 @@ previous version.
 
 ### Install and run
 
-**IMPORTANT**: You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab
-session. The above explained action assumes that the web application is sucessfully executing.
+> [!Caution]
+> You need to have the AWS Elasticbeanstalk environment running as it was at the end of the previous lab session. The above explained action assumes that the web application is sucessfully executing.
 
 The new code version uses additional database tables that need to be created using `python manage.py migrate`. You can
 execute the code in your laptop and type:
