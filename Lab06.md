@@ -398,6 +398,7 @@ Keep in mind that Docker reads the values defined in the `.env` file and loads t
 Additionally, AWS Elastic Beanstalk defines and manages its own environment variables, which are passed into the running Docker container during deployment.
 
 <img alt="Lab06-configuration.png" src="images/Lab06-configuration.png"/>
+<small>Red arrows mean variable value imported from the program. Pink numbered arrows are information transfer from one place holder to another.</small>
 
 > [!tip]
 > **Understand and internalize** the flow of configuration values as shown in the diagram above. Being aware of how each environment (local CLI, Django app, Docker container, and Elastic Beanstalk) relies on properly synchronized variables will help you diagnose and resolve issues more efficiently.
