@@ -141,11 +141,6 @@ _$ python manage.py migrate
 
 > :question: **Question 1**: Create an administrative AWS CLI script to have the AWS Elasticbeanstalk environment of the previous session up and running.
 
-We will be using GitHub Secrets as a new placeholder to keep configuration information.
-
-<img alt="Lab07-configuration.png" src="images/Lab07-configuration.png"/>
-
-
 ## Task 7.2: CI/CD build using GitHub Actions
 
 In this section, you will learn how to create CI/CD pipelines using GitHub Actions.
@@ -354,6 +349,9 @@ ECR_REPOSITORY=django-webapp-docker-repo
 ELASTIC_BEANSTALK_APP_NAME=django-webapp-eb
 ELASTIC_BEANSTALK_ENV_NAME=team<YOUR-TEAM-NUMBER>
 ```
+
+<img alt="Lab07-configuration.png" src="images/Lab07-configuration.png"/>
+
 
 Once the credentials are set up in the environment it uses an AWS specific action to log into the AWS Elastic Container
 Repository.
