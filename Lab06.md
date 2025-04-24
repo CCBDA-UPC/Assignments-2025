@@ -831,7 +831,7 @@ As you're deploying with a Dockerfile or `Dockerrun.aws.json`:
 - Check `web.stdout.log` or container logs via `docker logs`
 - Beanstalk expects your container to expose on **port 5000**, unless otherwise configured
 
-### Take aways
+### Your feedback
 
 Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<aws-account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
