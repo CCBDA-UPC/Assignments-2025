@@ -89,9 +89,9 @@ password under the "Actions" blue button.
 
 # Tasks for Lab session #7
 
-* [Task 7.1: Preparation](#)
-* [Task 7.2: CI/CD build using GitHub Actions](#)
-* [Task 7.3: Observability using AWS CloudWatch, Elastic and Kibana](#)
+* [Task 7.1: Preparation](#task-71-preparation)
+* [Task 7.2: CI/CD build using GitHub Actions](#task-72-cicd-build-using-github-actions)
+* [Task 7.3: Observability using AWS CloudWatch, Elastic and Kibana](#task-73-observability-using-aws-cloudwatch-elastic-and-kibana)
 
 ## Task 7.1: Preparation
 
