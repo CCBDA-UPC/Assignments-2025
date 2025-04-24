@@ -737,7 +737,7 @@ To confirm, type the environment name: team<YOUR-TEAM-NUMBER>
 
 If you obtain a "Severe" execution status instead of a "Healthy" one, you’ve got several tools and techniques at your disposal depending on where the problem lies — whether it's deployment failures, runtime errors, configuration issues, or Docker/container problems.
 
-#### Check EB Logs
+#### Check Elastic Beanstalk Logs
 Elastic Beanstalk offers a few ways to view logs from your environment:
 
 ##### Using the AWS Console
@@ -750,14 +750,14 @@ Elastic Beanstalk offers a few ways to view logs from your environment:
   - `docker logs` (for container output)
   - `nginx/access.log` or `nginx/error.log`
 
-##### Using the EB CLI
+##### Using the Elastic Beanstalk CLI
 ```bash
 _$ eb logs
 _$ eb logs --all
 _$ eb logs --zip  # Downloads all logs as a zip
 ```
 
-#### SSH Into the Instance
+#### SSH into the instance
 To get real-time logs or debug deeply:
 
 ```bash
@@ -784,7 +784,7 @@ Files to check:
 - `/var/log/eb-engine.log`
 - `/var/log/docker.log`
 
-#### Use `eb events` to Check Deployment Errors
+#### Use `eb events` to check deployment errors
 
 This shows recent event logs from the environment:
 
@@ -795,7 +795,7 @@ _$ eb events
 It’s helpful for messages like “health degraded,” failed config/app deployments, etc.
 
 ####  Enable Enhanced Health Reporting
-In the EB console:
+In the Elastic Beanstalk console:
 - Environment > Configuration > Monitoring
 - Enable **Enhanced Health Reporting** (provides detailed diagnostics)
 
