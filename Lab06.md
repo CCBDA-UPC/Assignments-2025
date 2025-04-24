@@ -1,12 +1,13 @@
 # Lab session 6: Running a custom web app in the cloud
 
-This lab session **builds upon the work from the previous session**, where we isolated the web application within a Docker container running locally. Make sure that you have available and working everything done in the previous session.
-
 In this session, we will use a more robust SQL database engine and scale the application by running multiple instances. A load balancer will be used to distribute incoming requests across these instances, ensuring optimal performance.
 
 As the number of instances fluctuates with creation and termination, it’s essential to track the web application’s activity by securely storing log files for monitoring and future analysis.
 
 Finally, we’ll reduce the load on the web application server by distributing static assets (such as images, CSS, and JavaScript) to edge locations closer to the visitors, improving response times and overall performance.
+
+> [!Note]
+> This lab session **builds upon the work from the previous session**, where we isolated the web application within a Docker container running locally. Make sure that you have available and working everything done in the previous session.
 
 ### AWS RDS: AWS Relational Database Service
 
