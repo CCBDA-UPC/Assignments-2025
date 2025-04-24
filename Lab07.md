@@ -149,9 +149,8 @@ In this section, you will learn how to create CI/CD pipelines using GitHub Actio
 > [!caution]  
 > The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
 > 
-> When a GitHub Action runs, it starts with a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. 
-> 
-> Keep this in mind when setting **relative paths** in your scripts—everything should be relative to the repo’s root folder.
+> When a GitHub Action runs, it starts on a clean Linux (Ubuntu) environment. It clones your repository into the default working directory. The GitHub Action commands execute using **relative paths** following this assumption.
+
 
 A workflow is an automated process that runs one or more defined jobs. A workflow file contains various sections within which each action in the pipeline is defined. These are:
 
