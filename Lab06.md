@@ -1267,7 +1267,7 @@ def get_leads(self, domain, preview):
 Save the changes and, before committing them, check that everything works fine by typing *http://127.0.0.1:8080/search*
 in your browser.
 
-<img src="./images/Lab05-6.fw.png " alt="Search" title="Search"/>
+<img src="./images/Lab06-leads.png" alt="Search" title="Search"/>
 
 To add the new option to the menu bar, simply edit the file *form/templates/generic.html*, go to line 28 and add the
 second navbar as shown below. Save the file and, with no further delay, check that you have it added in the version that
@@ -1297,8 +1297,6 @@ runs in your computer.
 	</ul>
 </div>
 ```
-
-<img src="./images/Lab05-7.png " alt="Search" title="Search"/>
 
 If the web app works correctly in your computer commit the changes and deploy the new version in the cloud. Change whatever is necessary to make it work.
 
