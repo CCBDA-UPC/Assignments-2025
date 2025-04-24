@@ -389,22 +389,21 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 
 ### Managing the configuration and the environment variables correctly
 
-The Learner Lab creates a new set of credentials for every session. It is **mandatory** that you get every new set of credentials and **immediately**  update the contents of `$HOME/.aws/config`. Such credentials will be used for every AWS CLI command that you type in your **local computer**.
+Each session of the Learner Lab generates a new set of AWS credentials. It is **essential** that you retrieve these credentials at the start of every session and **immediately** update the contents of your `$HOME/.aws/config` file. These credentials are required for all AWS CLI commands executed on your **laptop**.
 
-The Django web app, on his side, uses a `.env` file to define the configuration values for a set of variables **including** the ones defined in `$HOME/.aws/config`. That means, you'd need to **also** update every `.env` file with the new AWS set of credentials. For that matter, an administrative script named `.housekeeping\scripts\updateAWS.py` is provided in the Django web app repository. You **must** run the script right after updating `$HOME/.aws/config` for each and every `.env` file that you are using.
+The Django web application, in turn, relies on a `.env` file to configure various environment variables—**including** those defined in `$HOME/.aws/config`. This means you must also **update** each `.env` file with the new credentials. To streamline this process, an administrative script is included in the Django web app repository: `.housekeeping/scripts/updateAWS.py`. You **must execute** this script **after** updating `$HOME/.aws/config` to ensure that all relevant `.env` files are properly synchronized.
 
-Remember that the Docker image imports the values declared in the `.env` file into a set of "environment variables".
+Keep in mind that Docker reads the values defined in the `.env` file and loads them as environment variables within its containers.
 
-Finally, you'll see below that Elastic BeanStalk defines its own set of "environment variables" that are communicated to its running Docker container.
+Additionally, AWS Elastic Beanstalk defines and manages its own environment variables, which are passed into the running Docker container during deployment.
 
 <img alt="Lab06-configuration.png" src="images/Lab06-configuration.png"/>
 
 > [!tip]
-> **Verify that you understand** the information flow depicted above and **keep it present** when facing any issue that may be due to a lack of synchronization on the correct values of the variables used by each executing item (CLI or webapp in different souroundings: your local computer, Docker, AWS Elastic Beanstalk). That will save you wasted time while facing any appearing issue.
+> **Understand and internalize** the flow of configuration values as shown in the diagram above. Being aware of how each environment (local CLI, Django app, Docker container, and Elastic Beanstalk) relies on properly synchronized variables will help you diagnose and resolve issues more efficiently.
 
 > [!tip]
-> It is advisable to have different `.env` files such as `local.env`, `production.env`, `aws.env` to match the assets used in every step of the application life-cycle.
-
+> It is a good practice to maintain separate `.env` files—such as `local.env`, `production.env`, and `aws.env`—to align with the specific configurations required at different stages of the application lifecycle.
 
 ### Identification of the current EC2 instance
 
