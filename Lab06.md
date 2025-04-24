@@ -421,7 +421,7 @@ _$ TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-me
 _$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id/
 i-1234567898abcdef0
 _$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-type/
-t2.nano
+t2.small
 _$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/availability-zone/
 us-east-1f
 _$ curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4/
@@ -535,7 +535,7 @@ ebOptions = {
     'instance_profile': 'LabInstanceProfile',
     'service-role': 'LabRole',
     'elb-type': 'application',
-    'instance-types':'t2.nano',
+    'instance-types':'t2.small',
 }
 
 try:
@@ -571,7 +571,7 @@ print(f'eb create {HOSTNAME} %s ' % ' '.join(opt))
 - one EC2 instance minimum and three EC2 instances maximum (see `ebOptions` in the Python code above).
 - the instance profile and service role are the ones that must be used in the Learning Lab environment (see `ebOptions` in the Python code above).
 - the Elastic Load Balancer (ELB) is of type application, as necessary for this type of deployment (see `ebOptions` in the Python code above).
-- a very small EC2 instance type `t2.nano` will be used (see `ebOptions` in the Python code above).
+- a small EC2 instance type `t2.small` will be used (see `ebOptions` in the Python code above).
 - the name of your team will be used as the name of the environment (see command below).
 
 The final hostname that Elastic Beanstalk is creating will be `team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com` that host name needs to be unique. I suggest you to use team and two digits of your team number for this lab session.
@@ -581,7 +581,7 @@ The output of the command is extremely long, scroll to the right inside the box 
 ```bash
 _$ cd .houskeeping/elasticbeanstalk
 _$ python ../scripts/ebcreate.py ../../aws.env team<YOUR-TEAM-NUMBER>
-eb create team<YOUR-TEAM-NUMBER> --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.nano --cname team<YOUR-TEAM-NUMBER> --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
+eb create team<YOUR-TEAM-NUMBER> --min-instances 1 --max-instances 3 --instance_profile LabInstanceProfile --service-role LabRole --elb-type application --instance-types t2.small --cname team<YOUR-TEAM-NUMBER> --envvars "DJANGO_DEBUG=True,DJANGO_ALLOWED_HOSTS=0.0.0.0:127.0.0.1:localhost:172.*.*.*:team<YOUR-TEAM-NUMBER>.us-east-1.elasticbeanstalk.com,DJANGO_SECRET_KEY=-lm+)b44uap8!0-^1w9&2zokys(47)8u698=dy0mb&6@4ee-hh,DJANGO_LOGLEVEL=info,CCBDA_SIGNUP_TABLE=ccbda-signup-table,DB_NAME=ccbdadb,DB_USER=ccbdauser,DB_PASSWORD=ccbdapassword,DB_PORT=5432,DATABASE=postgresql,AWS_REGION=us-east-1,AWS_ACCESS_KEY_ID=ASI......ORM,AWS_SECRET_ACCESS_KEY=SwJu.....9XpmR,AWS_SESSION_TOKEN=IQoJb3Jp.....740ebvY"
 ```
 
 There is just one final thing to do before we issue the command above. Create a file named `Dockerrun.aws.json` inside of the `elasticbeanstalk` folder. Make sure you change `<aws-registry-id>` by the actual ID. This file informs AWS Elastic Beanstalk from which repository it needs to pull the Docker immage to install on each AWS EC2 instance.
