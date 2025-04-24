@@ -393,7 +393,17 @@ The Learner Lab creates a new set of credentials for every session. It is **mand
 
 The Django web app, on his side, uses a `.env` file to define the configuration values for a set of variables **including** the ones defined in `$HOME/.aws/config`. That means, you'd need to **also** update every `.env` file with the new AWS set of credentials. For that matter, an administrative script named `.housekeeping\scripts\updateAWS.py` is provided in the Django web app repository. You **must** run the script right after updating `$HOME/.aws/config` for each and every `.env` file that you are using.
 
+Remember that the Docker image imports the values declared in the `.env` file into a set of "environment variables".
+
+Finally, you'll see below that Elastic BeanStalk defines its own set of "environment variables" that are communicated to its running Docker container.
+
 <img alt="Lab06-configuration.png" src="images/Lab06-configuration.png"/>
+
+> [!tip]
+> **Verify that you understand** the information flow depicted above and **keep it present** when facing any issue that may be due to a lack of synchronization on the correct values of the variables used by each executing item (CLI or webapp in different souroundings: your local computer, Docker, AWS Elastic Beanstalk). That will save you wasted time while facing any appearing issue.
+
+> [!tip]
+> It is advisable to have different `.env` files such as `local.env`, `production.env`, `aws.env` to match the assets used in every step of the application life-cycle.
 
 
 ### Identification of the current EC2 instance
