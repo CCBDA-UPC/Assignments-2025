@@ -733,11 +733,9 @@ To confirm, type the environment name: team<YOUR-TEAM-NUMBER>
 2025-03-24 18:25:45    INFO    Deleting SNS topic for environment team<YOUR-TEAM-NUMBER>.
 2025-03-24 18:25:46    INFO    terminateEnvironment completed successfully.
 ```
-### Debuggin AWS Elastic Beanstalk issues
+### Debugging AWS Elastic Beanstalk issues
 
-You’ve got several tools and techniques at your disposal depending on where the problem lies — whether it's deployment failures, runtime errors, configuration issues, or Docker/container problems.
-
-
+If you obtain a "Severe" execution status instead of a "Healthy" one, you’ve got several tools and techniques at your disposal depending on where the problem lies — whether it's deployment failures, runtime errors, configuration issues, or Docker/container problems.
 
 #### Check EB Logs
 Elastic Beanstalk offers a few ways to view logs from your environment:
