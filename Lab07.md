@@ -89,21 +89,13 @@ password under the "Actions" blue button.
 
 # Tasks for Lab session #7
 
-* [Task 7.1: CI/CD build using GitHub Actions](#Task71)
-* [Task 7.2: Observability using AWS CloudWatch, Elastic and Kibana](#Task72)
+* [Task 7.1: Preparation](#)
+* [Task 7.2: CI/CD build using GitHub Actions](#)
+* [Task 7.3: Observability using AWS CloudWatch, Elastic and Kibana](#)
 
-<a id="Task71"/>
+## Task 7.1: Preparation
 
-## Task 7.1: CI/CD build using GitHub Actions
-
-In this section, you will learn how to create CI/CD pipelines using GitHub Actions.
-
-### Before you begin
-
-> [!Caution]
-> You need to have the AWS Elasticbeanstalk environment sucessfully running as it was at the end of the previous lab session.
-
-You need to be aware of a new Django model added to the application.
+You need to be aware of a new Django model added to the code of the application.
 
 ```python
 class Feeds(models.Model):
@@ -143,7 +135,16 @@ Django needs to be informed about any new data models that require database stor
 ```bash
 _$ python manage.py migrate
 ```
-### Workflows 
+
+> [!Caution]
+> You need to have the AWS Elasticbeanstalk environment sucessfully running as it was at the end of the previous lab session.
+
+> :question: **Question 1**: Create an administrative AWS CLI script to have the AWS Elasticbeanstalk environment of the previous session up and running.
+
+
+## Task 7.2: CI/CD build using GitHub Actions
+
+In this section, you will learn how to create CI/CD pipelines using GitHub Actions.
 
 > [!caution]  
 > The instructions in this section assume that you've unzipped the code **at the root** of your responses' repository.  
@@ -453,8 +454,7 @@ Running migrations:
   Applying form.0001_initial... OK
 ```
 
-> :question: **Question 1**: Create an administrative Python script to have the AWS Elasticbeanstalk environment of the previous session up
-and running.
+
 
 To create the workflow, add to your responses repo the file `.github/workflows/aws.yml` containing the complete workflow
 listed above.
