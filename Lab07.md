@@ -130,7 +130,7 @@ class Feeds(models.Model):
                 logger.error(f'Feed reading error: {e}')
 ```
 
-Django needs to be informed about any new data models that require database storage. To do this, it is necessary to run the `makemigrations` command. This will detect the new model and generate a migration file—typically something like `form/migrations/0001_initial.py`. The file is already included in the new repo, therefore you only need to apply the new migration by running the `migrate` command, just like you did in the previous session.
+Django needs to be informed about any new data models that require database storage. It is necessary to run the `makemigrations` command which will detect the new model and generate a migration file—typically something like `form/migrations/0001_initial.py`. That file is already included in the new repo, therefore you only need to apply the new migration by running the `migrate` command, just like you did in the previous session.
 
 ```bash
 _$ python manage.py migrate
