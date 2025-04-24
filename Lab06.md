@@ -222,9 +222,6 @@ Running migrations:
 
 **Q6-14:  What is the result of "select * FROM django_migrations;"**
 
-**VERY IMPORTANT: AWS RDS is a very expensive service, and it continues running even if your Learner Lab session stops. DO NOT FORGET to stop the database when you don't need it.**
-
-
 <a name="Task62"/>
 
 ## Task 6.2: Adding the Docker image to AWS ECR
@@ -389,6 +386,9 @@ _$ aws ecr describe-images --repository-name django-webapp-docker-repo
 <a name="Task63" />
 
 ## Task 6.3: Running Docker Container images on AWS Elastic Beanstalk
+
+### Managing the environment variables correctly
+
 
 ### Identification of the current EC2 instance
 
@@ -703,13 +703,13 @@ ccbdadb=>
 
 Go to the AWS S3 console and see that it there is a new bucket named `elasticbeanstalk-us-east-1-<aws-account-id>`. Go to the `django-webapp-eb` folder and download the lastest zip file. Uncompress the zip file.
 
-> :question: **Question 6.31. What have you found on the zip file? Why do you think it is like that?.
+> :question: **Question 6.31**: What have you found on the zip file? Why do you think it is like that?.
 
-> **:question: Question 6.32. Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.
+> :question: **Question 6.32**: Open the AWS EC2 console and check how many instances are running and how many AWS ELB instances. Share your thoughts.
 
-> :question: **Question 6.33. Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?
+> :question: **Question 6.33**: Terminate one of the AWS EC2 instances using the AWS EC2 console. Is the web app responding now?  Why?
 
-> **:question: Question 6.34. Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?
+> :question: **Question 6.34**: Wait three minutes. What happens? Is the web app responding now?  Why? What do you expect to happen?
 
 Finish the execution of the AWS Elastic Beanstalk environment.
 
