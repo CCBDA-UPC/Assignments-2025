@@ -245,7 +245,7 @@ _$ aws dynamodb create-table \
         },
         "TableSizeBytes": 0,
         "ItemCount": 0,
-        "TableArn": "arn:aws:dynamodb:us-east-1:YOUR-AWS-ACCOUNT-ID:table/ccbda-lambda-first",
+        "TableArn": "arn:aws:dynamodb:us-east-1:<YOUR-AWS-ACCOUNT-ID>:table/ccbda-lambda-first",
         "TableId": "481c8722-4994-4652-a68a-c0246643e206",
         "BillingModeSummary": {
             "BillingMode": "PAY_PER_REQUEST"
@@ -317,8 +317,8 @@ The file `requirements.txt` in the `crud/lambda/` folder defines the Python envi
 We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set more shell variables to the corresponding value. Then we will create a string containing the environment values to be passed along to the Lambda function.
 
 ```bash
-_$ ACCOUNT_ID=YOUR-AWS-ACCOUNT-ID
-_$ ROLE=arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/LabRole
+_$ ACCOUNT_ID=<YOUR-AWS-ACCOUNT-ID>
+_$ ROLE=arn:aws:iam::<YOUR-AWS-ACCOUNT-ID>:role/LabRole
 _$ LAMBDA=LambdaCRUD
 _$ LOG_LEVEL=INFO
 _$ ENVIRONMENT_VARIABLES=()
@@ -346,9 +346,9 @@ _$ aws lambda create-function \
   --environment "Variables={${ENVIRONMENT}}"
 {
     "FunctionName": "LambdaCRUD",
-    "FunctionArn": "arn:aws:lambda:us-east-1:YOUR-AWS-ACCOUNT-ID:function:LambdaCRUD",
+    "FunctionArn": "arn:aws:lambda:us-east-1:<YOUR-AWS-ACCOUNT-ID>:function:LambdaCRUD",
     "Runtime": "python3.13",
-    "Role": "arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/LabRole",
+    "Role": "arn:aws:iam::<YOUR-AWS-ACCOUNT-ID>:role/LabRole",
     "Handler": "lambda_crud.lambda_handler",
     "CodeSize": 1077,
     "Description": "",
@@ -371,7 +371,7 @@ _$ aws lambda create-function \
     "StateReason": "The function is being created.",
     "StateReasonCode": "Creating"
 }
-_$ LAMBDA_ARN="arn:aws:lambda:us-east-1:YOUR-AWS-ACCOUNT-ID:function:LambdaCRUD"
+_$ LAMBDA_ARN="arn:aws:lambda:us-east-1:<YOUR-AWS-ACCOUNT-ID>:function:LambdaCRUD"
 _$ popd
 ```
 
@@ -388,7 +388,7 @@ _$ LAMBDA_ARN=`aws lambda create-function \
   | jq -r '.FunctionArn'`
 
 echo "LAMBDA_ARN: ${LAMBDA_ARN}"
-LAMBDA_ARN: arn:aws:lambda:us-east-1:YOUR-AWS-ACCOUNT-ID:function:LambdaCRUD
+LAMBDA_ARN: arn:aws:lambda:us-east-1:<YOUR-AWS-ACCOUNT-ID>:function:LambdaCRUD
 ```
 
 Once the Lambda function is deployed you can go to the AWS Lambda console and see the outcome of the above commands.
@@ -444,7 +444,7 @@ _$ aws lambda add-permission \
   --statement-id "${STATEMENT_ID}" \
   --action lambda:InvokeFunction
 {
-    "Statement": "{\"Sid\":\"CDCFB599-79CC-4877-B480-6B97B4125D4D\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:YOUR-AWS-ACCOUNT-ID:function:LambdaCRUD\"}"
+    "Statement": "{\"Sid\":\"CDCFB599-79CC-4877-B480-6B97B4125D4D\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:us-east-1:<YOUR-AWS-ACCOUNT-ID>:function:LambdaCRUD\"}"
 }
 ```
 
@@ -481,7 +481,7 @@ _$ aws apigatewayv2 create-integration \
     "IntegrationId": "wp0uj9i",
     "IntegrationMethod": "ANY",
     "IntegrationType": "AWS_PROXY",
-    "IntegrationUri": "arn:aws:lambda:us-east-1:YOUR-AWS-ACCOUNT-ID:function:LambdaCRUD",
+    "IntegrationUri": "arn:aws:lambda:us-east-1:<YOUR-AWS-ACCOUNT-ID>:function:LambdaCRUD",
     "PayloadFormatVersion": "2.0",
     "TimeoutInMillis": 30000
 }
@@ -808,8 +808,8 @@ To run the script it is necessary to create a configuration file with the names 
 _$ cat .env
 TABLE=ccbda-lambda-first
 REGION=us-east-1
-ACCOUNT_ID=YOUR-AWS-ACCOUNT-ID
-ROLE=arn:aws:iam::YOUR-AWS-ACCOUNT-ID:role/LabRole
+ACCOUNT_ID=<YOUR-AWS-ACCOUNT-ID>
+ROLE=arn:aws:iam::<YOUR-AWS-ACCOUNT-ID>:role/LabRole
 LAMBDA=LambdaCRUD
 LOG_LEVEL=INFO
 _$ ./deploy.sh .env
@@ -1134,6 +1134,9 @@ echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 > :bangbang: See that the API Gateway now uses `--protocol-type` set to `WEBSOCKET` for WebSocket APIs. The parameter `--route-selection-expression` defines the routing logic based on the WebSocket messages.
 
 To execute the script is necessary to have a `.env` file. The API Key is the one you've obtained from [Geoapify](https://www.geoapify.com/).
+
+> [!caveat]
+> Please note that <YOUR-AWS-ACCOUNT-ID> is used and you need to replace it by YOUR AWS ACCOUNT ID both int ACCOUNT_ID and ROLE.
 
 ```bash
 _$ cat .env
