@@ -1139,7 +1139,7 @@ echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 To execute the script is necessary to have a `.env` file. The API Key is the one you've obtained from [Geoapify](https://www.geoapify.com/).
 
 > [!caution]
-> Please note that <YOUR-AWS-ACCOUNT-ID> is used and you need to replace it by YOUR AWS ACCOUNT ID both int ACCOUNT_ID and ROLE.
+> Please note that &lt;YOUR-AWS-ACCOUNT-ID&gt; is used and you need to replace it by YOUR AWS ACCOUNT ID both int ACCOUNT_ID and ROLE.
 
 ```bash
 _$ cat .env
