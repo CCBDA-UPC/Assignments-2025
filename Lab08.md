@@ -317,7 +317,7 @@ The file `requirements.txt` in the `crud/lambda/` folder defines the Python envi
 We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set more shell variables to the corresponding value. Then we will create a string containing the environment values to be passed along to the Lambda function.
 
 > [!caution]
-> Please note that <YOUR-AWS-ACCOUNT-ID> is used and you need to replace it by YOUR AWS ACCOUNT ID both int ACCOUNT_ID and ROLE.
+> Please note that &lt;YOUR-AWS-ACCOUNT-ID&gt; is used and you need to replace it by YOUR AWS ACCOUNT ID both int ACCOUNT_ID and ROLE.
 
 ```bash
 _$ ACCOUNT_ID=<YOUR-AWS-ACCOUNT-ID>
