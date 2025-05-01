@@ -1273,7 +1273,7 @@ The file `index.html` in the directory `websocket` includes the JavaScript code 
 Open your browser with the `index.html` file, open the console and observe the messages appearing.
 
 > [!caution]
-> Using the "file://" protocol you'll get CORS errors. Please use PyCharm to provide "http://" or `python -m http.server`
+> Using the "file://" protocol you'll get [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) errors. Please use PyCharm to provide "http://" or `python -m http.server`
 
 Now, you need to provide some data by running the Python application `sendFlights.py` inside the `websocket` folder. Depending on the value of the variable `AIRPORT` and `RADIUS` it resets the initial airport by sending a `reset` message to all browsers connected.
 
