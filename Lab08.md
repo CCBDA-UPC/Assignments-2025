@@ -317,7 +317,7 @@ The file `requirements.txt` in the `crud/lambda/` folder defines the Python envi
 We are going to use the **AWS CLI** to deploy the **Lambda function** and build the **API Gateway**. Open a terminal and set more shell variables to the corresponding value. Then we will create a string containing the environment values to be passed along to the Lambda function.
 
 > [!caution]
-> Please note that &lt;YOUR-AWS-ACCOUNT-ID&gt; is used and you need to replace it by YOUR AWS ACCOUNT ID both in ACCOUNT_ID and ROLE.
+> Please note that you need to replace &lt;YOUR-AWS-ACCOUNT-ID&gt; by YOUR AWS ACCOUNT ID both in ACCOUNT_ID and ROLE bash environment variables instantiation.
 
 ```bash
 _$ ACCOUNT_ID=<YOUR-AWS-ACCOUNT-ID>
@@ -1139,7 +1139,7 @@ echo -e "{\"url\":\"${URL}\"}" > variables.json; cat variables.json
 To execute the script is necessary to have a `.env` file. The API Key is the one you've obtained from [Geoapify](https://www.geoapify.com/).
 
 > [!caution]
-> Please note that &lt;YOUR-AWS-ACCOUNT-ID&gt; is used and you need to replace it by YOUR AWS ACCOUNT ID both in ACCOUNT_ID and ROLE.
+> Please note that you need to replace &lt;YOUR-AWS-ACCOUNT-ID&gt; by YOUR AWS ACCOUNT ID both in ACCOUNT_ID and ROLE bash environment variables instantiation.
 
 ```bash
 _$ cat .env
