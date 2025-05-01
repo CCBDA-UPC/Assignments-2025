@@ -593,6 +593,9 @@ URL: https://9h1wag0ywe.execute-api.us-east-1.amazonaws.com/production/
 ```
 We can test if it responds to the GET method using `curl`:
 
+> [!caution]
+> Please verify that you are always using the URL with the trailing slash, as shown above. If you miss it you'll get `{"message": "Not Found"}` as response.
+
 ```bash
 _$ curl "${URL}?TableName=${TABLE}"
 {
