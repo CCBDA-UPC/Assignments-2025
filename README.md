@@ -146,7 +146,7 @@ Between 6000 and  10000 English words, adding any images considered necessary;
 
 - Students assigned to a project group: **March-10 23:55**
 - First draft: **March-31 23:55**
-- Final presentation and report: **May-22 23:55**
+- Final presentation and report: **May-25 23:55**
 
 ### Evaluation criteria
 
